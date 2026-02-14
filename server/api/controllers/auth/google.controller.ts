@@ -57,7 +57,7 @@ export const googleLoginController = async (req: Request, res: Response) => {
           email: user.email,
         },
         process.env.JWT_SECRET!,
-        { expiresIn: "7d" }
+        { expiresIn: "7d" },
       );
 
       // Setting JWT Cookie
