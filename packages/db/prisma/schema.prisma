@@ -1,0 +1,187 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum InvoiceStatus {
+  pending
+  paid
+  failed
+  expired
+  refunded
+  cancelled
+}
+
+enum ValueType {
+  fixed
+  percentage
+}
+
+model User {
+  id        String    @id @default(uuid())
+  authId    String    @unique
+  email     String    @unique
+  fullName  String
+  avatarUrl String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  invoices  Invoice[]
+
+  @@map("users")
+}
+
+model GuestSession {
+  id         String    @id @default(uuid())
+  guestId    String    @unique
+  usageCount Int       @default(0)
+  expiresAt  DateTime
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  invoice    Invoice[]
+
+  @@map("guest_sessions")
+}
+
+model Invoice {
+  id          String        @id @default(uuid())
+  status      InvoiceStatus @default(pending)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  paidAt      DateTime?
+  userId      String?
+  user        User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invoiceData InvoiceData?
+
+  guestSessionId String?
+  guestSession   GuestSession? @relation(fields: [guestSessionId], references: [id])
+
+  @@index([userId])
+  @@index([guestSessionId])
+  @@index([status])
+  @@map("invoices")
+}
+
+model InvoiceData {
+  id             String                 @id @default(uuid())
+  invoiceId      String                 @unique
+  invoice        Invoice                @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  companyDetails InvoiceCompanyDetails?
+  clientDetails  InvoiceClientDetails?
+  invoiceDetails InvoiceDetails?
+  items          InvoiceItem[]
+  metadata       InvoiceMetadata?
+
+  @@map("invoice_data")
+}
+
+model InvoiceItem {
+  id            String      @id @default(uuid())
+  name          String
+  description   String
+  quantity      Int
+  unitPrice     Decimal     @db.Decimal(10, 2)
+  invoiceDataId String
+  invoiceData   InvoiceData @relation(fields: [invoiceDataId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceDataId])
+  @@map("invoice_items")
+}
+
+model InvoiceDetails {
+  id             String                  @id @default(uuid())
+  theme          Json
+  currency       String
+  prefix         String
+  serialNumber   String
+  date           DateTime
+  dueDate        DateTime
+  billingDetails InvoiceBillingDetails[]
+  invoiceDataId  String                  @unique
+  invoiceData    InvoiceData             @relation(fields: [invoiceDataId], references: [id], onDelete: Cascade)
+
+  @@map("invoice_details")
+}
+
+model InvoiceCompanyDetails {
+  id            String                          @id @default(uuid())
+  name          String
+  address       String
+  logo          String?
+  signature     String?
+  invoiceDataId String                          @unique
+  invoiceData   InvoiceData                     @relation(fields: [invoiceDataId], references: [id], onDelete: Cascade)
+  metadata      InvoiceCompanyDetailsMetadata[]
+
+  @@map("invoice_company_details")
+}
+
+model InvoiceCompanyDetailsMetadata {
+  id                      String                @id @default(uuid())
+  label                   String
+  value                   String
+  invoiceCompanyDetailsId String
+  companyDetails          InvoiceCompanyDetails @relation(fields: [invoiceCompanyDetailsId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceCompanyDetailsId])
+  @@map("invoice_company_details_metadata")
+}
+
+model InvoiceClientDetails {
+  id            String                         @id @default(uuid())
+  name          String
+  address       String
+  invoiceDataId String                         @unique
+  invoiceData   InvoiceData                    @relation(fields: [invoiceDataId], references: [id], onDelete: Cascade)
+  metadata      InvoiceClientDetailsMetadata[]
+
+  @@map("invoice_client_details")
+}
+
+model InvoiceClientDetailsMetadata {
+  id                     String               @id @default(uuid())
+  label                  String
+  value                  String
+  invoiceClientDetailsId String
+  clientDetails          InvoiceClientDetails @relation(fields: [invoiceClientDetailsId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceClientDetailsId])
+  @@map("invoice_client_details_metadata")
+}
+
+model InvoiceBillingDetails {
+  id               String         @id @default(uuid())
+  label            String
+  type             ValueType
+  value            Decimal        @db.Decimal(10, 2)
+  invoiceDetailsId String
+  invoiceDetails   InvoiceDetails @relation(fields: [invoiceDetailsId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceDetailsId])
+  @@map("invoice_billing_details")
+}
+
+model InvoiceMetadata {
+  id             String                 @id @default(uuid())
+  notes          String                 @default("")
+  terms          String                 @default("")
+  invoiceDataId  String                 @unique
+  invoiceData    InvoiceData            @relation(fields: [invoiceDataId], references: [id], onDelete: Cascade)
+  paymentDetails InvoicePaymentDetail[]
+
+  @@map("invoice_metadata")
+}
+
+model InvoicePaymentDetail {
+  id                String          @id @default(uuid())
+  label             String
+  value             String
+  invoiceMetadataId String
+  metadata          InvoiceMetadata @relation(fields: [invoiceMetadataId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceMetadataId])
+  @@map("invoice_payment_details")
+}
