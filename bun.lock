@@ -16,6 +16,7 @@
     "apps/server": {
       "name": "server",
       "dependencies": {
+        "db": "*",
         "dotenv": "^17.4.2",
       },
       "devDependencies": {
