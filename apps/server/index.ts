@@ -1,6 +1,7 @@
 import express from "express"
 import "./lib/supabase.ts"
 import { authRouter } from "./api/routes/auth/auth.route.ts"
+import { invoiceRouter } from "./api/routes/invoice/invoice.route.ts"
 
 const app = express()
 app.set("query parser", "extended")
@@ -8,6 +9,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use("/api/v1/google", authRouter)
+app.use("/api/v1/invoice", invoiceRouter)
 
 async function main() {
   try {

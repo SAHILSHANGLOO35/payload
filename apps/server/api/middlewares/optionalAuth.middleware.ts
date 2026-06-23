@@ -1,12 +1,6 @@
-import type { NextFunction, Request, Response } from "express"
+import type { NextFunction, Response } from "express"
 import jwt from "jsonwebtoken"
-
-export interface AuthRequest extends Request {
-  user?: {
-    id: string
-    email: string
-  }
-}
+import type { AuthRequest } from "../../types"
 
 export const optionalAuthMiddleware = (
   req: AuthRequest,
