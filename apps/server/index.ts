@@ -9,7 +9,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use("/api/v1/google", authRouter)
-app.use("/api/v1/invoice", invoiceRouter)
+app.use("/api/v1/invoices", invoiceRouter)
 
 async function main() {
   try {

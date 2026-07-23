@@ -62,6 +62,12 @@ export const createInvoice = async (req: AuthRequest, res: Response) => {
       data: {
         userId,
         guestSessionId,
+        invoiceData: {
+          create: {},
+        },
+      },
+      include: {
+        invoiceData: true,
       },
     })
 
@@ -78,3 +84,5 @@ export const createInvoice = async (req: AuthRequest, res: Response) => {
     })
   }
 }
+
+export const getInvoices = async (req: AuthRequest, res: Response) => {}
