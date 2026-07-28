@@ -26,7 +26,7 @@ export const saveInvoiceSchema = z.object({
 
   invoiceDetails: z
     .object({
-      theme: z.record(z.string(), z.unknown()),
+      theme: z.record(z.string(), z.any()),
       currency: z.string().min(1),
       prefix: z.string().min(1),
       serialNumber: z.string().min(1),

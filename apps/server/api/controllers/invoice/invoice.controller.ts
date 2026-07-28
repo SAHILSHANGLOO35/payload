@@ -2,6 +2,7 @@ import crypto from "crypto"
 import type { Response } from "express"
 import type { AuthRequest } from "../../../types"
 import { prisma } from "db/client"
+import { saveInvoiceSchema } from "../../validators/invoice.validator"
 
 async function resolveOwnership(
   req: AuthRequest,
@@ -96,10 +97,255 @@ export const createInvoice = async (req: AuthRequest, res: Response) => {
 
 export const saveInvoice = async (req: AuthRequest, res: Response) => {
   try {
+    const { id } = req.params
+
+    if (!id || Array.isArray(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid invoice id",
+      })
+    }
+
+    // 1. Validate body
+    const parsed = saveInvoiceSchema.safeParse(req.body)
+    if (!parsed.success) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation failed",
+        errors: parsed.error.flatten(),
+      })
+    }
+
+    const body = parsed.data
+
+    // 2. Resolve caller identity
+    const ownership = await resolveOwnership(req, res)
+    if (!ownership) return
+
+    const { userId, guestSessionId } = ownership
+
+    // 3. Find the invoice and verify ownership
+    const invoice = await prisma.invoice.findUnique({
+      where: { id },
+    })
+
+    if (!invoice) {
+      return res.status(404).json({
+        success: false,
+        message: "Invoice not found",
+      })
+    }
+
+    const ownsInvoice =
+      (userId && invoice.userId === userId) ||
+      (guestSessionId && invoice.guestSessionId === guestSessionId)
+
+    if (!ownsInvoice) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden",
+      })
+    }
+
+    // 4. Upsert InvoiceData parent record (the hub for all nested data)
+    const invoiceData = await prisma.invoiceData.upsert({
+      where: {
+        invoiceId: id,
+      },
+      create: {
+        invoiceId: id,
+      },
+      update: {}, // nothing to update on the hub itself
+    })
+
+    const invoiceDataId = invoiceData.id
+
+    // 5. Run all nested upserts inside a transaction so it's all-or-nothing.
+    await prisma.$transaction(async (tx) => {
+      // Company details
+      if (body.companyDetails) {
+        const { metadata, ...companyFields } = body.companyDetails
+
+        const company = await tx.invoiceCompanyDetails.upsert({
+          where: {
+            invoiceDataId,
+          },
+          create: { invoiceDataId, ...companyFields },
+          update: companyFields,
+        })
+
+        if (metadata !== undefined) {
+          await tx.invoiceCompanyDetailsMetadata.deleteMany({
+            where: {
+              invoiceCompanyDetailsId: company.id,
+            },
+          })
+          if (metadata.length > 0) {
+            await tx.invoiceCompanyDetailsMetadata.createMany({
+              data: metadata.map((m) => ({
+                ...m,
+                invoiceCompanyDetailsId: company.id,
+              })),
+            })
+          }
+        }
+      }
+
+      // Client Details
+      if (body.clientDetails) {
+        const { metadata, ...clientFields } = body.clientDetails
+
+        const client = await tx.invoiceClientDetails.upsert({
+          where: { invoiceDataId },
+          create: { invoiceDataId, ...clientFields },
+          update: clientFields,
+        })
+
+        if (metadata !== undefined) {
+          await tx.invoiceClientDetailsMetadata.deleteMany({
+            where: { invoiceClientDetailsId: client.id },
+          })
+          if (metadata.length > 0) {
+            await tx.invoiceClientDetailsMetadata.createMany({
+              data: metadata.map((m) => ({
+                ...m,
+                invoiceClientDetailsId: client.id,
+              })),
+            })
+          }
+        }
+      }
+
+      // Invoice Details
+      if (body.invoiceDetails) {
+        const { billingDetails, date, dueDate, ...detailsFields } =
+          body.invoiceDetails
+
+        const details = await tx.invoiceDetails.upsert({
+          where: { invoiceDataId },
+          create: {
+            invoiceDataId,
+            ...detailsFields,
+            date: new Date(date),
+            dueDate: new Date(dueDate),
+          },
+          update: {
+            ...detailsFields,
+            date: new Date(date),
+            dueDate: new Date(dueDate),
+          },
+        })
+
+        // Same delete-then-recreate rationale as metadata above
+        if (billingDetails !== undefined) {
+          await tx.invoiceBillingDetails.deleteMany({
+            where: { invoiceDetailsId: details.id },
+          })
+          if (billingDetails.length > 0) {
+            await tx.invoiceBillingDetails.createMany({
+              data: billingDetails.map((b) => ({
+                ...b,
+                invoiceDetailsId: details.id,
+              })),
+            })
+          }
+        }
+      }
+
+      // Items
+      if (body.items != undefined) {
+        await tx.invoiceItem.deleteMany({
+          where: {
+            invoiceDataId,
+          },
+        })
+        if (body.items.length > 0) {
+          await tx.invoiceItem.createMany({
+            data: body.items.map((i) => ({
+              ...i,
+              invoiceDataId,
+            })),
+          })
+        }
+      }
+
+      // Metadata
+      if (body.metadata) {
+        const { paymentDetails, ...metaFields } = body.metadata
+
+        const meta = await tx.invoiceMetadata.upsert({
+          where: {
+            invoiceDataId,
+          },
+          create: {
+            invoiceDataId,
+            ...metaFields,
+          },
+          update: metaFields,
+        })
+
+        if (paymentDetails !== undefined) {
+          await tx.invoicePaymentDetail.deleteMany({
+            where: {
+              invoiceMetadataId: meta.id,
+            },
+          })
+          if (paymentDetails.length > 0) {
+            await tx.invoicePaymentDetail.createMany({
+              data: paymentDetails.map((p) => ({
+                ...p,
+                invoiceMetadataId: meta.id,
+              })),
+            })
+          }
+        }
+      }
+    })
+
+    // 6. Return the fully hydrated invoice so the frontend stays in sync
+    const fullInvoice = await fetchFullInvoice(id)
+
+    return res.status(200).json({
+      success: true,
+      invoice: fullInvoice,
+    })
   } catch (error) {
     console.error("[saveInvoice]", error)
     return res
       .status(500)
       .json({ success: false, message: "Something went wrong" })
   }
+}
+
+async function fetchFullInvoice(id: string) {
+  return prisma.invoice.findUnique({
+    where: { id },
+    include: {
+      invoiceData: {
+        include: {
+          companyDetails: {
+            include: {
+              metadata: true,
+            },
+          },
+          clientDetails: {
+            include: {
+              metadata: true,
+            },
+          },
+          invoiceDetails: {
+            include: {
+              billingDetails: true,
+            },
+          },
+          items: true,
+          metadata: {
+            include: {
+              paymentDetails: true,
+            },
+          },
+        },
+      },
+    },
+  })
 }
