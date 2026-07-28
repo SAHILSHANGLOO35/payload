@@ -317,6 +317,172 @@ export const saveInvoice = async (req: AuthRequest, res: Response) => {
   }
 }
 
+export const getInvoices = async (req: AuthRequest, res: Response) => {
+  try {
+    const ownership = await resolveOwnership(req, res)
+    if (!ownership) return
+
+    const { userId, guestSessionId } = ownership
+
+    // Pagination, default page 1, max 25 per page
+    const page = Math.max(1, parseInt(req.query.page as string) || 1)
+    const limit = Math.min(
+      25,
+      Math.max(1, parseInt(req.query.limit as string) || 1)
+    )
+    const skip = (page - 1) * limit
+
+    const where = userId ? { userId } : { guestSessionId }
+
+    const [invoices, total] = await Promise.all([
+      prisma.invoice.findMany({
+        where,
+        orderBy: {
+          createdAt: "desc",
+        },
+        skip,
+        take: limit,
+        include: {
+          invoiceData: {
+            include: {
+              clientDetails: {
+                select: {
+                  name: true,
+                },
+              },
+              invoiceDetails: {
+                select: {
+                  currency: true,
+                  serialNumber: true,
+                  prefix: true,
+                  dueDate: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+      prisma.invoice.count({ where }),
+    ])
+
+    return res.status(200).json({
+      success: true,
+      invoices,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    })
+  } catch (error) {
+    console.error("[getInvoices]", error)
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" })
+  }
+}
+
+export const getInvoice = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params
+
+    if (!id || Array.isArray(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid invoice id",
+      })
+    }
+    const ownership = await resolveOwnership(req, res)
+    if (!ownership) return
+
+    const { userId, guestSessionId } = ownership
+
+    const invoice = await prisma.invoice.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!invoice) {
+      return res.status(404).json({
+        success: false,
+        message: "Invoice not found",
+      })
+    }
+
+    const ownsInvoice =
+      (userId && invoice.userId === userId) ||
+      (guestSessionId && invoice.guestSessionId === guestSessionId)
+
+    if (!ownsInvoice) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden",
+      })
+    }
+
+    const fullInvoice = await fetchFullInvoice(id)
+
+    return res.status(200).json({
+      success: true,
+      invoice: fullInvoice,
+    })
+  } catch (error) {
+    console.error("[getInvoice]", error)
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" })
+  }
+}
+
+export const deleteInvoice = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params
+
+    if (!id || Array.isArray(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid invoice id",
+      })
+    }
+
+    const ownership = await resolveOwnership(req, res)
+    if (!ownership) return
+
+    const { userId, guestSessionId } = ownership
+
+    const invoice = await prisma.invoice.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!invoice) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Invoice not found" })
+    }
+
+    const ownsInvoice =
+      (userId && invoice.userId === userId) ||
+      (guestSessionId && invoice.guestSessionId === guestSessionId)
+
+    if (!ownsInvoice) {
+      return res.status(403).json({ success: false, message: "Forbidden" })
+    }
+
+    await prisma.invoice.delete({ where: { id } })
+
+    return res.status(200).json({ success: true, message: "Invoice deleted" })
+  } catch (error) {
+    console.error("[deleteInvoice]", error)
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" })
+  }
+}
+
 async function fetchFullInvoice(id: string) {
   return prisma.invoice.findUnique({
     where: { id },
