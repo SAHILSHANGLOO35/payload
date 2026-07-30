@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.106.1",
+    "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "cookie-parser": "^1.4.7",
     "db": "*",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",

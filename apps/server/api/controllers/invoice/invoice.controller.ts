@@ -19,7 +19,7 @@ async function resolveOwnership(
   let guestId = req.cookies.guestId
 
   if (!guestId) {
-    guestId: crypto.randomUUID()
+    guestId = crypto.randomUUID()
     res.cookie("guestId", guestId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
