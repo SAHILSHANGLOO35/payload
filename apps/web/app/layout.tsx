@@ -1,15 +1,28 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Poppins } from "next/font/google"
 
 import "@workspace/ui/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@workspace/ui/lib/utils";
+import { cn } from "@workspace/ui/lib/utils"
+import { Metadata } from "next"
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'})
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 })
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+})
+
+export const metadata: Metadata = {
+  title: "Payload",
+  description:
+    "Payload is a free, lifetime invoice application for creating beautiful, professional, and interactive invoices. Generate, customize, and share invoices with ease—no subscriptions, no hidden costs.",
+}
 
 export default function RootLayout({
   children,
@@ -20,7 +33,14 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", geist.variable)}
+      className={cn(
+        "antialiased",
+        fontMono.variable,
+        "font-geist",
+        geist.variable,
+        "font-poppins",
+        poppins.variable
+      )}
     >
       <body>
         <ThemeProvider>{children}</ThemeProvider>
