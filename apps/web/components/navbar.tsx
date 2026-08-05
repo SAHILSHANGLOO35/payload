@@ -35,7 +35,9 @@ export const Navbar = () => {
   return (
     <Container className="grid h-15 grid-cols-2 divide-dashed font-poppins sm:divide-x">
       <div className="flex items-center overflow-hidden pr-4">
-        <Logo />
+        <div className="border-r border-dashed">
+          <Logo />
+        </div>
         <div className="ml-20 hidden font-geist text-sm font-medium tracking-wider sm:block">
           {time} IND
         </div>
@@ -45,7 +47,7 @@ export const Navbar = () => {
         <ThemeSwitcher />
         <Button
           variant="secondary"
-          className="cursor-pointer rounded-md py-4 font-geist"
+          className="cursor-pointer rounded-md py-4 font-geist text-shadow-2xs"
         >
           Workspace
           <NavigationArrowIcon className="rotate-90 text-neutral-400" />

@@ -20,7 +20,7 @@ export function ThemeSwitcher() {
 
   if (!mounted) {
     return (
-      <div className="h-8 w-27.5 rounded-lg border border-border bg-muted" />
+      <div className="h-8 w-25 animate-pulse rounded-lg border border-border bg-muted transition-all" />
     )
   }
 
