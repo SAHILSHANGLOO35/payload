@@ -1,6 +1,6 @@
 import React from "react"
 import { SiGithub } from "react-icons/si"
-import { FaArrowTurnDown, FaCircleArrowRight } from "react-icons/fa6"
+import { FaCircleArrowRight } from "react-icons/fa6"
 import { Container } from "./container"
 import { Button } from "@workspace/ui/components/button"
 import { TwistyArrow } from "./icons/twisty-arrow"
