@@ -2,7 +2,6 @@
 
 import React from "react"
 import { Container } from "./container"
-import { Logo } from "./logo"
 import { FaRegCircleCheck } from "react-icons/fa6"
 import { SiGithub } from "react-icons/si"
 import {
@@ -13,6 +12,7 @@ import {
   XLogoIcon,
 } from "@phosphor-icons/react"
 import Link from "next/link"
+import { Logo } from "@/components/common/logo"
 
 const socials = [
   {

@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react"
 import { NavigationArrowIcon } from "@phosphor-icons/react"
 import { Container } from "./container"
-import { Logo } from "./logo"
 import { Button } from "@workspace/ui/components/button"
-import { ThemeSwitcher } from "./theme-switcher"
 import Link from "next/link"
+import { Logo } from "@/components/common/logo"
+import { ThemeSwitcher } from "@/components/common/theme-switcher"
 
 export const Navbar = () => {
   const [time, setTime] = useState("")

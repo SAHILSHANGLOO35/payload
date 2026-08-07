@@ -1,18 +1,18 @@
 "use client"
 
 import React, { useState } from "react"
-import { Logo } from "../landing/logo"
 import { SidebarItems } from "./sidebar-items"
 import { AddItem } from "@/components/icons/add-item"
 import { Invoice } from "@/components/icons/invoice"
 import { Receipt } from "@/components/icons/receipt"
 import { SidebarFooter } from "./sidebar-footer"
+import { Logo } from "../../common/logo"
 
 export const Sidebar = () => {
   const [activeItem, setActiveItem] = useState("Invoices")
 
   return (
-    <div className="h-screen w-62">
+    <div className="h-screen w-60">
       <div className="flex h-full flex-col items-start justify-between pr-4 pb-4">
         <div className="flex w-full flex-col gap-3">
           <div className="flex items-center">
