@@ -11,16 +11,18 @@ export const Logo = ({ className }: { className?: string }) => {
 
   useEffect(() => setMounted(true), [])
 
-  if (!mounted) return null
+  const src =
+    mounted && resolvedTheme === "dark" ? "/logo-dark.png" : "/logo-light.png"
 
   return (
-    <div className={`flex size-18 ${className}`}>
-      {/* eslint-disable @next/next/no-img-element  */}
+    <div className={`flex size-18 shrink-0 ${className}`}>
+      {/* eslint-disable @next/next/no-img-element */}
       <img
-        src={resolvedTheme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
+        src={src}
         alt="Payload Logo"
-        loading="lazy"
+        loading="eager"
         decoding="async"
+        draggable="false"
         fetchPriority="high"
         className="size-full object-contain"
       />

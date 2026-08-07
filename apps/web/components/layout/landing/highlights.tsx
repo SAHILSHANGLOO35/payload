@@ -3,8 +3,8 @@ import { SiGithub } from "react-icons/si"
 import { FaCircleArrowRight } from "react-icons/fa6"
 import { Container } from "./container"
 import { Button } from "@workspace/ui/components/button"
-import { TwistyArrow } from "./icons/twisty-arrow"
 import Link from "next/link"
+import { TwistyArrow } from "@/components/icons/twisty-arrow"
 
 export const Highlights = () => {
   return (
@@ -36,12 +36,12 @@ export const Highlights = () => {
             </span>
 
             <div className="flex items-center gap-3 font-geist">
-              <Button className="flex cursor-pointer items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-4 text-center text-sm text-white shadow-xs transition-all text-shadow-2xs hover:bg-blue-700 focus:bg-blue-500 active:bg-blue-500 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+              <Button className="flex cursor-pointer items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-4 text-center text-sm text-white shadow-xs [box-shadow:inset_0_1px_0_rgba(255,255,255,0.18)] transition-all text-shadow-2xs hover:bg-blue-700 focus:bg-blue-500 active:bg-blue-500 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
                 Get Started
                 <FaCircleArrowRight className="-rotate-45" />
               </Button>
 
-              <div className="group relative inline-flex">
+              <div className="group relative inline-flex" draggable="false">
                 <span className="pointer-events-none absolute top-3 left-1/2 flex -translate-x-1/2 items-center gap-1 font-instrument-serif text-[10px] font-medium tracking-[0.2em] whitespace-nowrap text-sky-700 opacity-90 transition-all duration-300 ease-out group-hover:-translate-y-0.5 group-hover:opacity-0 dark:text-sky-200/40">
                   <TwistyArrow />
                   hover me
@@ -54,6 +54,7 @@ export const Highlights = () => {
                 <Link
                   href="https://github.com/SAHILSHANGLOO35/payload"
                   target="_blank"
+                  draggable="false"
                 >
                   <Button
                     variant="secondary"

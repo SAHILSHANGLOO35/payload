@@ -11,7 +11,7 @@ export const Container = ({
   return (
     <div
       className={cn(
-        "mx-auto max-w-5xl border border-t-0 border-dashed",
+        "mx-auto max-w-5xl border border-t-0 sm:border-dashed",
         className
       )}
     >

@@ -12,6 +12,7 @@ import {
   LinkedinLogoIcon,
   XLogoIcon,
 } from "@phosphor-icons/react"
+import Link from "next/link"
 
 const socials = [
   {
@@ -78,10 +79,11 @@ export const Footer = () => {
 
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-1">
                 {socials.map(({ label, href, Icon }) => (
-                  <a
+                  <Link
                     key={label}
                     href={href}
                     className="group relative overflow-hidden rounded-md border border-dashed px-3 py-2 transition-colors duration-300 ease-out hover:border-foreground/40"
+                    draggable="false"
                   >
                     <span className="absolute inset-0 origin-left scale-x-0 bg-foreground/10 transition-transform duration-300 ease-out group-hover:scale-x-100 dark:bg-foreground/15" />
                     <span className="relative z-10 flex items-center gap-3">
@@ -93,7 +95,7 @@ export const Footer = () => {
                         {label}
                       </span>
                     </span>
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>

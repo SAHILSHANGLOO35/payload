@@ -5,10 +5,9 @@
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { cn } from "@workspace/ui/lib/utils"
-
-import { SystemIcon } from "./icons/system-icon"
-import { LightIcon } from "./icons/light-icon"
-import { DarkIcon } from "./icons/dark-icon"
+import { SystemIcon } from "@/components/icons/system-icon"
+import { LightIcon } from "@/components/icons/light-icon"
+import { DarkIcon } from "@/components/icons/dark-icon"
 
 export function ThemeSwitcher() {
   const { theme, setTheme } = useTheme()

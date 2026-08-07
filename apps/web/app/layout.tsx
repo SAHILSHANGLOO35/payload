@@ -1,4 +1,10 @@
-import { Geist, Geist_Mono, Poppins, Instrument_Serif } from "next/font/google"
+import {
+  Geist,
+  Geist_Mono,
+  Poppins,
+  Instrument_Serif,
+  Pacifico,
+} from "next/font/google"
 
 import "@workspace/ui/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -20,6 +26,12 @@ const poppins = Poppins({
 
 const instrument_serif = Instrument_Serif({
   variable: "--font-instrument-serif",
+  subsets: ["latin"],
+  weight: ["400"],
+})
+
+const pacifico = Pacifico({
+  variable: "--font-pacifico",
   subsets: ["latin"],
   weight: ["400"],
 })
@@ -68,7 +80,9 @@ export default function RootLayout({
         "font-poppins",
         poppins.variable,
         "font-instrument-serif",
-        instrument_serif.variable
+        instrument_serif.variable,
+        "font-pacifico",
+        pacifico.variable
       )}
     >
       <body>

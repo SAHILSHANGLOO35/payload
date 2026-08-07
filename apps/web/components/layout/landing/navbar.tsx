@@ -6,6 +6,7 @@ import { Container } from "./container"
 import { Logo } from "./logo"
 import { Button } from "@workspace/ui/components/button"
 import { ThemeSwitcher } from "./theme-switcher"
+import Link from "next/link"
 
 export const Navbar = () => {
   const [time, setTime] = useState("")
@@ -45,13 +46,15 @@ export const Navbar = () => {
 
       <div className="flex items-center justify-end gap-3 px-4">
         <ThemeSwitcher />
-        <Button
-          variant="secondary"
-          className="cursor-pointer rounded-md py-4 font-geist text-shadow-2xs"
-        >
-          Workspace
-          <NavigationArrowIcon className="rotate-90 text-neutral-400" />
-        </Button>
+        <Link href="/create/invoice" draggable="false">
+          <Button
+            variant="secondary"
+            className="cursor-pointer rounded-md py-4 font-geist text-shadow-2xs"
+          >
+            Workspace
+            <NavigationArrowIcon className="rotate-90 text-neutral-400" />
+          </Button>
+        </Link>
       </div>
     </Container>
   )
