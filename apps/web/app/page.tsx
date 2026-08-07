@@ -1,8 +1,8 @@
-import { Features } from "@/components/features/features"
-import { Footer } from "@/components/footer"
-import { Hero } from "@/components/hero"
-import { Highlights } from "@/components/highlights"
-import { Navbar } from "@/components/navbar"
+import { Features } from "@/components/layout/landing/features/features"
+import { Footer } from "@/components/layout/landing/footer"
+import { Hero } from "@/components/layout/landing/hero"
+import { Highlights } from "@/components/layout/landing/highlights"
+import { Navbar } from "@/components/layout/landing/navbar"
 
 export default function Page() {
   return (
