@@ -15,7 +15,7 @@ export const Sidebar = () => {
 
   return (
     <div
-      className={`top-0 left-0 z-50 h-screen w-60 overflow-hidden pl-4 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+      className={`scrollbar-hide top-0 left-0 z-50 h-screen w-60 overflow-hidden pl-4 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
     >
       <div className="flex h-full flex-col items-start justify-between pb-4">
         <div className="flex w-full flex-col gap-3">

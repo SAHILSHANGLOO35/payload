@@ -9,7 +9,7 @@ import { Accordion } from "@workspace/ui/components/accordion"
 
 export const InvoiceForm = () => {
   return (
-    <div className="flex h-full min-h-0 flex-col border-r">
+    <div className="scrollbar-hide flex h-full min-h-0 flex-col border-r">
       <InvoiceToolbar />
 
       <ScrollArea className="min-h-0 flex-1">
