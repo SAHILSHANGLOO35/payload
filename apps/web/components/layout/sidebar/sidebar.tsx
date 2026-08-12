@@ -7,13 +7,17 @@ import { Invoice } from "@/components/icons/invoice"
 import { Receipt } from "@/components/icons/receipt"
 import { SidebarFooter } from "./sidebar-footer"
 import { Logo } from "../../common/logo"
+import { useSidebarStore } from "@/stores/sidebar-store"
 
 export const Sidebar = () => {
   const [activeItem, setActiveItem] = useState("Invoices")
+  const isOpen = useSidebarStore((state) => state.isOpen)
 
   return (
-    <div className="h-screen w-60">
-      <div className="flex h-full flex-col items-start justify-between pr-4 pb-4">
+    <div
+      className={`top-0 left-0 z-50 h-screen w-60 overflow-hidden pl-4 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+    >
+      <div className="flex h-full flex-col items-start justify-between pb-4">
         <div className="flex w-full flex-col gap-3">
           <div className="flex items-center">
             <Logo className="w-14" />
