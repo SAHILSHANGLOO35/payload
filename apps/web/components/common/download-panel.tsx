@@ -72,7 +72,7 @@ export const DownloadPanel = () => {
 
             <ComboboxInput
               readOnly
-              className="w-full cursor-default border-border py-4 ring-0 outline-none focus:border-border focus:ring-0 focus:outline-none focus-visible:border-border focus-visible:ring-0 focus-visible:outline-none"
+              className="w-full cursor-default border-border py-4 text-transparent caret-transparent ring-0 outline-none selection:bg-transparent focus:border-border focus:ring-0 focus:outline-none focus-visible:border-border focus-visible:ring-0 focus-visible:outline-none"
             />
           </div>
 
@@ -84,16 +84,17 @@ export const DownloadPanel = () => {
                   value={item.title}
                   className="font-geist"
                 >
-                  <div className="flex items-center gap-2">
-                    {item.icon}
-                    {item.title}
+                  <div className="flex w-full items-center gap-2">
+                    <span className="flex w-5 shrink-0 items-center justify-center">
+                      {item.icon}
+                    </span>
+                    <span>{item.title}</span>
                   </div>
                 </ComboboxItem>
               )}
             </ComboboxList>
           </ComboboxContent>
         </Combobox>
-
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
@@ -104,25 +105,25 @@ export const DownloadPanel = () => {
             }
           />
 
-          <DropdownMenuContent className="w-40 cursor-pointer font-geist">
+          <DropdownMenuContent className="flex w-40 cursor-pointer items-center font-geist">
             <DropdownMenuGroup>
               <DropdownMenuItem className="cursor-pointer p-1.5">
-                <Download />
+                <Download className="flex w-5 shrink-0 items-center justify-center" />
                 Save Invoice
               </DropdownMenuItem>
 
               <DropdownMenuItem className="cursor-pointer p-1.5">
-                <Preview />
+                <Preview className="flex w-5 shrink-0 items-center justify-center" />
                 View Invoice
               </DropdownMenuItem>
 
               <DropdownMenuItem className="cursor-pointer p-1.5">
-                <Invoice />
+                <Invoice className="flex w-5 shrink-0 items-center justify-center" />
                 Download PDF
               </DropdownMenuItem>
 
               <DropdownMenuItem className="cursor-pointer p-1.5">
-                <Gallery />
+                <Gallery className="flex w-5 shrink-0 items-center justify-center" />
                 Download PNG
               </DropdownMenuItem>
             </DropdownMenuGroup>

@@ -1,9 +1,13 @@
 import React from "react"
 
-export const Preview = () => {
+type PreviewProps = {
+  className?: string
+}
+
+export const Preview = ({ className }: PreviewProps) => {
   return (
     <svg
-      className="size-5 text-black dark:text-white"
+      className={`size-5 text-black dark:text-white ${className}`}
       width="24"
       height="24"
       viewBox="0 0 24 24"

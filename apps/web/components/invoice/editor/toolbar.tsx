@@ -83,7 +83,6 @@ export function InvoiceToolbar() {
           }}
         >
           <div className="relative w-32">
-            {/* Selected theme */}
             <div className="pointer-events-none absolute inset-0 z-10 flex items-center gap-2 px-3">
               {currentTheme?.icon}
 
@@ -105,9 +104,11 @@ export function InvoiceToolbar() {
                   value={themeItem.title}
                   className="font-geist"
                 >
-                  <div className="flex items-center gap-2">
-                    {themeItem.icon}
-                    {themeItem.title}
+                  <div className="flex w-full items-center gap-2">
+                    <span className="flex w-5 shrink-0 items-center justify-center">
+                      {themeItem.icon}
+                    </span>
+                    <span>{themeItem.title}</span>
                   </div>
                 </ComboboxItem>
               )}

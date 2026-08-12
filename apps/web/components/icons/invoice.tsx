@@ -1,9 +1,13 @@
 import React from "react"
 
-export const Invoice = () => {
+type InvoiceProps = {
+  className?: string
+}
+
+export const Invoice = ({ className }: InvoiceProps) => {
   return (
     <svg
-      className="size-4.5 text-black dark:text-white"
+      className={`size-4.5 text-black dark:text-white ${className}`}
       width="24"
       height="24"
       viewBox="0 0 24 24"
