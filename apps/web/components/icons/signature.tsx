@@ -3,7 +3,7 @@ import React from "react"
 export const Signature = () => {
   return (
     <svg
-      className="size-5 text-black dark:text-white"
+      className="size-7 text-black dark:text-white"
       width="24"
       height="24"
       viewBox="0 0 24 24"

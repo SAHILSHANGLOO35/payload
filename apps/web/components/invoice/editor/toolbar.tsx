@@ -1,27 +1,119 @@
-import { Button } from "@workspace/ui/components/button"
-import { ChevronDown } from "lucide-react"
+"use client"
+
+import { useState } from "react"
+import { DefaultTheme } from "@/components/icons/default"
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@workspace/ui/components/combobox"
+import { IoLogoGithub } from "react-icons/io"
+import { VercelLogo } from "@/components/icons/vercel"
+
+type ThemeItem = {
+  icon: React.ReactNode
+  title: string
+}
 
 export function InvoiceToolbar() {
+  const fontItems = [
+    "Inter",
+    "JetBrains Mono",
+    "Geist",
+    "Helvetica",
+    "Roboto",
+    "Ubuntu",
+  ]
+
+  const themeItems: ThemeItem[] = [
+    {
+      icon: <DefaultTheme />,
+      title: "Default",
+    },
+    {
+      icon: <VercelLogo />,
+      title: "Vercel",
+    },
+    {
+      icon: <IoLogoGithub className="size-4.5" />,
+      title: "GitHub",
+    },
+  ]
+
+  const [selectedTheme, setSelectedTheme] = useState("Default")
+
+  const currentTheme = themeItems.find((item) => item.title === selectedTheme)
+
   return (
-    <div className="flex h-17 shrink-0 items-center justify-between border-b border-border/60 px-4">
-      <h2 className="text-base font-semibold">Invoice Template</h2>
+    <div className="flex h-14 shrink-0 items-center justify-between border-b border-border/60 px-4">
+      <h2 className="text-[14px] font-medium">Invoice Template</h2>
 
       <div className="flex items-center gap-2">
-        <Button
-          variant="outline"
-          className="h-10 min-w-34 justify-between bg-transparent"
-        >
-          <span className="text-muted-foreground">Font</span>
-          <ChevronDown className="size-4 opacity-60" />
-        </Button>
+        {/* Font */}
+        <Combobox items={fontItems}>
+          <ComboboxInput
+            placeholder="Font"
+            readOnly
+            className="w-32 cursor-default border-border py-4 ring-0 outline-none focus:border-border focus:ring-0 focus:outline-none focus-visible:border-border focus-visible:ring-0 focus-visible:outline-none"
+          />
 
-        <Button
-          variant="outline"
-          className="h-10 min-w-34 justify-between bg-transparent"
+          <ComboboxContent align="center" className="h-auto w-auto">
+            <ComboboxList>
+              {(fontItem) => (
+                <ComboboxItem
+                  key={fontItem}
+                  value={fontItem}
+                  className="font-geist"
+                >
+                  {fontItem}
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
+
+        {/* Theme */}
+        <Combobox
+          items={themeItems}
+          value={selectedTheme}
+          onValueChange={(value) => {
+            if (value) setSelectedTheme(value)
+          }}
         >
-          <span>Default</span>
-          <ChevronDown className="size-4 opacity-60" />
-        </Button>
+          <div className="relative w-32">
+            {/* Selected theme */}
+            <div className="pointer-events-none absolute inset-0 z-10 flex items-center gap-2 px-3">
+              {currentTheme?.icon}
+
+              <span className="text-sm">{currentTheme?.title}</span>
+            </div>
+
+            {/* Actual combobox input */}
+            <ComboboxInput
+              readOnly
+              className="w-full cursor-default border-border py-4 text-transparent caret-transparent ring-0 outline-none focus:border-border focus:ring-0 focus:outline-none focus-visible:border-border focus-visible:ring-0 focus-visible:outline-none"
+            />
+          </div>
+
+          <ComboboxContent>
+            <ComboboxList>
+              {(themeItem) => (
+                <ComboboxItem
+                  key={themeItem.title}
+                  value={themeItem.title}
+                  className="font-geist"
+                >
+                  <div className="flex items-center gap-2">
+                    {themeItem.icon}
+                    {themeItem.title}
+                  </div>
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
       </div>
     </div>
   )

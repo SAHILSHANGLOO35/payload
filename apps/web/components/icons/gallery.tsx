@@ -1,9 +1,13 @@
 import React from "react"
 
-export const Gallery = () => {
+type GalleryProps = {
+  className?: string
+}
+
+export const Gallery = ({ className }: GalleryProps) => {
   return (
     <svg
-      className="size-5 text-black dark:text-white"
+      className={`size-5 ${className}`}
       width="24"
       height="24"
       viewBox="0 0 24 24"

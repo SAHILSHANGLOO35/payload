@@ -1,9 +1,13 @@
 import React from "react"
 
-export const Download = () => {
+type DownloadProps = {
+  className?: string
+}
+
+export const Download = ({ className }: DownloadProps) => {
   return (
     <svg
-      className="size-5 text-black dark:text-white"
+      className={`size-5 ${className}`}
       width="24"
       height="24"
       viewBox="0 0 24 24"
