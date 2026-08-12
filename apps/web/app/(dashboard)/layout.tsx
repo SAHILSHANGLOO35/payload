@@ -1,17 +1,27 @@
-import { Sidebar } from "@/components/layout/sidebar/sidebar"
+"use client"
+
 import React from "react"
+import { Sidebar } from "@/components/layout/sidebar/sidebar"
+import { useSidebarStore } from "@/stores/sidebar-store"
 
 export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const isOpen = useSidebarStore((state) => state.isOpen)
+
   return (
-    <div className="h-screen overflow-hidden bg-sidebar">
-      <div className="flex pt-2 pl-4">
+    <div className="flex h-screen overflow-hidden bg-sidebar">
+      <div
+        className={`shrink-0 transition-all duration-300 ease-in-out ${
+          isOpen ? "w-60" : "w-0"
+        }`}
+      >
         <Sidebar />
-        <main className="flex-1">{children}</main>
       </div>
+
+      <main className="min-w-0 flex-1 pt-2 pl-4">{children}</main>
     </div>
   )
 }
