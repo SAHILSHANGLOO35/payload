@@ -19,11 +19,11 @@ export function InvoiceSection({
 }: InvoiceSectionProps) {
   return (
     <AccordionItem value={value} className="border-b border-border/60">
-      <AccordionTrigger className="px-4 py-4 text-base font-semibold hover:no-underline">
+      <AccordionTrigger className="h-14 w-full cursor-pointer rounded-none px-4 py-4 text-[14px] font-medium transition-all duration-150 ease-in-out hover:bg-sidebar hover:no-underline focus:bg-sidebar focus:text-blue-600/95">
         {title}
       </AccordionTrigger>
 
-      <AccordionContent className="px-5 pb-5">{children}</AccordionContent>
+      <AccordionContent className="px-4 py-4">{children}</AccordionContent>
     </AccordionItem>
   )
 }
