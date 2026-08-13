@@ -7,8 +7,20 @@ import { Input } from "@workspace/ui/components/input"
 import { Textarea } from "@workspace/ui/components/textarea"
 import { Button } from "@workspace/ui/components/button"
 import { AddItem } from "@/components/icons/add-item"
+import { useInvoiceStore } from "@/stores/invoice-store"
+import { CustomFieldInput } from "../fields/custom-field"
 
 export const ClientSection = () => {
+  const client = useInvoiceStore((state) => state.invoice.client)
+
+  const updateClient = useInvoiceStore((state) => state.updateClient)
+
+  const addClientField = useInvoiceStore((state) => state.addClientField)
+
+  const updateClientField = useInvoiceStore((state) => state.updateClientField)
+
+  const removeClientField = useInvoiceStore((state) => state.removeClientField)
+
   return (
     <InvoiceSection value="client" title="Client Details">
       <div className="space-y-2">
@@ -18,7 +30,12 @@ export const ClientSection = () => {
 
           <Input
             placeholder="Client name"
-            defaultValue="John Doe"
+            value={client.name}
+            onChange={(event) => {
+              updateClient({
+                name: event.target.value,
+              })
+            }}
             className="px-3"
           />
         </div>
@@ -29,21 +46,40 @@ export const ClientSection = () => {
 
           <Textarea
             placeholder="Client address"
-            defaultValue="456 Second St, Anytown, USA"
+            value={client.address}
+            onChange={(event) =>
+              updateClient({
+                address: event.target.value,
+              })
+            }
             className="px-3"
           />
         </div>
 
         {/* Client Additional Fields */}
-        <div>
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full cursor-pointer border-dashed py-4"
-          >
-            <AddItem />
-            Add New Field
-          </Button>
+        <div className="space-y-2">
+          <Label className="text-xs">Additional Fields</Label>
+
+          <div className="space-y-3">
+            {client.fields.map((field) => (
+              <CustomFieldInput
+                key={field.id}
+                field={field}
+                onChange={(data) => updateClientField(field.id, data)}
+                onRemove={() => removeClientField(field.id)}
+              />
+            ))}
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={addClientField}
+              className="w-full cursor-pointer border-dashed py-4"
+            >
+              <AddItem />
+              Add New Field
+            </Button>
+          </div>
         </div>
       </div>
     </InvoiceSection>

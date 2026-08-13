@@ -97,7 +97,7 @@ export const AdditionalSection = () => {
             type="button"
             variant="destructive"
             size="icon"
-            className="mt-5.5 h-9 w-9 shrink-0 rounded-md bg-linear-to-b from-red-500 to-red-600 shadow-xs ring-1 shadow-red-500/20 ring-white/25 transition-all duration-200 ease-in-out ring-inset hover:from-red-600 hover:to-red-600"
+            className="mt-5.5 h-9 w-9 shrink-0 cursor-pointer rounded-md bg-linear-to-b from-red-500 to-red-600 shadow-xs ring-1 shadow-red-500/20 ring-white/25 transition-all duration-200 ease-in-out ring-inset hover:from-red-600 hover:to-red-600"
           >
             <TbTrashFilled className="size-5 text-white" />
           </Button>
