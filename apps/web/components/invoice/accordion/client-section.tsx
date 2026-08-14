@@ -10,7 +10,11 @@ import { AddItem } from "@/components/icons/add-item"
 import { useInvoiceStore } from "@/stores/invoice-store"
 import { CustomFieldInput } from "../fields/custom-field"
 
-export const ClientSection = () => {
+type ClientSectionProps = {
+  isActive: boolean
+}
+
+export const ClientSection = ({ isActive }: ClientSectionProps) => {
   const client = useInvoiceStore((state) => state.invoice.client)
 
   const updateClient = useInvoiceStore((state) => state.updateClient)
@@ -22,7 +26,7 @@ export const ClientSection = () => {
   const removeClientField = useInvoiceStore((state) => state.removeClientField)
 
   return (
-    <InvoiceSection value="client" title="Client Details">
+    <InvoiceSection value="client" title="Client Details" isActive={isActive}>
       <div className="space-y-2">
         {/* Client Name */}
         <div className="space-y-2 pb-2">

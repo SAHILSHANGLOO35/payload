@@ -19,7 +19,11 @@ import { CustomFieldInput } from "../fields/custom-field"
 
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png"]
 
-export const CompanySection = () => {
+type CompanySectionProps = {
+  isActive: boolean
+}
+
+export const CompanySection = ({ isActive }: CompanySectionProps) => {
   const company = useInvoiceStore((state) => state.invoice.company)
 
   const updateCompany = useInvoiceStore((state) => state.updateCompany)
@@ -72,7 +76,7 @@ export const CompanySection = () => {
   }
 
   return (
-    <InvoiceSection value="company" title="Company Details">
+    <InvoiceSection value="company" title="Company Details" isActive={isActive}>
       <div className="space-y-3">
         {/* Logo + Signature */}
         <div className="flex w-full gap-4">

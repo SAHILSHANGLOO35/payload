@@ -5,21 +5,31 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@workspace/ui/components/accordion"
+import { cn } from "@workspace/ui/lib/utils"
 
 type InvoiceSectionProps = {
   value: string
   title: string
   children: ReactNode
+  isActive?: boolean
 }
 
 export function InvoiceSection({
   value,
   title,
   children,
+  isActive,
 }: InvoiceSectionProps) {
   return (
     <AccordionItem value={value} className="border-b border-border/60">
-      <AccordionTrigger className="h-14 w-full cursor-pointer rounded-none px-4 py-4 text-[14px] font-medium transition-all duration-150 ease-in-out hover:bg-sidebar hover:no-underline focus:bg-sidebar focus:text-blue-600/95">
+      <AccordionTrigger
+        className={cn(
+          "h-14 w-full cursor-pointer rounded-none px-4 py-4",
+          "text-[14px] font-medium transition-all duration-150 ease-in-out",
+          "hover:bg-sidebar hover:no-underline",
+          isActive && "bg-sidebar text-blue-600/95"
+        )}
+      >
         {title}
       </AccordionTrigger>
 

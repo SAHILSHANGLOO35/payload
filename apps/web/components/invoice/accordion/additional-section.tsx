@@ -10,9 +10,17 @@ import { AddItem } from "@/components/icons/add-item"
 import { Info } from "lucide-react"
 import { TbTrashFilled } from "react-icons/tb"
 
-export const AdditionalSection = () => {
+type additionalSectionProps = {
+  isActive: boolean
+}
+
+export const AdditionalSection = ({ isActive }: additionalSectionProps) => {
   return (
-    <InvoiceSection value="additional" title="Additional Information">
+    <InvoiceSection
+      value="additional"
+      title="Additional Information"
+      isActive={isActive}
+    >
       <div className="space-y-2">
         {/* Notes */}
         <div className="space-y-1.5 pb-1">
