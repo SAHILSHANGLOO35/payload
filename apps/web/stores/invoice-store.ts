@@ -1,6 +1,11 @@
 import { create } from "zustand"
 
-import type { BillingDetails, CustomField, Invoice } from "@/types/invoice"
+import type {
+  BillingDetails,
+  CustomField,
+  Invoice,
+  InvoiceItem,
+} from "@/types/invoice"
 import { defaultInvoice } from "@/lib/invoice/default-values"
 
 export type InvoiceStore = {
@@ -26,9 +31,17 @@ export type InvoiceStore = {
   updateBillingDetail: (id: string, data: Partial<BillingDetails>) => void
   removeBillingDetail: (id: string) => void
 
+  // Items
+  addItem: () => void
+  updateItem: (id: string, data: Partial<InvoiceItem>) => void
+  removeItem: (id: string) => void
+
   // Metadata
   setNotes: (notes: string) => void
   setTerms: (terms: string) => void
+  addPaymentDetail: () => void
+  updatePaymentDetail: (id: string, data: Partial<CustomField>) => void
+  removePaymentDetail: (id: string) => void
 
   resetInvoice: () => void
 }
@@ -226,6 +239,50 @@ export const useInvoiceStore = create<InvoiceStore>((set) => ({
       },
     })),
 
+  addItem: () =>
+    set((state) => ({
+      invoice: {
+        ...state.invoice,
+
+        items: [
+          ...state.invoice.items,
+
+          {
+            id: crypto.randomUUID(),
+            name: "",
+            description: "",
+            quantity: 1,
+            unitPrice: 0,
+          },
+        ],
+      },
+    })),
+
+  updateItem: (id, data) =>
+    set((state) => ({
+      invoice: {
+        ...state.invoice,
+
+        items: state.invoice.items.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                ...data,
+              }
+            : item
+        ),
+      },
+    })),
+
+  removeItem: (id) =>
+    set((state) => ({
+      invoice: {
+        ...state.invoice,
+
+        items: state.invoice.items.filter((item) => item.id !== id),
+      },
+    })),
+
   setNotes: (notes) =>
     set((state) => ({
       invoice: {
@@ -242,6 +299,55 @@ export const useInvoiceStore = create<InvoiceStore>((set) => ({
       invoice: {
         ...state.invoice,
         metadata: { ...state.invoice.metadata, terms },
+      },
+    })),
+
+  addPaymentDetail: () =>
+    set((state) => ({
+      invoice: {
+        ...state.invoice,
+        metadata: {
+          ...state.invoice.metadata,
+          paymentDetails: [
+            ...state.invoice.metadata.paymentDetails,
+            {
+              id: crypto.randomUUID(),
+              label: "",
+              value: "",
+            },
+          ],
+        },
+      },
+    })),
+
+  updatePaymentDetail: (id, data) =>
+    set((state) => ({
+      invoice: {
+        ...state.invoice,
+        metadata: {
+          ...state.invoice.metadata,
+          paymentDetails: state.invoice.metadata.paymentDetails.map((field) =>
+            field.id === id
+              ? {
+                  ...field,
+                  ...data,
+                }
+              : field
+          ),
+        },
+      },
+    })),
+
+  removePaymentDetail: (id) =>
+    set((state) => ({
+      invoice: {
+        ...state.invoice,
+        metadata: {
+          ...state.invoice.metadata,
+          paymentDetails: state.invoice.metadata.paymentDetails.filter(
+            (field) => field.id !== id
+          ),
+        },
       },
     })),
 

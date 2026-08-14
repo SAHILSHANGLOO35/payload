@@ -26,8 +26,6 @@ export const BillingCustomField = ({
 }: BillingCustomFieldProps) => {
   const billingTypes = ["Fixed", "Percentage"]
 
-  const selectedBillingType = field.type === "fixed" ? "Fixed" : "Percentage"
-
   return (
     <div className="flex items-start gap-2">
       <div className="flex flex-1 gap-2">
@@ -60,18 +58,20 @@ export const BillingCustomField = ({
         <div className="flex-1 space-y-1.5">
           <Label className="text-xs">Type</Label>
 
-          <Combobox items={billingTypes} value={selectedBillingType}>
-            <ComboboxInput
-              placeholder="Type"
-              value={selectedBillingType}
-              readOnly
-              onChange={(event) => {
-                const value = event.currentTarget.value
-
+          <Combobox
+            items={billingTypes}
+            value={field.type === "fixed" ? "Fixed" : "Percentage"}
+            onValueChange={(value) => {
+              if (value) {
                 onChange({
                   type: value === "Fixed" ? "fixed" : "percentage",
                 })
-              }}
+              }
+            }}
+          >
+            <ComboboxInput
+              placeholder="Type"
+              readOnly
               className="h-9 w-full cursor-default border-border py-4 ring-0 outline-none focus:border-border focus:ring-0 focus:outline-none focus-visible:border-border focus-visible:ring-0 focus-visible:outline-none"
             />
 
