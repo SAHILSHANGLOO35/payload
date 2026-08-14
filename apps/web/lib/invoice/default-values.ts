@@ -32,16 +32,28 @@ export const defaultInvoice: Invoice = {
   items: [
     {
       id: crypto.randomUUID(),
-      name: "",
-      description: "",
+      name: "Item 1",
+      description: "Description of Item 1",
       quantity: 1,
-      unitPrice: 0,
+      unitPrice: 20000,
     },
   ],
 
   metadata: {
-    notes: "",
-    terms: "",
-    paymentDetails: [],
+    notes: "Thanks for your business - we really appreciate it.",
+    terms:
+      "Payment is due within 15 days. Please reach out if anything looks off.",
+    paymentDetails: [
+      {
+        id: crypto.randomUUID(),
+        label: "HDFC Bank",
+        value: "SN 11, Parliament Street, New Delhi, 110001",
+      },
+      {
+        id: crypto.randomUUID(),
+        label: "Account No.",
+        value: "001234567890",
+      },
+    ],
   },
 }

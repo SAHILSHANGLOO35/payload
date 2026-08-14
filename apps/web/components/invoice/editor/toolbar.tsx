@@ -79,20 +79,25 @@ export function InvoiceToolbar() {
           items={themeItems}
           value={selectedTheme}
           onValueChange={(value) => {
-            if (value) setSelectedTheme(value)
+            if (value) {
+              setSelectedTheme(value)
+            }
           }}
         >
           <div className="relative w-32">
+            {/* Custom visible value */}
             <div className="pointer-events-none absolute inset-0 z-10 flex items-center gap-2 px-3">
-              {currentTheme?.icon}
+              <span className="flex w-5 shrink-0 items-center justify-center">
+                {currentTheme?.icon}
+              </span>
 
-              <span className="text-sm">{currentTheme?.title}</span>
+              <span className="truncate text-sm">{currentTheme?.title}</span>
             </div>
 
             {/* Actual combobox input */}
             <ComboboxInput
               readOnly
-              className="w-full cursor-default border-border py-4 text-transparent caret-transparent ring-0 outline-none focus:border-border focus:ring-0 focus:outline-none focus-visible:border-border focus-visible:ring-0 focus-visible:outline-none"
+              className="w-full cursor-default border-border py-4 text-transparent caret-transparent ring-0 outline-none selection:bg-transparent focus:border-border focus:ring-0 focus:outline-none focus-visible:border-border focus-visible:ring-0 focus-visible:outline-none"
             />
           </div>
 
@@ -108,6 +113,7 @@ export function InvoiceToolbar() {
                     <span className="flex w-5 shrink-0 items-center justify-center">
                       {themeItem.icon}
                     </span>
+
                     <span>{themeItem.title}</span>
                   </div>
                 </ComboboxItem>

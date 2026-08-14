@@ -3,9 +3,9 @@ import { InvoiceForm } from "./form"
 
 export function InvoiceEditor() {
   return (
-    <div className="w-full">
+    <div className="flex h-full min-h-0 w-full flex-col">
       <DownloadPanel />
-      <div className="h-full w-1/2">
+      <div className="min-h-0 w-1/2 flex-1 overflow-auto">
         <InvoiceForm />
       </div>
     </div>

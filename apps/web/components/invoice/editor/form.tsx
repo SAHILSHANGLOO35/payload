@@ -1,26 +1,27 @@
 "use client"
 
+import { useState } from "react"
+
 import { ScrollArea } from "@workspace/ui/components/scroll-area"
+import { Accordion } from "@workspace/ui/components/accordion"
+
 import { CompanySection } from "../accordion/company-section"
 import { ClientSection } from "../accordion/client-section"
-import { InvoiceDetailsSection } from "../accordion/invoiceDetails-section"
+import { InvoiceDetailsSection } from "../accordion/invoice-details-section"
 import { ItemsSection } from "../accordion/items-section"
 import { AdditionalSection } from "../accordion/additional-section"
 import { InvoiceToolbar } from "./toolbar"
-import { Accordion } from "@workspace/ui/components/accordion"
-import { useState } from "react"
 
 export const InvoiceForm = () => {
   const [activeSection, setActiveSection] = useState<string[]>(["company"])
 
   return (
-    <div className="scrollbar-hide flex h-full min-h-0 flex-col border-r">
+    <div className="flex h-full min-h-0 flex-col border-r">
       <InvoiceToolbar />
 
       <ScrollArea className="min-h-0 flex-1">
         <Accordion
           className="w-full"
-          defaultValue={["company"]}
           value={activeSection}
           onValueChange={setActiveSection}
         >
