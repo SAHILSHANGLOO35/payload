@@ -1,9 +1,10 @@
 import type { Invoice } from "@/types/invoice"
 
 export const defaultInvoice: Invoice = {
-  template: "default",
-
-  font: "Inter",
+  theme: {
+    template: "default",
+    font: "Inter",
+  },
 
   company: {
     logo: null,
@@ -20,20 +21,27 @@ export const defaultInvoice: Invoice = {
   },
 
   invoice: {
-    number: "INV-0002",
+    prefix: "Invoice INV-",
+    serialNumber: "007",
     date: "",
     dueDate: "",
-    currency: "USD",
+    currency: "INR",
+    billingDetails: [],
   },
 
   items: [
     {
       id: crypto.randomUUID(),
+      name: "",
       description: "",
       quantity: 1,
-      price: 0,
+      unitPrice: 0,
     },
   ],
 
-  notes: "",
+  metadata: {
+    notes: "",
+    terms: "",
+    paymentDetails: [],
+  },
 }

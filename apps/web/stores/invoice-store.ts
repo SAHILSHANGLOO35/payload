@@ -1,6 +1,6 @@
 import { create } from "zustand"
 
-import type { CustomField, Invoice } from "@/types/invoice"
+import type { BillingDetails, CustomField, Invoice } from "@/types/invoice"
 import { defaultInvoice } from "@/lib/invoice/default-values"
 
 export type InvoiceStore = {
@@ -22,7 +22,14 @@ export type InvoiceStore = {
 
   // Invoice
   updateInvoiceDetails: (data: Partial<Invoice["invoice"]>) => void
+  addBillingDetails: () => void
+  updateBillingDetail: (id: string, data: Partial<BillingDetails>) => void
+  removeBillingDetail: (id: string) => void
+
+  // Metadata
   setNotes: (notes: string) => void
+  setTerms: (terms: string) => void
+
   resetInvoice: () => void
 }
 
@@ -174,11 +181,67 @@ export const useInvoiceStore = create<InvoiceStore>((set) => ({
       },
     })),
 
+  addBillingDetails: () =>
+    set((state) => ({
+      invoice: {
+        ...state.invoice,
+        invoice: {
+          ...state.invoice.invoice,
+          billingDetails: [
+            ...state.invoice.invoice.billingDetails,
+            {
+              id: crypto.randomUUID(),
+              label: "",
+              type: "fixed",
+              value: 0,
+            },
+          ],
+        },
+      },
+    })),
+
+  updateBillingDetail: (id, data) =>
+    set((state) => ({
+      invoice: {
+        ...state.invoice,
+        invoice: {
+          ...state.invoice.invoice,
+          billingDetails: state.invoice.invoice.billingDetails.map((bd) =>
+            bd.id === id ? { ...bd, ...data } : bd
+          ),
+        },
+      },
+    })),
+
+  removeBillingDetail: (id) =>
+    set((state) => ({
+      invoice: {
+        ...state.invoice,
+        invoice: {
+          ...state.invoice.invoice,
+          billingDetails: state.invoice.invoice.billingDetails.filter(
+            (bd) => bd.id !== id
+          ),
+        },
+      },
+    })),
+
   setNotes: (notes) =>
     set((state) => ({
       invoice: {
         ...state.invoice,
-        notes,
+        metadata: {
+          ...state.invoice.metadata,
+          notes,
+        },
+      },
+    })),
+
+  setTerms: (terms) =>
+    set((state) => ({
+      invoice: {
+        ...state.invoice,
+        metadata: { ...state.invoice.metadata, terms },
       },
     })),
 

@@ -1,8 +1,9 @@
 export type InvoiceItem = {
   id: string
+  name: string
   description: string
   quantity: number
-  price: number
+  unitPrice: number
 }
 
 export type CustomField = {
@@ -25,16 +26,37 @@ export type ClientDetails = {
   fields: CustomField[]
 }
 
+export type ValueType = "fixed" | "percentage"
+
+export type BillingDetails = {
+  id: string
+  label: string
+  type: ValueType
+  value: number
+}
+
 export type InvoiceDetails = {
-  number: string
+  prefix: string
+  serialNumber: string
   date: string
   dueDate: string
   currency: string
+  billingDetails: BillingDetails[]
+}
+
+export type InvoiceTheme = {
+  template: string
+  font: string
+}
+
+export type InvoiceMetadata = {
+  notes: string
+  terms: string
+  paymentDetails: CustomField[] // label/value pairs, same shape as company/client fields
 }
 
 export type Invoice = {
-  template: string
-  font: string
+  theme: InvoiceTheme
 
   company: CompanyDetails
   client: ClientDetails
@@ -42,5 +64,5 @@ export type Invoice = {
 
   items: InvoiceItem[]
 
-  notes: string
+  metadata: InvoiceMetadata
 }
