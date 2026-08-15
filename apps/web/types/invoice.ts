@@ -42,6 +42,9 @@ export type InvoiceDetails = {
   dueDate: string
   currency: string
   billingDetails: BillingDetails[]
+
+  taxRate: number
+  discount: number
 }
 
 export type InvoiceTheme = {
