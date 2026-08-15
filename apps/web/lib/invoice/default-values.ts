@@ -27,6 +27,8 @@ export const defaultInvoice: Invoice = {
     dueDate: "",
     currency: "INR",
     billingDetails: [],
+    taxRate: 0,
+    discount: 0,
   },
 
   items: [
