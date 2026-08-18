@@ -1,7 +1,9 @@
 "use client"
 
-import { useState } from "react"
 import { DefaultTheme } from "@/components/icons/default"
+import { VercelLogo } from "@/components/icons/vercel"
+import { PdfThemeKey, pdfThemes } from "@/lib/invoice/pdf-theme"
+import { useInvoiceStore } from "@/stores/invoice-store"
 import {
   Combobox,
   ComboboxContent,
@@ -10,41 +12,59 @@ import {
   ComboboxList,
 } from "@workspace/ui/components/combobox"
 import { IoLogoGithub } from "react-icons/io"
-import { VercelLogo } from "@/components/icons/vercel"
+import { RiNotionFill } from "react-icons/ri"
+import { FaApple } from "react-icons/fa"
+import { FaCcStripe } from "react-icons/fa6"
 
 type ThemeItem = {
   icon: React.ReactNode
   title: string
+  value: PdfThemeKey
 }
 
 export function InvoiceToolbar() {
-  const fontItems = [
-    "Inter",
-    "JetBrains Mono",
-    "Geist",
-    "Helvetica",
-    "Roboto",
-    "Ubuntu",
-  ]
+  const fontItems = ["Helvetica", "Times-Roman", "Courier"]
 
   const themeItems: ThemeItem[] = [
     {
       icon: <DefaultTheme />,
-      title: "Default",
+      title: pdfThemes.default.name,
+      value: "default",
     },
     {
       icon: <VercelLogo />,
-      title: "Vercel",
+      title: pdfThemes.vercel.name,
+      value: "vercel",
     },
     {
       icon: <IoLogoGithub className="size-4.5" />,
-      title: "GitHub",
+      title: pdfThemes.github.name,
+      value: "github",
+    },
+    {
+      icon: <FaCcStripe className="size-4.5" />,
+      title: pdfThemes.stripe.name,
+      value: "stripe",
+    },
+    {
+      icon: <RiNotionFill className="size-4.5" />,
+      title: pdfThemes.notion.name,
+      value: "notion",
+    },
+    {
+      icon: <FaApple className="size-4.5" />,
+      title: pdfThemes.apple.name,
+      value: "apple",
     },
   ]
 
-  const [selectedTheme, setSelectedTheme] = useState("Default")
+  const theme = useInvoiceStore((state) => state.invoice.theme)
 
-  const currentTheme = themeItems.find((item) => item.title === selectedTheme)
+  const setInvoiceTheme = useInvoiceStore((state) => state.setInvoiceTheme)
+
+  const currentTheme = themeItems.find((item) => item.value === theme.template)
+
+  const setInvoiceFont = useInvoiceStore((state) => state.setInvoiceFont)
 
   return (
     <div className="flex h-14 shrink-0 items-center justify-between border-b border-border/60 px-4">
@@ -52,7 +72,15 @@ export function InvoiceToolbar() {
 
       <div className="flex items-center gap-2">
         {/* Font */}
-        <Combobox items={fontItems}>
+        <Combobox
+          items={fontItems}
+          value={theme.font}
+          onValueChange={(value) => {
+            if (!value) return
+
+            setInvoiceFont(value)
+          }}
+        >
           <ComboboxInput
             placeholder="Font"
             readOnly
@@ -77,21 +105,23 @@ export function InvoiceToolbar() {
         {/* Theme */}
         <Combobox
           items={themeItems}
-          value={selectedTheme}
+          value={theme.template}
           onValueChange={(value) => {
-            if (value) {
-              setSelectedTheme(value)
-            }
+            if (!value) return
+
+            setInvoiceTheme(value as PdfThemeKey)
           }}
         >
           <div className="relative w-32">
-            {/* Custom visible value */}
+            {/* Visible selected value */}
             <div className="pointer-events-none absolute inset-0 z-10 flex items-center gap-2 px-3">
               <span className="flex w-5 shrink-0 items-center justify-center">
                 {currentTheme?.icon}
               </span>
 
-              <span className="truncate text-sm">{currentTheme?.title}</span>
+              <span className="truncate text-sm">
+                {currentTheme?.title ?? "Default"}
+              </span>
             </div>
 
             {/* Actual combobox input */}
@@ -105,8 +135,8 @@ export function InvoiceToolbar() {
             <ComboboxList>
               {(themeItem) => (
                 <ComboboxItem
-                  key={themeItem.title}
-                  value={themeItem.title}
+                  key={themeItem.value}
+                  value={themeItem.value}
                   className="font-geist"
                 >
                   <div className="flex w-full items-center gap-2">

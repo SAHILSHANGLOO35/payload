@@ -13,6 +13,9 @@
     "postinstall": "cp node_modules/pdfjs-dist/build/pdf.worker.min.mjs public/pdf.worker.min.mjs"
   },
   "dependencies": {
+    "@fontsource/inter": "5.1.1",
+    "@fontsource/roboto": "5.1.1",
+    "@fontsource/ubuntu": "5.1.1",
     "@phosphor-icons/react": "^2.1.10",
     "@react-pdf/renderer": "^4.6.1",
     "@workspace/ui": "*",
