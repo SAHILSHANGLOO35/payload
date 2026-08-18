@@ -1,3 +1,5 @@
+import { PdfFont, PdfThemeKey } from "@/lib/invoice/pdf-theme"
+
 export type InvoiceItem = {
   id: string
   name: string
@@ -48,8 +50,10 @@ export type InvoiceDetails = {
 }
 
 export type InvoiceTheme = {
-  template: string
-  font: string
+  template: PdfThemeKey
+  font: PdfFont
+  mode: "light" | "dark"
+  accentColor: string
 }
 
 export type InvoiceMetadata = {

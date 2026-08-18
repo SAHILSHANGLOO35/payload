@@ -7,6 +7,7 @@ import type {
   InvoiceItem,
 } from "@/types/invoice"
 import { defaultInvoice } from "@/lib/invoice/default-values"
+import { PdfFont, PdfThemeKey } from "@/lib/invoice/pdf-theme"
 
 export type InvoiceStore = {
   invoice: Invoice
@@ -42,6 +43,12 @@ export type InvoiceStore = {
   addPaymentDetail: () => void
   updatePaymentDetail: (id: string, data: Partial<CustomField>) => void
   removePaymentDetail: (id: string) => void
+
+  // Theme
+  setInvoiceTheme: (template: PdfThemeKey) => void
+
+  // Font
+  setInvoiceFont: (font: PdfFont) => void
 
   resetInvoice: () => void
 }
@@ -347,6 +354,29 @@ export const useInvoiceStore = create<InvoiceStore>((set) => ({
           paymentDetails: state.invoice.metadata.paymentDetails.filter(
             (field) => field.id !== id
           ),
+        },
+      },
+    })),
+
+  setInvoiceTheme: (template) =>
+    set((state) => ({
+      invoice: {
+        ...state.invoice,
+
+        theme: {
+          ...state.invoice.theme,
+          template,
+        },
+      },
+    })),
+
+  setInvoiceFont: (font) =>
+    set((state) => ({
+      invoice: {
+        ...state.invoice,
+        theme: {
+          ...state.invoice.theme,
+          font,
         },
       },
     })),

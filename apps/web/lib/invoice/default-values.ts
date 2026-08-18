@@ -3,7 +3,9 @@ import type { Invoice } from "@/types/invoice"
 export const defaultInvoice: Invoice = {
   theme: {
     template: "default",
-    font: "Inter",
+    font: "Helvetica",
+    mode: "light",
+    accentColor: "#635CFF",
   },
 
   company: {
@@ -21,7 +23,7 @@ export const defaultInvoice: Invoice = {
   },
 
   invoice: {
-    prefix: "Invoice INV-",
+    prefix: "Invoice INV",
     serialNumber: "007",
     date: "",
     dueDate: "",
