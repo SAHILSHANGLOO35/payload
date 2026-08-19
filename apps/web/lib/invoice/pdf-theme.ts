@@ -6,13 +6,7 @@ export type PdfFont =
   | "Roboto"
   | "Ubuntu"
 
-export type PdfThemeKey =
-  | "default"
-  | "vercel"
-  | "github"
-  | "stripe"
-  | "notion"
-  | "apple"
+export type PdfThemeKey = "default" | "vercel" | "github" | "stripe" | "notion"
 
 export type InvoiceTheme = {
   template: PdfThemeKey
@@ -39,6 +33,9 @@ export type PdfTheme = {
 
   accent: string
 
+  // GitHub's "diff add" green — used for positive/total emphasis
+  success: string
+
   totalBackground: string
   totalText: string
 }
@@ -61,6 +58,7 @@ export const pdfThemes: Record<PdfThemeKey, PdfTheme> = {
     tableRow: "#f5f5f5",
 
     accent: "#635cff",
+    success: "#16a34a",
 
     totalBackground: "#ffffff",
     totalText: "#111111",
@@ -83,6 +81,7 @@ export const pdfThemes: Record<PdfThemeKey, PdfTheme> = {
     tableRow: "#0d0d0d",
 
     accent: "#ffffff",
+    success: "#3fb950",
 
     totalBackground: "#050505",
     totalText: "#ffffff",
@@ -92,22 +91,25 @@ export const pdfThemes: Record<PdfThemeKey, PdfTheme> = {
     name: "GitHub",
 
     page: {
-      background: "#ffffff",
-      text: "#24292f",
+      background: "#0d1117", // canvas.default (dark)
+      text: "#c9d1d9", // fg.default
     },
 
-    heading: "#24292f",
-    mutedText: "#57606a",
-    border: "#d0d7de",
+    heading: "#f0f6fc", // fg.default (bright/emphasis)
+    mutedText: "#8b949e", // fg.muted
+    border: "#30363d", // border.default
 
-    panel: "#f6f8fa",
-    tableHeader: "#24292f",
-    tableRow: "#f6f8fa",
+    panel: "#161b22", // canvas.subtle
+    tableHeader: "#161b22", // canvas.subtle, kept dark instead of a loud fill
+    tableRow: "#0d1117", // canvas.default (near-invisible zebra striping)
 
-    accent: "#0969da",
+    accent: "#58a6ff", // GitHub link/accent blue
 
-    totalBackground: "#ffffff",
-    totalText: "#24292f",
+    // like a confirmed / merged amount
+    success: "#3fb950",
+
+    totalBackground: "#161b22",
+    totalText: "#f0f6fc",
   },
 
   stripe: {
@@ -127,6 +129,7 @@ export const pdfThemes: Record<PdfThemeKey, PdfTheme> = {
     tableRow: "#ffffff",
 
     accent: "#635bff",
+    success: "#0d8a4f",
 
     totalBackground: "#f6f9fc",
     totalText: "#1a1f36",
@@ -136,43 +139,22 @@ export const pdfThemes: Record<PdfThemeKey, PdfTheme> = {
     name: "Notion",
 
     page: {
-      background: "#ffffff",
-      text: "#37352f",
+      background: "#191919", // Notion dark page background
+      text: "#E6E6E5", // Notion light primary body text
     },
 
-    heading: "#37352f",
-    mutedText: "#787774",
-    border: "#e9e9e7",
+    heading: "#FFFFFF", // Clean white headings
+    mutedText: "#9B9B9B", // Notion secondary/muted text
+    border: "#2E2E2E", // Notion dark subtle divider borders
 
-    panel: "#f7f6f3",
-    tableHeader: "#f7f6f3",
-    tableRow: "#ffffff",
+    panel: "#202020", // Notion block/callout background
+    tableHeader: "#222222", // Slightly distinct header tile
+    tableRow: "#1C1C1C", // Alternate row background for striping
 
-    accent: "#eb5757",
+    accent: "#EB5757", // Notion classic red/coral accent
+    success: "#4dab72",
 
-    totalBackground: "#f7f6f3",
-    totalText: "#37352f",
-  },
-
-  apple: {
-    name: "Apple",
-
-    page: {
-      background: "#ffffff",
-      text: "#1d1d1f",
-    },
-
-    heading: "#1d1d1f",
-    mutedText: "#86868b",
-    border: "#d2d2d7",
-
-    panel: "#f5f5f7",
-    tableHeader: "#f5f5f7",
-    tableRow: "#ffffff",
-
-    accent: "#0071e3",
-
-    totalBackground: "#f5f5f7",
-    totalText: "#1d1d1f",
+    totalBackground: "#202020",
+    totalText: "#FFFFFF",
   },
 }

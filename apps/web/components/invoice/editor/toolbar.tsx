@@ -13,7 +13,6 @@ import {
 } from "@workspace/ui/components/combobox"
 import { IoLogoGithub } from "react-icons/io"
 import { RiNotionFill } from "react-icons/ri"
-import { FaApple } from "react-icons/fa"
 import { FaCcStripe } from "react-icons/fa6"
 
 type ThemeItem = {
@@ -50,11 +49,6 @@ export function InvoiceToolbar() {
       icon: <RiNotionFill className="size-4.5" />,
       title: pdfThemes.notion.name,
       value: "notion",
-    },
-    {
-      icon: <FaApple className="size-4.5" />,
-      title: pdfThemes.apple.name,
-      value: "apple",
     },
   ]
 
