@@ -164,11 +164,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderBottomWidth: 1,
+    minHeight: 36,
   },
 
   itemColumn: {
     width: "60%",
     flexDirection: "column",
+    justifyContent: "center",
   },
 
   quantityColumn: {

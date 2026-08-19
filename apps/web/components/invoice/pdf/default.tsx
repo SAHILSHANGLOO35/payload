@@ -9,10 +9,7 @@ type DefaultPdfProps = {
 
 const styles = StyleSheet.create({
   page: {
-    paddingTop: 38,
-    paddingRight: 40,
-    paddingBottom: 34,
-    paddingLeft: 40,
+    padding: 20,
 
     fontSize: 8,
 
@@ -139,15 +136,16 @@ const styles = StyleSheet.create({
   itemRow: {
     flexDirection: "row",
     alignItems: "center",
-
-    paddingTop: 7,
-    paddingRight: 8,
-    paddingBottom: 7,
-    paddingLeft: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    minHeight: 36,
   },
 
   itemColumn: {
-    width: "55%",
+    width: "60%",
+    flexDirection: "column",
+    justifyContent: "center",
   },
 
   quantityColumn: {

@@ -7,6 +7,7 @@ import DefaultPdf from "./default"
 import VercelPdf from "./vercel"
 import GithubPdf from "./github"
 import StripePdf from "./stripe"
+import NotionPdf from "./notion"
 
 type InvoiceTemplateProps = {
   invoice: Invoice
@@ -21,10 +22,7 @@ const templates: Partial<
   vercel: VercelPdf,
   github: GithubPdf,
   stripe: StripePdf,
-  // linear: LinearPdf,
-  // notion: NotionPdf,
-  // apple: ApplePdf,
-  // emerald: EmeraldPdf,
+  notion: NotionPdf,
 }
 
 type InvoiceDocumentProps = {

@@ -12,98 +12,140 @@ const styles = StyleSheet.create({
     padding: 24,
     fontSize: 8,
     flexDirection: "column",
-    gap: 10,
+    gap: 12,
   },
 
-  // Hero Bento Module
-  heroTile: {
+  // ----------------------------------------------------------
+  // Header Tile (Prefix & Serial)
+  // ----------------------------------------------------------
+
+  headerTile: {
     borderWidth: 1,
     borderRadius: 8,
     padding: 16,
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
   },
 
-  heroLeft: {
-    gap: 3,
+  invoiceTitle: {
+    fontSize: 28,
+    fontWeight: 600,
+    letterSpacing: -1,
+    lineHeight: 1,
   },
 
-  brandBadge: {
+  invoiceSerial: {
+    letterSpacing: -1,
+  },
+
+  // ----------------------------------------------------------
+  // Details & Logo Row (Vercel Style in Bento Card)
+  // ----------------------------------------------------------
+
+  detailsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+
+  invoiceDetails: {
+    flexDirection: "column",
+    gap: 4,
+    padding: 16,
+    paddingRight: 32,
+    borderRightWidth: 1,
+  },
+
+  detailRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+
+  detailLabel: {
+    minWidth: 90,
     fontSize: 7,
-    fontWeight: 600,
-    textTransform: "uppercase",
+    fontWeight: 500,
   },
 
-  invoiceId: {
-    fontSize: 18,
-    fontWeight: 700,
-    letterSpacing: -0.5,
+  detailValue: {
+    fontSize: 7,
+    fontWeight: 400,
   },
 
-  kpiBlock: {
-    alignItems: "flex-end",
-    gap: 2,
+  logoContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderLeftWidth: 1,
+    padding: 16,
   },
 
-  kpiLabel: {
-    fontSize: 6.5,
-    fontWeight: 600,
-    textTransform: "uppercase",
+  logo: {
+    width: 80,
+    height: 80,
+    objectFit: "contain",
   },
 
-  kpiValue: {
-    fontSize: 20,
-    fontWeight: 700,
-    letterSpacing: -0.6,
-  },
+  // ----------------------------------------------------------
+  // 2-Column Billing Modules (Billed To & Billed By)
+  // ----------------------------------------------------------
 
-  // 3-Column Info Module
-  infoRow: {
+  billingRow: {
     flexDirection: "row",
     gap: 8,
   },
 
-  infoCard: {
+  billingCard: {
     flex: 1,
     borderWidth: 1,
     borderRadius: 6,
-    padding: 10,
-    gap: 3,
+    padding: 12,
+    gap: 4,
   },
 
-  infoCardHeader: {
-    fontSize: 6.5,
+  sectionTitle: {
+    fontSize: 7,
     fontWeight: 600,
     textTransform: "uppercase",
     marginBottom: 2,
   },
 
-  cardMainText: {
-    fontSize: 8.5,
+  companyName: {
+    fontSize: 9,
     fontWeight: 600,
+    marginBottom: 2,
   },
 
-  cardSubText: {
+  addressText: {
     fontSize: 7,
+    fontWeight: 400,
+    marginBottom: 4,
     lineHeight: 1.3,
   },
 
   fieldRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
+    gap: 4,
     marginTop: 1,
   },
 
-  logoThumb: {
-    width: 40,
-    height: 40,
-    objectFit: "contain",
-    alignSelf: "flex-end",
+  fieldLabel: {
+    fontSize: 7,
+    minWidth: 55,
   },
 
-  // Items Card
+  fieldValue: {
+    fontSize: 7,
+    fontWeight: 400,
+  },
+
+  // ----------------------------------------------------------
+  // Items Table Box
+  // ----------------------------------------------------------
+
   itemsBox: {
     borderWidth: 1,
     borderRadius: 8,
@@ -114,26 +156,43 @@ const styles = StyleSheet.create({
   tableHeader: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderBottomWidth: 1,
   },
 
   itemRow: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 12,
-    paddingVertical: 9,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderBottomWidth: 1,
+    minHeight: 36,
   },
 
-  itemCol: { width: "55%" },
-  qtyCol: { width: "10%", textAlign: "center" },
-  priceCol: { width: "17.5%", textAlign: "right" },
-  totalCol: { width: "17.5%", textAlign: "right" },
+  itemColumn: {
+    width: "60%",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
 
-  colTitle: {
-    fontSize: 6.5,
+  quantityColumn: {
+    width: "10%",
+    textAlign: "center",
+  },
+
+  priceColumn: {
+    width: "15%",
+    textAlign: "right",
+  },
+
+  totalColumn: {
+    width: "15%",
+    textAlign: "right",
+  },
+
+  tableHeaderText: {
+    fontSize: 8,
     fontWeight: 600,
     textTransform: "uppercase",
   },
@@ -143,118 +202,138 @@ const styles = StyleSheet.create({
     fontWeight: 600,
   },
 
-  itemDesc: {
-    fontSize: 6.5,
-    marginTop: 1.5,
+  itemDescription: {
+    fontSize: 7,
+    marginTop: 2,
   },
 
-  // Bottom 2-Panel Bento
+  monoText: {
+    letterSpacing: -0.5,
+  },
+
+  // ----------------------------------------------------------
+  // Bottom Modules (Metadata Left, Totals Right)
+  // ----------------------------------------------------------
+
   bottomSection: {
     flexDirection: "row",
-    gap: 10,
+    gap: 8,
   },
 
-  bottomLeftStack: {
-    flex: 1,
+  metadataColumn: {
+    width: "50%",
+    flexDirection: "column",
     gap: 8,
   },
 
   notesCard: {
     borderWidth: 1,
     borderRadius: 6,
-    padding: 10,
+    padding: 12,
     gap: 4,
   },
 
-  notesTitle: {
-    fontSize: 6.5,
+  metadataTitle: {
+    fontSize: 7,
     fontWeight: 600,
     textTransform: "uppercase",
-  },
-
-  notesText: {
-    fontSize: 6.5,
-    lineHeight: 1.35,
-  },
-
-  bottomRightStack: {
-    flex: 1,
-    gap: 8,
-  },
-
-  signatureCard: {
-    borderWidth: 1,
-    borderRadius: 6,
-    padding: 8,
-    alignItems: "flex-end",
-  },
-
-  signatureLabel: {
-    fontSize: 6,
     marginBottom: 2,
   },
 
-  signatureImage: {
-    width: 44,
-    height: 44,
-    objectFit: "contain",
+  metadataBody: {
+    fontSize: 7,
+    fontWeight: 400,
+    lineHeight: 1.3,
   },
 
-  summaryCard: {
+  totalsColumn: {
+    width: "50%",
+    flexDirection: "column",
+    gap: 8,
+  },
+
+  signatureContainer: {
+    borderWidth: 1,
+    borderRadius: 6,
+    padding: 12,
+    alignItems: "flex-end",
+  },
+
+  signature: {
+    width: 64,
+    height: 64,
+    objectFit: "cover",
+  },
+
+  totalsBreakdownCard: {
     borderWidth: 1,
     borderRadius: 6,
     overflow: "hidden",
   },
 
-  summaryInner: {
-    padding: 10,
+  totalsBreakdown: {
+    flexDirection: "column",
     gap: 4,
+    padding: 12,
   },
 
-  rowBetween: {
+  totalRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
 
-  totalLabel: { fontSize: 7 },
-  totalValue: { fontSize: 7, fontWeight: 500 },
+  totalLabel: {
+    fontSize: 7,
+    fontWeight: 400,
+  },
 
-  grandTotalBox: {
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+  totalValue: {
+    fontSize: 7,
+    letterSpacing: -0.5,
+  },
+
+  grandTotal: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     borderTopWidth: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    padding: 12,
   },
 
   grandTotalLabel: {
-    fontSize: 8.5,
+    fontSize: 9,
     fontWeight: 600,
   },
 
   grandTotalValue: {
-    fontSize: 13,
-    fontWeight: 700,
+    fontSize: 14,
+    fontWeight: 600,
+    letterSpacing: -0.5,
   },
 
-  wordsBox: {
-    paddingHorizontal: 10,
-    paddingBottom: 8,
-    paddingTop: 4,
+  wordsContainer: {
+    flexDirection: "column",
+    gap: 2,
+    borderTopWidth: 1,
+    padding: 12,
   },
 
   wordsLabel: {
-    fontSize: 5.5,
+    fontSize: 6,
+    fontWeight: 400,
     textTransform: "uppercase",
   },
 
-  wordsText: {
-    fontSize: 6.5,
-    marginTop: 1,
+  words: {
+    fontSize: 7,
+    fontWeight: 400,
   },
 })
+
+// ============================================================
+// Helpers
+// ============================================================
 
 function formatCurrency(currency: string, value: number) {
   return new Intl.NumberFormat("en-IN", {
@@ -272,25 +351,27 @@ function formatDate(value: string) {
 
 function calculateSubtotal(invoice: Invoice) {
   return invoice.items.reduce(
-    (acc, item) => acc + item.quantity * item.unitPrice,
+    (total, item) => total + item.quantity * item.unitPrice,
     0
   )
 }
 
 function calculateBillingDetails(invoice: Invoice, subtotal: number) {
-  return invoice.invoice.billingDetails.reduce((acc, detail) => {
-    return (
-      acc +
-      (detail.type === "percentage"
-        ? subtotal * (detail.value / 100)
-        : detail.value)
-    )
+  return invoice.invoice.billingDetails.reduce((total, detail) => {
+    if (detail.type === "percentage") {
+      return total + subtotal * (detail.value / 100)
+    }
+    return total + detail.value
   }, 0)
 }
 
 function numberToWords(value: number) {
   return value.toLocaleString("en-IN")
 }
+
+// ============================================================
+// Stripe PDF Component
+// ============================================================
 
 export default function StripePdf({ invoice }: StripePdfProps) {
   const theme = pdfThemes[invoice.theme.template] ?? pdfThemes.default
@@ -307,181 +388,319 @@ export default function StripePdf({ invoice }: StripePdfProps) {
       color: theme.page.text,
       fontFamily: invoice.theme.font,
     },
+
+    headerTile: {
+      ...styles.headerTile,
+      borderColor: theme.border,
+      backgroundColor: theme.panel ?? theme.page.background,
+    },
+
+    invoiceTitle: {
+      ...styles.invoiceTitle,
+      color: theme.heading,
+    },
+
+    invoiceSerial: {
+      ...styles.invoiceSerial,
+      color: theme.accent ?? theme.heading,
+    },
+
+    detailsRow: {
+      ...styles.detailsRow,
+      borderColor: theme.border,
+      backgroundColor: theme.page.background,
+    },
+
+    invoiceDetails: {
+      ...styles.invoiceDetails,
+      borderRightColor: theme.border,
+    },
+
+    logoContainer: {
+      ...styles.logoContainer,
+      borderLeftColor: theme.border,
+    },
+
     tile: {
       borderColor: theme.border,
       backgroundColor: theme.page.background,
     },
-    heroPanel: {
-      backgroundColor: theme.panel,
-      borderColor: theme.border,
+
+    sectionTitle: {
+      ...styles.sectionTitle,
+      color: theme.mutedText,
     },
-    heading: { color: theme.heading },
-    muted: { color: theme.mutedText },
-    accent: { color: theme.accent },
+
+    companyName: {
+      ...styles.companyName,
+      color: theme.heading,
+    },
+
+    addressText: {
+      ...styles.addressText,
+      color: theme.mutedText,
+    },
+
+    fieldLabel: {
+      ...styles.fieldLabel,
+      color: theme.mutedText,
+    },
+
+    fieldValue: {
+      ...styles.fieldValue,
+      color: theme.page.text,
+    },
+
+    detailLabel: {
+      ...styles.detailLabel,
+      color: theme.mutedText,
+    },
+
+    detailValue: {
+      ...styles.detailValue,
+      color: theme.page.text,
+    },
+
     tableHeader: {
+      ...styles.tableHeader,
       backgroundColor: theme.tableHeader,
       borderBottomColor: theme.border,
     },
+
+    tableHeaderText: {
+      ...styles.tableHeaderText,
+      color: theme.mutedText,
+    },
+
     itemRow: {
+      ...styles.itemRow,
       borderBottomColor: theme.border,
     },
+
+    itemName: {
+      ...styles.itemName,
+      color: theme.heading,
+    },
+
+    itemDescription: {
+      ...styles.itemDescription,
+      color: theme.mutedText,
+    },
+
+    monoText: {
+      ...styles.monoText,
+      color: theme.page.text,
+    },
+
+    metadataTitle: {
+      ...styles.metadataTitle,
+      color: theme.heading,
+    },
+
+    metadataBody: {
+      ...styles.metadataBody,
+      color: theme.mutedText,
+    },
+
+    signatureContainer: {
+      ...styles.signatureContainer,
+      borderColor: theme.border,
+      backgroundColor: theme.page.background,
+    },
+
+    totalsBreakdownCard: {
+      ...styles.totalsBreakdownCard,
+      borderColor: theme.border,
+      backgroundColor: theme.page.background,
+    },
+
+    totalLabel: {
+      ...styles.totalLabel,
+      color: theme.mutedText,
+    },
+
+    totalValue: {
+      ...styles.totalValue,
+      color: theme.page.text,
+    },
+
     grandTotal: {
-      backgroundColor: theme.panel,
+      ...styles.grandTotal,
+      borderTopColor: theme.border,
+      backgroundColor: theme.totalBackground ?? theme.panel,
+    },
+
+    grandTotalLabel: {
+      ...styles.grandTotalLabel,
+      color: theme.totalText ?? theme.heading,
+    },
+
+    grandTotalValue: {
+      ...styles.grandTotalValue,
+      color: theme.totalText ?? theme.heading,
+    },
+
+    wordsContainer: {
+      ...styles.wordsContainer,
       borderTopColor: theme.border,
     },
-    totalText: { color: theme.totalText },
+
+    wordsLabel: {
+      ...styles.wordsLabel,
+      color: theme.mutedText,
+    },
+
+    words: {
+      ...styles.words,
+      color: theme.page.text,
+    },
   })
 
   return (
     <Page size="A4" style={dynamicStyles.page}>
-      {/* Hero Bento Banner */}
-      <View style={[styles.heroTile, dynamicStyles.heroPanel]}>
-        <View style={styles.heroLeft}>
-          <Text style={[styles.brandBadge, dynamicStyles.accent]}>
-            {invoice.company.name}
+      {/* ================================================== */}
+      {/* 1. HEADER (Invoice Serial No Title) */}
+      {/* ================================================== */}
+      <View style={dynamicStyles.headerTile}>
+        <Text style={dynamicStyles.invoiceTitle}>
+          {invoice.invoice.prefix}
+          <Text style={dynamicStyles.invoiceSerial}>
+            {invoice.invoice.serialNumber}
           </Text>
-          <Text style={[styles.invoiceId, dynamicStyles.heading]}>
-            Invoice {invoice.invoice.prefix}-{invoice.invoice.serialNumber}
-          </Text>
-        </View>
-
-        <View style={styles.kpiBlock}>
-          <Text style={[styles.kpiLabel, dynamicStyles.muted]}>
-            Total Amount Due
-          </Text>
-          <Text style={[styles.kpiValue, dynamicStyles.heading]}>
-            {formatCurrency(invoice.invoice.currency, total)}
-          </Text>
-        </View>
+        </Text>
       </View>
 
-      {/* 3-Card Entity Matrix */}
-      <View style={styles.infoRow}>
-        <View style={[styles.infoCard, dynamicStyles.tile]}>
-          <Text style={[styles.infoCardHeader, dynamicStyles.muted]}>
-            Billed To
-          </Text>
-          <Text style={[styles.cardMainText, dynamicStyles.heading]}>
-            {invoice.client.name}
-          </Text>
-          <Text style={[styles.cardSubText, dynamicStyles.muted]}>
-            {invoice.client.address}
-          </Text>
-          {invoice.client.fields.map((f) => (
-            <View key={f.id} style={styles.fieldRow}>
-              <Text style={[styles.cardSubText, dynamicStyles.muted]}>
-                {f.label}
-              </Text>
-              <Text style={styles.cardSubText}>{f.value}</Text>
-            </View>
-          ))}
-        </View>
-
-        <View style={[styles.infoCard, dynamicStyles.tile]}>
-          <Text style={[styles.infoCardHeader, dynamicStyles.muted]}>
-            Timeline & Terms
-          </Text>
-          <View style={styles.fieldRow}>
-            <Text style={[styles.cardSubText, dynamicStyles.muted]}>
-              Serial
-            </Text>
-            <Text style={[styles.cardSubText, dynamicStyles.heading]}>
+      {/* ================================================== */}
+      {/* 2. DETAILS (Left) & LOGO (Right) - Vercel Style */}
+      {/* ================================================== */}
+      <View style={dynamicStyles.detailsRow}>
+        <View style={dynamicStyles.invoiceDetails}>
+          <View style={styles.detailRow}>
+            <Text style={dynamicStyles.detailLabel}>Serial Number</Text>
+            <Text style={dynamicStyles.detailValue}>
               {invoice.invoice.serialNumber}
             </Text>
           </View>
+
           {invoice.invoice.date && (
-            <View style={styles.fieldRow}>
-              <Text style={[styles.cardSubText, dynamicStyles.muted]}>
-                Issued
-              </Text>
-              <Text style={styles.cardSubText}>
+            <View style={styles.detailRow}>
+              <Text style={dynamicStyles.detailLabel}>Date</Text>
+              <Text style={dynamicStyles.detailValue}>
                 {formatDate(invoice.invoice.date)}
               </Text>
             </View>
           )}
+
           {invoice.invoice.dueDate && (
-            <View style={styles.fieldRow}>
-              <Text style={[styles.cardSubText, dynamicStyles.muted]}>Due</Text>
-              <Text style={styles.cardSubText}>
+            <View style={styles.detailRow}>
+              <Text style={dynamicStyles.detailLabel}>Due Date</Text>
+              <Text style={dynamicStyles.detailValue}>
                 {formatDate(invoice.invoice.dueDate)}
               </Text>
             </View>
           )}
-          <View style={styles.fieldRow}>
-            <Text style={[styles.cardSubText, dynamicStyles.muted]}>
-              Currency
+
+          <View style={styles.detailRow}>
+            <Text style={dynamicStyles.detailLabel}>Currency</Text>
+            <Text style={dynamicStyles.detailValue}>
+              {invoice.invoice.currency}
             </Text>
-            <Text style={styles.cardSubText}>{invoice.invoice.currency}</Text>
           </View>
         </View>
 
-        <View style={[styles.infoCard, dynamicStyles.tile]}>
-          <Text style={[styles.infoCardHeader, dynamicStyles.muted]}>
-            Issuer Details
+        {invoice.company.logo && (
+          <View style={dynamicStyles.logoContainer}>
+            <Image src={invoice.company.logo} style={styles.logo} />
+          </View>
+        )}
+      </View>
+
+      {/* ================================================== */}
+      {/* 3. 2-COLUMN BILLING (Billed By & Billed To) */}
+      {/* ================================================== */}
+      <View style={styles.billingRow}>
+        {/* BILLED BY */}
+        <View style={[styles.billingCard, dynamicStyles.tile]}>
+          <Text style={dynamicStyles.sectionTitle}>Billed By</Text>
+          <Text style={dynamicStyles.companyName}>{invoice.company.name}</Text>
+          <Text style={dynamicStyles.addressText}>
+            {invoice.company.address}
           </Text>
-          <Text style={[styles.cardMainText, dynamicStyles.heading]}>
-            {invoice.company.name}
+
+          {invoice.company.fields.map((field) => (
+            <View key={field.id} style={styles.fieldRow}>
+              <Text style={dynamicStyles.fieldLabel}>{field.label}</Text>
+              <Text style={dynamicStyles.fieldValue}>{field.value}</Text>
+            </View>
+          ))}
+        </View>
+
+        {/* BILLED TO */}
+        <View style={[styles.billingCard, dynamicStyles.tile]}>
+          <Text style={dynamicStyles.sectionTitle}>Billed To</Text>
+          <Text style={dynamicStyles.companyName}>{invoice.client.name}</Text>
+          <Text style={dynamicStyles.addressText}>
+            {invoice.client.address}
           </Text>
-          {invoice.company.logo ? (
-            <Image src={invoice.company.logo} style={styles.logoThumb} />
-          ) : (
-            <Text style={[styles.cardSubText, dynamicStyles.muted]}>
-              {invoice.company.address}
-            </Text>
-          )}
+
+          {invoice.client.fields.map((field) => (
+            <View key={field.id} style={styles.fieldRow}>
+              <Text style={dynamicStyles.fieldLabel}>{field.label}</Text>
+              <Text style={dynamicStyles.fieldValue}>{field.value}</Text>
+            </View>
+          ))}
         </View>
       </View>
 
-      {/* Items Container Module */}
+      {/* ================================================== */}
+      {/* 4. ITEMS TABLE */}
+      {/* ================================================== */}
       <View style={[styles.itemsBox, dynamicStyles.tile]}>
-        <View fixed style={[styles.tableHeader, dynamicStyles.tableHeader]}>
-          <Text
-            style={[styles.itemCol, styles.colTitle, dynamicStyles.heading]}
-          >
+        <View fixed style={dynamicStyles.tableHeader}>
+          <Text style={[styles.itemColumn, dynamicStyles.tableHeaderText]}>
             Item
           </Text>
-          <Text style={[styles.qtyCol, styles.colTitle, dynamicStyles.heading]}>
+          <Text style={[styles.quantityColumn, dynamicStyles.tableHeaderText]}>
             Qty
           </Text>
-          <Text
-            style={[styles.priceCol, styles.colTitle, dynamicStyles.heading]}
-          >
-            Unit Price
+          <Text style={[styles.priceColumn, dynamicStyles.tableHeaderText]}>
+            Price
           </Text>
-          <Text
-            style={[styles.totalCol, styles.colTitle, dynamicStyles.heading]}
-          >
-            Amount
+          <Text style={[styles.totalColumn, dynamicStyles.tableHeaderText]}>
+            Total
           </Text>
         </View>
-        {invoice.items.map((item, i) => (
+
+        {invoice.items.map((item, index) => (
           <View
             key={item.id}
             wrap={false}
             style={[
-              styles.itemRow,
               dynamicStyles.itemRow,
               {
                 backgroundColor:
-                  i % 2 === 0 ? theme.page.background : theme.tableRow,
+                  index % 2 === 0 ? theme.page.background : theme.tableRow,
               },
             ]}
           >
-            <View style={styles.itemCol}>
-              <Text style={[styles.itemName, dynamicStyles.heading]}>
-                {item.name}
-              </Text>
+            <View style={styles.itemColumn}>
+              <Text style={dynamicStyles.itemName}>{item.name}</Text>
               {item.description && (
-                <Text style={[styles.itemDesc, dynamicStyles.muted]}>
+                <Text style={dynamicStyles.itemDescription}>
                   {item.description}
                 </Text>
               )}
             </View>
-            <Text style={styles.qtyCol}>{item.quantity}</Text>
-            <Text style={styles.priceCol}>
+
+            <Text style={[styles.quantityColumn, dynamicStyles.monoText]}>
+              {item.quantity}
+            </Text>
+
+            <Text style={[styles.priceColumn, dynamicStyles.monoText]}>
               {formatCurrency(invoice.invoice.currency, item.unitPrice)}
             </Text>
-            <Text style={styles.totalCol}>
+
+            <Text style={[styles.totalColumn, dynamicStyles.monoText]}>
               {formatCurrency(
                 invoice.invoice.currency,
                 item.quantity * item.unitPrice
@@ -491,20 +710,21 @@ export default function StripePdf({ invoice }: StripePdfProps) {
         ))}
       </View>
 
-      {/* Bottom Modules */}
+      {/* ================================================== */}
+      {/* 5. BOTTOM SECTION (Metadata Left, Totals Right) */}
+      {/* ================================================== */}
       <View wrap={false} style={styles.bottomSection}>
-        <View style={styles.bottomLeftStack}>
+        {/* LEFT: Metadata */}
+        <View style={styles.metadataColumn}>
           {invoice.metadata.paymentDetails.length > 0 && (
             <View style={[styles.notesCard, dynamicStyles.tile]}>
-              <Text style={[styles.notesTitle, dynamicStyles.muted]}>
-                Payment Rail
+              <Text style={dynamicStyles.metadataTitle}>
+                Payment Information
               </Text>
-              {invoice.metadata.paymentDetails.map((f) => (
-                <View key={f.id} style={styles.fieldRow}>
-                  <Text style={[styles.notesText, dynamicStyles.muted]}>
-                    {f.label}:
-                  </Text>
-                  <Text style={styles.notesText}>{f.value}</Text>
+              {invoice.metadata.paymentDetails.map((field) => (
+                <View key={field.id} style={styles.fieldRow}>
+                  <Text style={dynamicStyles.fieldLabel}>{field.label}</Text>
+                  <Text style={dynamicStyles.fieldValue}>{field.value}</Text>
                 </View>
               ))}
             </View>
@@ -512,10 +732,8 @@ export default function StripePdf({ invoice }: StripePdfProps) {
 
           {invoice.metadata.terms && (
             <View style={[styles.notesCard, dynamicStyles.tile]}>
-              <Text style={[styles.notesTitle, dynamicStyles.muted]}>
-                Terms & Conditions
-              </Text>
-              <Text style={[styles.notesText, dynamicStyles.muted]}>
+              <Text style={dynamicStyles.metadataTitle}>Terms</Text>
+              <Text style={dynamicStyles.metadataBody}>
                 {invoice.metadata.terms}
               </Text>
             </View>
@@ -523,70 +741,57 @@ export default function StripePdf({ invoice }: StripePdfProps) {
 
           {invoice.metadata.notes && (
             <View style={[styles.notesCard, dynamicStyles.tile]}>
-              <Text style={[styles.notesTitle, dynamicStyles.muted]}>
-                Client Notes
-              </Text>
-              <Text style={[styles.notesText, dynamicStyles.muted]}>
+              <Text style={dynamicStyles.metadataTitle}>Notes</Text>
+              <Text style={dynamicStyles.metadataBody}>
                 {invoice.metadata.notes}
               </Text>
             </View>
           )}
         </View>
 
-        <View style={styles.bottomRightStack}>
+        {/* RIGHT: Totals & Signature */}
+        <View style={styles.totalsColumn}>
           {invoice.company.signature && (
-            <View style={[styles.signatureCard, dynamicStyles.tile]}>
-              <Text style={[styles.signatureLabel, dynamicStyles.muted]}>
-                Authorized Verification
-              </Text>
-              <Image
-                src={invoice.company.signature}
-                style={styles.signatureImage}
-              />
+            <View style={dynamicStyles.signatureContainer}>
+              <Image src={invoice.company.signature} style={styles.signature} />
             </View>
           )}
 
-          <View style={[styles.summaryCard, dynamicStyles.tile]}>
-            <View style={styles.summaryInner}>
-              <View style={styles.rowBetween}>
-                <Text style={[styles.totalLabel, dynamicStyles.muted]}>
-                  Subtotal
-                </Text>
-                <Text style={styles.totalValue}>
+          <View style={dynamicStyles.totalsBreakdownCard}>
+            <View style={styles.totalsBreakdown}>
+              <View style={styles.totalRow}>
+                <Text style={dynamicStyles.totalLabel}>Subtotal</Text>
+                <Text style={dynamicStyles.totalValue}>
                   {formatCurrency(invoice.invoice.currency, subtotal)}
                 </Text>
               </View>
 
-              {invoice.invoice.billingDetails.map((d) => (
-                <View key={d.id} style={styles.rowBetween}>
-                  <Text style={[styles.totalLabel, dynamicStyles.muted]}>
-                    {d.label}
-                  </Text>
-                  <Text style={styles.totalValue}>
-                    {d.type === "percentage"
-                      ? `${d.value}%`
-                      : formatCurrency(invoice.invoice.currency, d.value)}
+              {invoice.invoice.billingDetails.map((detail) => (
+                <View key={detail.id} style={styles.totalRow}>
+                  <Text style={dynamicStyles.totalLabel}>{detail.label}</Text>
+                  <Text style={dynamicStyles.totalValue}>
+                    {detail.type === "percentage"
+                      ? `${detail.value}%`
+                      : formatCurrency(invoice.invoice.currency, detail.value)}
                   </Text>
                 </View>
               ))}
 
               {invoice.invoice.taxRate > 0 && (
-                <View style={styles.rowBetween}>
-                  <Text style={[styles.totalLabel, dynamicStyles.muted]}>
+                <View style={styles.totalRow}>
+                  <Text style={dynamicStyles.totalLabel}>
                     Tax ({invoice.invoice.taxRate}%)
                   </Text>
-                  <Text style={styles.totalValue}>
+                  <Text style={dynamicStyles.totalValue}>
                     {formatCurrency(invoice.invoice.currency, tax)}
                   </Text>
                 </View>
               )}
 
               {invoice.invoice.discount > 0 && (
-                <View style={styles.rowBetween}>
-                  <Text style={[styles.totalLabel, dynamicStyles.muted]}>
-                    Discount
-                  </Text>
-                  <Text style={styles.totalValue}>
+                <View style={styles.totalRow}>
+                  <Text style={dynamicStyles.totalLabel}>Discount</Text>
+                  <Text style={dynamicStyles.totalValue}>
                     -
                     {formatCurrency(
                       invoice.invoice.currency,
@@ -597,22 +802,18 @@ export default function StripePdf({ invoice }: StripePdfProps) {
               )}
             </View>
 
-            <View style={[styles.grandTotalBox, dynamicStyles.grandTotal]}>
-              <Text style={[styles.grandTotalLabel, dynamicStyles.totalText]}>
-                Final Amount
-              </Text>
-              <Text style={[styles.grandTotalValue, dynamicStyles.totalText]}>
+            <View style={dynamicStyles.grandTotal}>
+              <Text style={dynamicStyles.grandTotalLabel}>Total</Text>
+              <Text style={dynamicStyles.grandTotalValue}>
                 {formatCurrency(invoice.invoice.currency, total)}
               </Text>
             </View>
 
-            <View style={styles.wordsBox}>
-              <Text style={[styles.wordsLabel, dynamicStyles.muted]}>
-                Amount in words
+            <View style={dynamicStyles.wordsContainer}>
+              <Text style={dynamicStyles.wordsLabel}>
+                Invoice Total (in words)
               </Text>
-              <Text style={[styles.wordsText, dynamicStyles.muted]}>
-                {numberToWords(total)}
-              </Text>
+              <Text style={dynamicStyles.words}>{numberToWords(total)}</Text>
             </View>
           </View>
         </View>

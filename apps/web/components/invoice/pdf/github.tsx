@@ -9,81 +9,93 @@ type GithubPdfProps = {
 
 const styles = StyleSheet.create({
   page: {
-    padding: 32,
     fontSize: 8,
     flexDirection: "column",
   },
 
   // ----------------------------------------------------------
-  // Header / Repo-like Bar
+  // Header
   // ----------------------------------------------------------
 
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingBottom: 16,
+    padding: 16,
     borderBottomWidth: 1,
   },
 
   headerLeft: {
     flexDirection: "column",
-    gap: 4,
-  },
-
-  badgeRow: {
-    flexDirection: "row",
-    alignItems: "center",
     gap: 6,
   },
 
   badge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 10,
+    alignSelf: "flex-start",
+    width: 52,
+    height: 18,
+
+    alignItems: "center",
+    justifyContent: "center",
+
+    borderRadius: 3,
     borderWidth: 1,
-    fontSize: 6,
+  },
+
+  badgeText: {
+    fontSize: 7.5,
     fontWeight: 600,
+    letterSpacing: 0.5,
     textTransform: "uppercase",
   },
 
   invoiceTitle: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 600,
-    letterSpacing: -0.3,
+    letterSpacing: -0.5,
+  },
+
+  invoiceRef: {
+    fontSize: 7,
+    letterSpacing: 0.2,
   },
 
   logo: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: 60,
+    height: 60,
     objectFit: "contain",
     borderWidth: 1,
   },
 
   // ----------------------------------------------------------
-  // Metadata Bar (Commit-style info)
+  // Meta bar (issued / due / currency, file-path style)
   // ----------------------------------------------------------
 
   metaBar: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    padding: 8,
-    marginTop: 14,
-    borderRadius: 6,
-    borderWidth: 1,
+    height: 30,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
   },
 
   metaItem: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 3,
+    marginRight: 20,
+  },
+
+  metaDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
   },
 
   metaLabel: {
-    fontSize: 7,
-    fontWeight: 500,
+    fontSize: 6.5,
+    textTransform: "uppercase",
+    letterSpacing: 0.3,
   },
 
   metaValue: {
@@ -92,49 +104,59 @@ const styles = StyleSheet.create({
   },
 
   // ----------------------------------------------------------
-  // Billing Grid
+  // Billing
   // ----------------------------------------------------------
 
-  billingGrid: {
+  billingRow: {
     flexDirection: "row",
-    gap: 12,
-    marginTop: 14,
-  },
-
-  billingCard: {
-    width: "50%",
-    borderRadius: 6,
-    borderWidth: 1,
-    overflow: "hidden",
-  },
-
-  cardHeader: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    width: "100%",
     borderBottomWidth: 1,
   },
 
-  cardTitle: {
-    fontSize: 7,
-    fontWeight: 600,
-    textTransform: "uppercase",
-  },
-
-  cardBody: {
-    padding: 10,
+  billingPanel: {
+    width: "50%",
     flexDirection: "column",
     gap: 3,
+    padding: 16,
   },
 
-  partyName: {
-    fontSize: 8.5,
+  billingPanelRight: {
+    width: "50%",
+    flexDirection: "column",
+    gap: 3,
+    padding: 16,
+    borderLeftWidth: 1,
+  },
+
+  sectionLabelRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    marginBottom: 5,
+  },
+
+  sectionMarker: {
+    width: 6,
+    height: 6,
+    borderRadius: 1,
+  },
+
+  sectionTitle: {
+    fontSize: 6.5,
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+
+  companyName: {
+    fontSize: 9,
     fontWeight: 600,
     marginBottom: 2,
   },
 
-  partyAddress: {
+  addressText: {
     fontSize: 7,
-    lineHeight: 1.3,
+    lineHeight: 1.35,
     marginBottom: 4,
   },
 
@@ -142,6 +164,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
+    marginTop: 1,
   },
 
   fieldLabel: {
@@ -154,134 +177,133 @@ const styles = StyleSheet.create({
   },
 
   // ----------------------------------------------------------
-  // Items Table (GitHub File/Diff styled list)
+  // Items table (diff-list styled)
   // ----------------------------------------------------------
 
   itemsContainer: {
-    marginTop: 14,
-    borderRadius: 6,
-    borderWidth: 1,
-    overflow: "hidden",
+    flexGrow: 1,
   },
 
   tableHeader: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+    height: 30,
+    paddingHorizontal: 16,
     borderBottomWidth: 1,
   },
 
   itemRow: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderBottomWidth: 1,
+    minHeight: 36,
   },
 
   itemColumn: {
-    width: "55%",
+    width: "60%",
     flexDirection: "column",
+    justifyContent: "center",
   },
 
   quantityColumn: {
-    width: "12%",
+    width: "10%",
     textAlign: "center",
   },
 
   priceColumn: {
-    width: "16.5%",
+    width: "16%",
     textAlign: "right",
   },
 
   totalColumn: {
-    width: "16.5%",
+    width: "16%",
     textAlign: "right",
   },
 
   tableHeaderText: {
-    fontSize: 7,
+    fontSize: 6.5,
     fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: 0.3,
   },
 
   itemName: {
-    fontSize: 7.5,
+    fontSize: 8,
     fontWeight: 600,
   },
 
   itemDescription: {
     fontSize: 6.5,
     marginTop: 2,
+    lineHeight: 1.3,
   },
 
-  pageSpacer: {
-    flexGrow: 1,
+  monoText: {
+    letterSpacing: -0.3,
   },
 
   // ----------------------------------------------------------
-  // Bottom Section
+  // Bottom section
   // ----------------------------------------------------------
 
   bottomSection: {
     flexDirection: "row",
-    gap: 12,
-    marginTop: 14,
+    borderTopWidth: 1,
   },
 
-  notesColumn: {
+  metadataColumn: {
     width: "50%",
-    gap: 8,
+    flexDirection: "column",
+    borderRightWidth: 1,
   },
 
-  notesCard: {
-    borderRadius: 6,
-    borderWidth: 1,
-    overflow: "hidden",
+  metadataSection: {
+    flexDirection: "column",
+    gap: 2,
+    padding: 16,
   },
 
-  notesBody: {
-    padding: 8,
+  metadataDivider: {
+    borderTopWidth: 1,
+  },
+
+  metadataBody: {
     fontSize: 6.5,
-    lineHeight: 1.3,
+    marginTop: 4,
+    lineHeight: 1.4,
   },
 
   totalsColumn: {
     width: "50%",
     flexDirection: "column",
-    gap: 8,
   },
 
-  signatureCard: {
-    borderRadius: 6,
-    borderWidth: 1,
-    padding: 8,
+  // ----------------------------------------------------------
+  // Signature
+  // ----------------------------------------------------------
+
+  signatureContainer: {
     alignItems: "flex-end",
+    borderBottomWidth: 1,
+    padding: 12,
   },
 
-  signatureLabel: {
-    fontSize: 6,
-    marginBottom: 4,
+  signature: {
+    width: 60,
+    height: 60,
+    objectFit: "cover",
   },
 
-  signatureImage: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    objectFit: "contain",
-    borderWidth: 1,
-  },
+  // ----------------------------------------------------------
+  // Totals breakdown
+  // ----------------------------------------------------------
 
-  totalsCard: {
-    borderRadius: 6,
-    borderWidth: 1,
-    overflow: "hidden",
-  },
-
-  breakdownList: {
-    padding: 10,
+  totalsBreakdown: {
     flexDirection: "column",
     gap: 4,
+    padding: 16,
   },
 
   totalRow: {
@@ -296,42 +318,53 @@ const styles = StyleSheet.create({
 
   totalValue: {
     fontSize: 7,
-    fontWeight: 500,
+    letterSpacing: -0.3,
   },
 
-  grandTotalRow: {
+  // Styled like a diff "+" addition block
+  grandTotal: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderTopWidth: 1,
+    marginHorizontal: 16,
+    marginBottom: 12,
+    padding: 12,
+    borderRadius: 4,
+    borderWidth: 1,
+  },
+
+  grandTotalPrefix: {
+    fontSize: 9,
+    fontWeight: 700,
+    marginRight: 6,
   },
 
   grandTotalLabel: {
-    fontSize: 8.5,
+    fontSize: 8,
     fontWeight: 600,
   },
 
   grandTotalValue: {
-    fontSize: 11,
-    fontWeight: 600,
+    fontSize: 13,
+    fontWeight: 700,
+    letterSpacing: -0.3,
   },
 
-  wordsFooter: {
-    paddingHorizontal: 10,
-    paddingBottom: 8,
-    paddingTop: 4,
+  wordsContainer: {
+    flexDirection: "column",
+    gap: 2,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
   },
 
   wordsLabel: {
-    fontSize: 5.5,
+    fontSize: 6,
     textTransform: "uppercase",
+    letterSpacing: 0.3,
   },
 
-  wordsValue: {
-    fontSize: 6.5,
-    marginTop: 2,
+  words: {
+    fontSize: 7,
   },
 })
 
@@ -349,8 +382,13 @@ function formatCurrency(currency: string, value: number) {
 
 function formatDate(value: string) {
   if (!value) return ""
+
   const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
+
+  if (Number.isNaN(date.getTime())) {
+    return value
+  }
+
   return date.toLocaleDateString("en-IN")
 }
 
@@ -366,12 +404,24 @@ function calculateBillingDetails(invoice: Invoice, subtotal: number) {
     if (detail.type === "percentage") {
       return total + subtotal * (detail.value / 100)
     }
+
     return total + detail.value
   }, 0)
 }
 
 function numberToWords(value: number) {
   return value.toLocaleString("en-IN")
+}
+
+// Blends a hex color toward transparent-on-dark by returning an rgba string.
+// Used to get a subtle "diff addition" tint behind the grand total.
+function tint(hex: string, alpha: number) {
+  const clean = hex.replace("#", "")
+  const bigint = parseInt(clean, 16)
+  const r = (bigint >> 16) & 255
+  const g = (bigint >> 8) & 255
+  const b = bigint & 255
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
 // ============================================================
@@ -386,12 +436,17 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
   const billingTotal = calculateBillingDetails(invoice, subtotal)
   const total = subtotal + tax + billingTotal - invoice.invoice.discount
 
+  // Subtle alternate row fallback if theme.tableRow is not defined
+  const alternateRowBg = tint(theme.page.text, 0.05)
+
   const dynamicStyles = StyleSheet.create({
     page: {
       ...styles.page,
       backgroundColor: theme.page.background,
       color: theme.page.text,
       fontFamily: invoice.theme.font,
+      borderColor: theme.border,
+      borderWidth: 1,
     },
 
     header: {
@@ -401,14 +456,22 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
 
     badge: {
       ...styles.badge,
-      borderColor: theme.border,
-      backgroundColor: theme.panel,
-      color: theme.mutedText,
+      borderColor: theme.accent,
+    },
+
+    badgeText: {
+      ...styles.badgeText,
+      color: theme.accent,
     },
 
     invoiceTitle: {
       ...styles.invoiceTitle,
       color: theme.heading,
+    },
+
+    invoiceRef: {
+      ...styles.invoiceRef,
+      color: theme.mutedText,
     },
 
     logo: {
@@ -419,7 +482,12 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
     metaBar: {
       ...styles.metaBar,
       backgroundColor: theme.panel,
-      borderColor: theme.border,
+      borderBottomColor: theme.border,
+    },
+
+    metaDot: {
+      ...styles.metaDot,
+      backgroundColor: theme.accent,
     },
 
     metaLabel: {
@@ -432,34 +500,44 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
       color: theme.page.text,
     },
 
-    card: {
-      backgroundColor: theme.page.background,
-      borderColor: theme.border,
-    },
-
-    cardHeader: {
-      ...styles.cardHeader,
-      backgroundColor: theme.panel,
+    billingRow: {
+      ...styles.billingRow,
       borderBottomColor: theme.border,
     },
 
-    cardTitle: {
-      ...styles.cardTitle,
-      color: theme.heading,
+    billingPanelRight: {
+      ...styles.billingPanelRight,
+      borderLeftColor: theme.border,
     },
 
-    partyName: {
-      ...styles.partyName,
-      color: theme.heading,
+    sectionMarker: {
+      ...styles.sectionMarker,
+      backgroundColor: theme.accent,
     },
 
-    mutedText: {
+    sectionTitle: {
+      ...styles.sectionTitle,
       color: theme.mutedText,
     },
 
-    tableContainer: {
-      ...styles.itemsContainer,
-      borderColor: theme.border,
+    companyName: {
+      ...styles.companyName,
+      color: theme.heading,
+    },
+
+    addressText: {
+      ...styles.addressText,
+      color: theme.mutedText,
+    },
+
+    fieldLabel: {
+      ...styles.fieldLabel,
+      color: theme.mutedText,
+    },
+
+    fieldValue: {
+      ...styles.fieldValue,
+      color: theme.page.text,
     },
 
     tableHeader: {
@@ -470,12 +548,14 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
 
     tableHeaderText: {
       ...styles.tableHeaderText,
-      color: theme.heading,
+      color: theme.mutedText,
     },
 
     itemRow: {
       ...styles.itemRow,
       borderBottomColor: theme.border,
+      borderLeftWidth: 2,
+      borderLeftColor: theme.accent,
     },
 
     itemName: {
@@ -483,10 +563,65 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
       color: theme.heading,
     },
 
-    grandTotalRow: {
-      ...styles.grandTotalRow,
+    itemDescription: {
+      ...styles.itemDescription,
+      color: theme.mutedText,
+    },
+
+    monoText: {
+      ...styles.monoText,
+      color: theme.page.text,
+    },
+
+    bottomSection: {
+      ...styles.bottomSection,
       borderTopColor: theme.border,
-      backgroundColor: theme.panel,
+    },
+
+    metadataColumn: {
+      ...styles.metadataColumn,
+      borderRightColor: theme.border,
+    },
+
+    metadataDivider: {
+      ...styles.metadataDivider,
+      borderTopColor: theme.border,
+    },
+
+    metadataTitle: {
+      ...styles.sectionTitle,
+      color: theme.mutedText,
+    },
+
+    metadataBody: {
+      ...styles.metadataBody,
+      color: theme.mutedText,
+    },
+
+    signatureContainer: {
+      ...styles.signatureContainer,
+      borderBottomColor: theme.border,
+    },
+
+    totalLabel: {
+      ...styles.totalLabel,
+      color: theme.mutedText,
+    },
+
+    totalValue: {
+      ...styles.totalValue,
+      color: theme.page.text,
+    },
+
+    grandTotal: {
+      ...styles.grandTotal,
+      backgroundColor: tint(theme.success, 0.12),
+      borderColor: tint(theme.success, 0.4),
+    },
+
+    grandTotalPrefix: {
+      ...styles.grandTotalPrefix,
+      color: theme.success,
     },
 
     grandTotalLabel: {
@@ -496,26 +631,38 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
 
     grandTotalValue: {
       ...styles.grandTotalValue,
-      color: theme.totalText,
+      color: theme.success,
+    },
+
+    wordsLabel: {
+      ...styles.wordsLabel,
+      color: theme.mutedText,
+    },
+
+    words: {
+      ...styles.words,
+      color: theme.mutedText,
     },
   })
 
   return (
     <Page size="A4" style={dynamicStyles.page}>
       {/* ================================================== */}
-      {/* HEADER / REPO-STYLE TITLE */}
+      {/* HEADER */}
       {/* ================================================== */}
 
       <View style={dynamicStyles.header}>
         <View style={styles.headerLeft}>
-          <View style={styles.badgeRow}>
-            <Text style={dynamicStyles.badge}>Invoice</Text>
-            <Text style={dynamicStyles.badge}>
-              #{invoice.invoice.serialNumber}
-            </Text>
+          <View style={dynamicStyles.badge}>
+            <Text style={dynamicStyles.badgeText}>Invoice</Text>
           </View>
           <Text style={dynamicStyles.invoiceTitle}>
-            {invoice.invoice.prefix}-{invoice.invoice.serialNumber}
+            {invoice.invoice.prefix}
+            {invoice.invoice.serialNumber}
+          </Text>
+          <Text style={dynamicStyles.invoiceRef}>
+            ref: {invoice.invoice.prefix}
+            {invoice.invoice.serialNumber}
           </Text>
         </View>
 
@@ -525,13 +672,14 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
       </View>
 
       {/* ================================================== */}
-      {/* METADATA BAR (DATE, DUE DATE, CURRENCY) */}
+      {/* META BAR */}
       {/* ================================================== */}
 
       <View style={dynamicStyles.metaBar}>
         {invoice.invoice.date && (
           <View style={styles.metaItem}>
-            <Text style={dynamicStyles.metaLabel}>Issued:</Text>
+            <View style={dynamicStyles.metaDot} />
+            <Text style={dynamicStyles.metaLabel}>Issued</Text>
             <Text style={dynamicStyles.metaValue}>
               {formatDate(invoice.invoice.date)}
             </Text>
@@ -540,7 +688,8 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
 
         {invoice.invoice.dueDate && (
           <View style={styles.metaItem}>
-            <Text style={dynamicStyles.metaLabel}>Due:</Text>
+            <View style={dynamicStyles.metaDot} />
+            <Text style={dynamicStyles.metaLabel}>Due</Text>
             <Text style={dynamicStyles.metaValue}>
               {formatDate(invoice.invoice.dueDate)}
             </Text>
@@ -548,7 +697,8 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
         )}
 
         <View style={styles.metaItem}>
-          <Text style={dynamicStyles.metaLabel}>Currency:</Text>
+          <View style={dynamicStyles.metaDot} />
+          <Text style={dynamicStyles.metaLabel}>Currency</Text>
           <Text style={dynamicStyles.metaValue}>
             {invoice.invoice.currency}
           </Text>
@@ -556,52 +706,46 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
       </View>
 
       {/* ================================================== */}
-      {/* BILLING CARDS */}
+      {/* BILLING */}
       {/* ================================================== */}
 
-      <View style={styles.billingGrid}>
+      <View style={dynamicStyles.billingRow}>
         {/* Billed By */}
-        <View style={[styles.billingCard, dynamicStyles.card]}>
-          <View style={dynamicStyles.cardHeader}>
-            <Text style={dynamicStyles.cardTitle}>Billed By</Text>
+        <View style={styles.billingPanel}>
+          <View style={styles.sectionLabelRow}>
+            <View style={dynamicStyles.sectionMarker} />
+            <Text style={dynamicStyles.sectionTitle}>Billed By</Text>
           </View>
-          <View style={styles.cardBody}>
-            <Text style={dynamicStyles.partyName}>{invoice.company.name}</Text>
-            <Text style={[styles.partyAddress, dynamicStyles.mutedText]}>
-              {invoice.company.address}
-            </Text>
+          <Text style={dynamicStyles.companyName}>{invoice.company.name}</Text>
+          <Text style={dynamicStyles.addressText}>
+            {invoice.company.address}
+          </Text>
 
-            {invoice.company.fields.map((field) => (
-              <View key={field.id} style={styles.fieldRow}>
-                <Text style={[styles.fieldLabel, dynamicStyles.mutedText]}>
-                  {field.label}:
-                </Text>
-                <Text style={styles.fieldValue}>{field.value}</Text>
-              </View>
-            ))}
-          </View>
+          {invoice.company.fields.map((field) => (
+            <View key={field.id} style={styles.fieldRow}>
+              <Text style={dynamicStyles.fieldLabel}>{field.label}</Text>
+              <Text style={dynamicStyles.fieldValue}>{field.value}</Text>
+            </View>
+          ))}
         </View>
 
         {/* Billed To */}
-        <View style={[styles.billingCard, dynamicStyles.card]}>
-          <View style={dynamicStyles.cardHeader}>
-            <Text style={dynamicStyles.cardTitle}>Billed To</Text>
+        <View style={dynamicStyles.billingPanelRight}>
+          <View style={styles.sectionLabelRow}>
+            <View style={dynamicStyles.sectionMarker} />
+            <Text style={dynamicStyles.sectionTitle}>Billed To</Text>
           </View>
-          <View style={styles.cardBody}>
-            <Text style={dynamicStyles.partyName}>{invoice.client.name}</Text>
-            <Text style={[styles.partyAddress, dynamicStyles.mutedText]}>
-              {invoice.client.address}
-            </Text>
+          <Text style={dynamicStyles.companyName}>{invoice.client.name}</Text>
+          <Text style={dynamicStyles.addressText}>
+            {invoice.client.address}
+          </Text>
 
-            {invoice.client.fields.map((field) => (
-              <View key={field.id} style={styles.fieldRow}>
-                <Text style={[styles.fieldLabel, dynamicStyles.mutedText]}>
-                  {field.label}:
-                </Text>
-                <Text style={styles.fieldValue}>{field.value}</Text>
-              </View>
-            ))}
-          </View>
+          {invoice.client.fields.map((field) => (
+            <View key={field.id} style={styles.fieldRow}>
+              <Text style={dynamicStyles.fieldLabel}>{field.label}</Text>
+              <Text style={dynamicStyles.fieldValue}>{field.value}</Text>
+            </View>
+          ))}
         </View>
       </View>
 
@@ -609,10 +753,10 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
       {/* ITEMS TABLE */}
       {/* ================================================== */}
 
-      <View style={dynamicStyles.tableContainer}>
+      <View style={styles.itemsContainer}>
         <View fixed style={dynamicStyles.tableHeader}>
           <Text style={[styles.itemColumn, dynamicStyles.tableHeaderText]}>
-            Item Description
+            Item
           </Text>
           <Text style={[styles.quantityColumn, dynamicStyles.tableHeaderText]}>
             Qty
@@ -633,26 +777,28 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
               dynamicStyles.itemRow,
               {
                 backgroundColor:
-                  index % 2 === 0 ? theme.page.background : theme.tableRow,
+                  index % 2 === 0 ? theme.page.background : alternateRowBg,
               },
             ]}
           >
             <View style={styles.itemColumn}>
               <Text style={dynamicStyles.itemName}>{item.name}</Text>
               {item.description && (
-                <Text style={[styles.itemDescription, dynamicStyles.mutedText]}>
+                <Text style={dynamicStyles.itemDescription}>
                   {item.description}
                 </Text>
               )}
             </View>
 
-            <Text style={styles.quantityColumn}>{item.quantity}</Text>
+            <Text style={[styles.quantityColumn, dynamicStyles.monoText]}>
+              {item.quantity}
+            </Text>
 
-            <Text style={styles.priceColumn}>
+            <Text style={[styles.priceColumn, dynamicStyles.monoText]}>
               {formatCurrency(invoice.invoice.currency, item.unitPrice)}
             </Text>
 
-            <Text style={styles.totalColumn}>
+            <Text style={[styles.totalColumn, dynamicStyles.monoText]}>
               {formatCurrency(
                 invoice.invoice.currency,
                 item.quantity * item.unitPrice
@@ -662,137 +808,129 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
         ))}
       </View>
 
-      {/* Flexible Spacer */}
-      <View style={styles.pageSpacer} />
-
       {/* ================================================== */}
       {/* BOTTOM SECTION */}
       {/* ================================================== */}
 
-      <View wrap={false} style={styles.bottomSection}>
-        {/* Left Column: Metadata / Terms / Notes */}
-        <View style={styles.notesColumn}>
+      <View wrap={false} style={dynamicStyles.bottomSection}>
+        {/* Left: Metadata */}
+        <View style={dynamicStyles.metadataColumn}>
           {invoice.metadata.paymentDetails.length > 0 && (
-            <View style={[styles.notesCard, dynamicStyles.card]}>
-              <View style={dynamicStyles.cardHeader}>
-                <Text style={dynamicStyles.cardTitle}>Payment Details</Text>
-              </View>
-              <View style={styles.cardBody}>
-                {invoice.metadata.paymentDetails.map((field) => (
-                  <View key={field.id} style={styles.fieldRow}>
-                    <Text style={[styles.fieldLabel, dynamicStyles.mutedText]}>
-                      {field.label}:
-                    </Text>
-                    <Text style={styles.fieldValue}>{field.value}</Text>
-                  </View>
-                ))}
-              </View>
+            <View style={styles.metadataSection}>
+              <Text style={dynamicStyles.metadataTitle}>
+                Payment Information
+              </Text>
+              {invoice.metadata.paymentDetails.map((field) => (
+                <View key={field.id} style={styles.fieldRow}>
+                  <Text style={dynamicStyles.fieldLabel}>{field.label}</Text>
+                  <Text style={dynamicStyles.fieldValue}>{field.value}</Text>
+                </View>
+              ))}
             </View>
           )}
 
           {invoice.metadata.terms && (
-            <View style={[styles.notesCard, dynamicStyles.card]}>
-              <View style={dynamicStyles.cardHeader}>
-                <Text style={dynamicStyles.cardTitle}>Terms</Text>
-              </View>
-              <Text style={[styles.notesBody, dynamicStyles.mutedText]}>
+            <View
+              style={[
+                styles.metadataSection,
+                invoice.metadata.paymentDetails.length > 0
+                  ? dynamicStyles.metadataDivider
+                  : {},
+              ]}
+            >
+              <Text style={dynamicStyles.metadataTitle}>Terms</Text>
+              <Text style={dynamicStyles.metadataBody}>
                 {invoice.metadata.terms}
               </Text>
             </View>
           )}
 
           {invoice.metadata.notes && (
-            <View style={[styles.notesCard, dynamicStyles.card]}>
-              <View style={dynamicStyles.cardHeader}>
-                <Text style={dynamicStyles.cardTitle}>Notes</Text>
-              </View>
-              <Text style={[styles.notesBody, dynamicStyles.mutedText]}>
+            <View
+              style={[
+                styles.metadataSection,
+                invoice.metadata.paymentDetails.length > 0 ||
+                invoice.metadata.terms
+                  ? dynamicStyles.metadataDivider
+                  : {},
+              ]}
+            >
+              <Text style={dynamicStyles.metadataTitle}>Notes</Text>
+              <Text style={dynamicStyles.metadataBody}>
                 {invoice.metadata.notes}
               </Text>
             </View>
           )}
         </View>
 
-        {/* Right Column: Signature & Totals */}
+        {/* Right: Signature & Totals */}
         <View style={styles.totalsColumn}>
           {invoice.company.signature && (
-            <View style={[styles.signatureCard, dynamicStyles.card]}>
-              <Text style={[styles.signatureLabel, dynamicStyles.mutedText]}>
-                Authorized Signatory
-              </Text>
-              <Image
-                src={invoice.company.signature}
-                style={styles.signatureImage}
-              />
+            <View style={dynamicStyles.signatureContainer}>
+              <Image src={invoice.company.signature} style={styles.signature} />
             </View>
           )}
 
-          <View style={[styles.totalsCard, dynamicStyles.card]}>
-            <View style={styles.breakdownList}>
-              <View style={styles.totalRow}>
-                <Text style={[styles.totalLabel, dynamicStyles.mutedText]}>
-                  Subtotal
-                </Text>
-                <Text style={styles.totalValue}>
-                  {formatCurrency(invoice.invoice.currency, subtotal)}
+          <View style={styles.totalsBreakdown}>
+            <View style={styles.totalRow}>
+              <Text style={dynamicStyles.totalLabel}>Subtotal</Text>
+              <Text style={dynamicStyles.totalValue}>
+                {formatCurrency(invoice.invoice.currency, subtotal)}
+              </Text>
+            </View>
+
+            {invoice.invoice.billingDetails.map((detail) => (
+              <View key={detail.id} style={styles.totalRow}>
+                <Text style={dynamicStyles.totalLabel}>{detail.label}</Text>
+                <Text style={dynamicStyles.totalValue}>
+                  {detail.type === "percentage"
+                    ? `${detail.value}%`
+                    : formatCurrency(invoice.invoice.currency, detail.value)}
                 </Text>
               </View>
+            ))}
 
-              {invoice.invoice.billingDetails.map((detail) => (
-                <View key={detail.id} style={styles.totalRow}>
-                  <Text style={[styles.totalLabel, dynamicStyles.mutedText]}>
-                    {detail.label}
-                  </Text>
-                  <Text style={styles.totalValue}>
-                    {detail.type === "percentage"
-                      ? `${detail.value}%`
-                      : formatCurrency(invoice.invoice.currency, detail.value)}
-                  </Text>
-                </View>
-              ))}
+            {invoice.invoice.taxRate > 0 && (
+              <View style={styles.totalRow}>
+                <Text style={dynamicStyles.totalLabel}>
+                  Tax ({invoice.invoice.taxRate}%)
+                </Text>
+                <Text style={dynamicStyles.totalValue}>
+                  {formatCurrency(invoice.invoice.currency, tax)}
+                </Text>
+              </View>
+            )}
 
-              {invoice.invoice.taxRate > 0 && (
-                <View style={styles.totalRow}>
-                  <Text style={[styles.totalLabel, dynamicStyles.mutedText]}>
-                    Tax ({invoice.invoice.taxRate}%)
-                  </Text>
-                  <Text style={styles.totalValue}>
-                    {formatCurrency(invoice.invoice.currency, tax)}
-                  </Text>
-                </View>
-              )}
+            {invoice.invoice.discount > 0 && (
+              <View style={styles.totalRow}>
+                <Text style={dynamicStyles.totalLabel}>Discount</Text>
+                <Text style={dynamicStyles.totalValue}>
+                  -
+                  {formatCurrency(
+                    invoice.invoice.currency,
+                    invoice.invoice.discount
+                  )}
+                </Text>
+              </View>
+            )}
+          </View>
 
-              {invoice.invoice.discount > 0 && (
-                <View style={styles.totalRow}>
-                  <Text style={[styles.totalLabel, dynamicStyles.mutedText]}>
-                    Discount
-                  </Text>
-                  <Text style={styles.totalValue}>
-                    -
-                    {formatCurrency(
-                      invoice.invoice.currency,
-                      invoice.invoice.discount
-                    )}
-                  </Text>
-                </View>
-              )}
-            </View>
-
-            <View style={dynamicStyles.grandTotalRow}>
+          {/* Grand total, styled like a GitHub diff "+" addition line */}
+          <View style={dynamicStyles.grandTotal}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={dynamicStyles.grandTotalPrefix}>+</Text>
               <Text style={dynamicStyles.grandTotalLabel}>Total Due</Text>
-              <Text style={dynamicStyles.grandTotalValue}>
-                {formatCurrency(invoice.invoice.currency, total)}
-              </Text>
             </View>
+            <Text style={dynamicStyles.grandTotalValue}>
+              {formatCurrency(invoice.invoice.currency, total)}
+            </Text>
+          </View>
 
-            <View style={styles.wordsFooter}>
-              <Text style={[styles.wordsLabel, dynamicStyles.mutedText]}>
-                Amount in Words
-              </Text>
-              <Text style={[styles.wordsValue, dynamicStyles.mutedText]}>
-                {numberToWords(total)}
-              </Text>
-            </View>
+          <View style={styles.wordsContainer}>
+            <Text style={dynamicStyles.wordsLabel}>
+              Invoice Total (in words)
+            </Text>
+            <Text style={dynamicStyles.words}>{numberToWords(total)}</Text>
           </View>
         </View>
       </View>
