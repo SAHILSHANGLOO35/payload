@@ -22,7 +22,7 @@ type ThemeItem = {
 }
 
 export function InvoiceToolbar() {
-  const fontItems = ["Helvetica", "Times-Roman", "Courier"]
+  const fontItems = ["Inter", "Geist", "JetBrains Mono", "Quicksand"]
 
   const themeItems: ThemeItem[] = [
     {

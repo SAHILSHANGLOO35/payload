@@ -1,6 +1,13 @@
 import { Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer"
 
 import type { Invoice } from "@/types/invoice"
+import {
+  calculateInvoiceTotals,
+  calculateItemTotal,
+  formatCurrency,
+  formatDate,
+  numberToWords,
+} from "@/lib/invoice/calculation"
 import { pdfThemes } from "@/lib/invoice/pdf-theme"
 
 type StripePdfProps = {
@@ -15,9 +22,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
 
-  // ----------------------------------------------------------
-  // Header Tile (Prefix & Serial)
-  // ----------------------------------------------------------
+  // Header tile
 
   headerTile: {
     borderWidth: 1,
@@ -38,9 +43,7 @@ const styles = StyleSheet.create({
     letterSpacing: -1,
   },
 
-  // ----------------------------------------------------------
-  // Details & Logo Row (Vercel Style in Bento Card)
-  // ----------------------------------------------------------
+  // Details and logo
 
   detailsRow: {
     flexDirection: "row",
@@ -88,9 +91,7 @@ const styles = StyleSheet.create({
     objectFit: "contain",
   },
 
-  // ----------------------------------------------------------
-  // 2-Column Billing Modules (Billed To & Billed By)
-  // ----------------------------------------------------------
+  // Billing cards
 
   billingRow: {
     flexDirection: "row",
@@ -142,9 +143,7 @@ const styles = StyleSheet.create({
     fontWeight: 400,
   },
 
-  // ----------------------------------------------------------
-  // Items Table Box
-  // ----------------------------------------------------------
+  // Items table
 
   itemsBox: {
     borderWidth: 1,
@@ -211,9 +210,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
 
-  // ----------------------------------------------------------
-  // Bottom Modules (Metadata Left, Totals Right)
-  // ----------------------------------------------------------
+  // Bottom section
 
   bottomSection: {
     flexDirection: "row",
@@ -331,55 +328,10 @@ const styles = StyleSheet.create({
   },
 })
 
-// ============================================================
-// Helpers
-// ============================================================
-
-function formatCurrency(currency: string, value: number) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
-
-function formatDate(value: string) {
-  if (!value) return ""
-  const date = new Date(value)
-  return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString("en-IN")
-}
-
-function calculateSubtotal(invoice: Invoice) {
-  return invoice.items.reduce(
-    (total, item) => total + item.quantity * item.unitPrice,
-    0
-  )
-}
-
-function calculateBillingDetails(invoice: Invoice, subtotal: number) {
-  return invoice.invoice.billingDetails.reduce((total, detail) => {
-    if (detail.type === "percentage") {
-      return total + subtotal * (detail.value / 100)
-    }
-    return total + detail.value
-  }, 0)
-}
-
-function numberToWords(value: number) {
-  return value.toLocaleString("en-IN")
-}
-
-// ============================================================
-// Stripe PDF Component
-// ============================================================
-
 export default function StripePdf({ invoice }: StripePdfProps) {
   const theme = pdfThemes[invoice.theme.template] ?? pdfThemes.default
 
-  const subtotal = calculateSubtotal(invoice)
-  const tax = subtotal * (invoice.invoice.taxRate / 100)
-  const billingTotal = calculateBillingDetails(invoice, subtotal)
-  const total = subtotal + tax + billingTotal - invoice.invoice.discount
+  const { subtotal, tax, discount, total } = calculateInvoiceTotals(invoice)
 
   const dynamicStyles = StyleSheet.create({
     page: {
@@ -558,9 +510,7 @@ export default function StripePdf({ invoice }: StripePdfProps) {
 
   return (
     <Page size="A4" style={dynamicStyles.page}>
-      {/* ================================================== */}
-      {/* 1. HEADER (Invoice Serial No Title) */}
-      {/* ================================================== */}
+      {/* Header */}
       <View style={dynamicStyles.headerTile}>
         <Text style={dynamicStyles.invoiceTitle}>
           {invoice.invoice.prefix}
@@ -570,9 +520,7 @@ export default function StripePdf({ invoice }: StripePdfProps) {
         </Text>
       </View>
 
-      {/* ================================================== */}
-      {/* 2. DETAILS (Left) & LOGO (Right) - Vercel Style */}
-      {/* ================================================== */}
+      {/* Details and logo */}
       <View style={dynamicStyles.detailsRow}>
         <View style={dynamicStyles.invoiceDetails}>
           <View style={styles.detailRow}>
@@ -615,9 +563,7 @@ export default function StripePdf({ invoice }: StripePdfProps) {
         )}
       </View>
 
-      {/* ================================================== */}
-      {/* 3. 2-COLUMN BILLING (Billed By & Billed To) */}
-      {/* ================================================== */}
+      {/* Billing cards */}
       <View style={styles.billingRow}>
         {/* BILLED BY */}
         <View style={[styles.billingCard, dynamicStyles.tile]}>
@@ -652,9 +598,7 @@ export default function StripePdf({ invoice }: StripePdfProps) {
         </View>
       </View>
 
-      {/* ================================================== */}
-      {/* 4. ITEMS TABLE */}
-      {/* ================================================== */}
+      {/* Items table */}
       <View style={[styles.itemsBox, dynamicStyles.tile]}>
         <View fixed style={dynamicStyles.tableHeader}>
           <Text style={[styles.itemColumn, dynamicStyles.tableHeaderText]}>
@@ -703,18 +647,16 @@ export default function StripePdf({ invoice }: StripePdfProps) {
             <Text style={[styles.totalColumn, dynamicStyles.monoText]}>
               {formatCurrency(
                 invoice.invoice.currency,
-                item.quantity * item.unitPrice
+                calculateItemTotal(item)
               )}
             </Text>
           </View>
         ))}
       </View>
 
-      {/* ================================================== */}
-      {/* 5. BOTTOM SECTION (Metadata Left, Totals Right) */}
-      {/* ================================================== */}
+      {/* Bottom section */}
       <View wrap={false} style={styles.bottomSection}>
-        {/* LEFT: Metadata */}
+        {/* Metadata */}
         <View style={styles.metadataColumn}>
           {invoice.metadata.paymentDetails.length > 0 && (
             <View style={[styles.notesCard, dynamicStyles.tile]}>
@@ -749,7 +691,7 @@ export default function StripePdf({ invoice }: StripePdfProps) {
           )}
         </View>
 
-        {/* RIGHT: Totals & Signature */}
+        {/* Totals and signature */}
         <View style={styles.totalsColumn}>
           {invoice.company.signature && (
             <View style={dynamicStyles.signatureContainer}>
@@ -792,11 +734,7 @@ export default function StripePdf({ invoice }: StripePdfProps) {
                 <View style={styles.totalRow}>
                   <Text style={dynamicStyles.totalLabel}>Discount</Text>
                   <Text style={dynamicStyles.totalValue}>
-                    -
-                    {formatCurrency(
-                      invoice.invoice.currency,
-                      invoice.invoice.discount
-                    )}
+                    -{formatCurrency(invoice.invoice.currency, discount)}
                   </Text>
                 </View>
               )}

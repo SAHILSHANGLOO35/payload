@@ -2,6 +2,13 @@ import { Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer"
 
 import type { Invoice } from "@/types/invoice"
 import { pdfThemes } from "@/lib/invoice/pdf-theme"
+import {
+  calculateInvoiceTotals,
+  calculateItemTotal,
+  formatCurrency,
+  formatDate,
+  numberToWords,
+} from "@/lib/invoice/calculation"
 
 type DefaultPdfProps = {
   invoice: Invoice
@@ -10,15 +17,11 @@ type DefaultPdfProps = {
 const styles = StyleSheet.create({
   page: {
     padding: 20,
-
     fontSize: 8,
-
     flexDirection: "column",
   },
 
-  // ----------------------------------------------------------
   // Header
-  // ----------------------------------------------------------
 
   header: {
     flexDirection: "row",
@@ -62,9 +65,7 @@ const styles = StyleSheet.create({
     objectFit: "contain",
   },
 
-  // ----------------------------------------------------------
   // Company / Client
-  // ----------------------------------------------------------
 
   billingRow: {
     flexDirection: "row",
@@ -78,7 +79,6 @@ const styles = StyleSheet.create({
     paddingRight: 11,
     paddingBottom: 10,
     paddingLeft: 11,
-
     borderRadius: 2,
   },
 
@@ -113,9 +113,7 @@ const styles = StyleSheet.create({
     fontSize: 7,
   },
 
-  // ----------------------------------------------------------
   // Items
-  // ----------------------------------------------------------
 
   itemsContainer: {
     marginTop: 20,
@@ -124,12 +122,10 @@ const styles = StyleSheet.create({
   tableHeader: {
     flexDirection: "row",
     alignItems: "center",
-
     paddingTop: 7,
     paddingRight: 8,
     paddingBottom: 7,
     paddingLeft: 8,
-
     borderRadius: 3,
   },
 
@@ -178,23 +174,17 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  // ----------------------------------------------------------
-  // IMPORTANT:
-  // This pushes the bottom section to the bottom of the page.
-  // ----------------------------------------------------------
+  // Spacer
 
   pageSpacer: {
     flexGrow: 1,
   },
 
-  // ----------------------------------------------------------
   // Bottom
-  // ----------------------------------------------------------
 
   bottomSection: {
     flexDirection: "row",
     gap: 35,
-
     marginTop: 18,
   },
 
@@ -213,9 +203,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
 
-  // ----------------------------------------------------------
   // Signature
-  // ----------------------------------------------------------
 
   signatureContainer: {
     alignItems: "flex-end",
@@ -233,15 +221,12 @@ const styles = StyleSheet.create({
     objectFit: "contain",
   },
 
-  // ----------------------------------------------------------
   // Totals
-  // ----------------------------------------------------------
 
   totalRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-
     marginBottom: 5,
   },
 
@@ -258,10 +243,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-
     marginTop: 7,
     paddingTop: 8,
-
     borderTopWidth: 1,
   },
 
@@ -286,67 +269,15 @@ const styles = StyleSheet.create({
   },
 })
 
-// ============================================================
 // Helpers
-// ============================================================
 
-function formatCurrency(currency: string, value: number) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
-
-function formatDate(value: string) {
-  if (!value) return ""
-
-  const date = new Date(value)
-
-  if (Number.isNaN(date.getTime())) {
-    return value
-  }
-
-  return date.toLocaleDateString("en-IN")
-}
-
-function calculateSubtotal(invoice: Invoice) {
-  return invoice.items.reduce(
-    (total, item) => total + item.quantity * item.unitPrice,
-    0
-  )
-}
-
-function calculateBillingDetails(invoice: Invoice, subtotal: number) {
-  return invoice.invoice.billingDetails.reduce((total, detail) => {
-    if (detail.type === "percentage") {
-      return total + subtotal * (detail.value / 100)
-    }
-
-    return total + detail.value
-  }, 0)
-}
-
-function numberToWords(value: number) {
-  // Keep this simple for now.
-  // Replace with your existing number-to-words helper if you already have one.
-  return value.toLocaleString("en-IN")
-}
-
-// ============================================================
 // Default PDF
-// ============================================================
 
 export default function DefaultPdf({ invoice }: DefaultPdfProps) {
   const theme = pdfThemes[invoice.theme.template] ?? pdfThemes.default
 
-  const subtotal = calculateSubtotal(invoice)
-
-  const tax = subtotal * (invoice.invoice.taxRate / 100)
-
-  const billingTotal = calculateBillingDetails(invoice, subtotal)
-
-  const total = subtotal + tax + billingTotal - invoice.invoice.discount
+  // Centralized totals.
+  const { subtotal, tax, discount, total } = calculateInvoiceTotals(invoice)
 
   const dynamicStyles = StyleSheet.create({
     page: {
@@ -482,9 +413,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
         fontFamily: invoice.theme.font,
       }}
     >
-      {/* ================================================== */}
       {/* HEADER */}
-      {/* ================================================== */}
 
       <View style={dynamicStyles.header}>
         <View style={styles.headerLeft}>
@@ -561,9 +490,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
         )}
       </View>
 
-      {/* ================================================== */}
       {/* BILLING */}
-      {/* ================================================== */}
 
       <View style={dynamicStyles.billingRow}>
         {/* Billed By */}
@@ -583,7 +510,14 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
             Billed By
           </Text>
 
-          <Text style={styles.companyName}>{invoice.company.name}</Text>
+          <Text
+            style={{
+              ...styles.companyName,
+              color: theme.page.text,
+            }}
+          >
+            {invoice.company.name}
+          </Text>
 
           <Text
             style={{
@@ -634,7 +568,14 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
             Billed To
           </Text>
 
-          <Text style={styles.companyName}>{invoice.client.name}</Text>
+          <Text
+            style={{
+              ...styles.companyName,
+              color: theme.page.text,
+            }}
+          >
+            {invoice.client.name}
+          </Text>
 
           <Text
             style={{
@@ -669,9 +610,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
         </View>
       </View>
 
-      {/* ================================================== */}
       {/* ITEMS */}
-      {/* ================================================== */}
 
       <View style={styles.itemsContainer}>
         <View
@@ -727,10 +666,8 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
             wrap={false}
             style={{
               ...styles.itemRow,
-
               backgroundColor:
                 index % 2 === 0 ? theme.page.background : theme.tableRow,
-
               borderBottomWidth: 1,
               borderBottomColor: theme.border,
             }}
@@ -783,27 +720,21 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
             >
               {formatCurrency(
                 invoice.invoice.currency,
-                item.quantity * item.unitPrice
+                calculateItemTotal(item)
               )}
             </Text>
           </View>
         ))}
       </View>
 
-      {/* ================================================== */}
-      {/* THIS IS WHAT PUSHES FOOTER TO THE BOTTOM */}
-      {/* ================================================== */}
+      {/* SPACER */}
 
       <View style={styles.pageSpacer} />
 
-      {/* ================================================== */}
       {/* BOTTOM CONTENT */}
-      {/* ================================================== */}
 
       <View wrap={false} style={styles.bottomSection}>
-        {/* ================================================== */}
         {/* LEFT SIDE */}
-        {/* ================================================== */}
 
         <View style={styles.metadataColumn}>
           {invoice.metadata.paymentDetails.length > 0 && (
@@ -888,9 +819,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
           )}
         </View>
 
-        {/* ================================================== */}
         {/* RIGHT SIDE */}
-        {/* ================================================== */}
 
         <View style={styles.totalsColumn}>
           {/* Signature */}
@@ -984,7 +913,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
           {/* Discount */}
 
-          {invoice.invoice.discount > 0 && (
+          {discount > 0 && (
             <View style={styles.totalRow}>
               <Text
                 style={{
@@ -1001,11 +930,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
                   color: theme.mutedText,
                 }}
               >
-                -
-                {formatCurrency(
-                  invoice.invoice.currency,
-                  invoice.invoice.discount
-                )}
+                -{formatCurrency(invoice.invoice.currency, discount)}
               </Text>
             </View>
           )}

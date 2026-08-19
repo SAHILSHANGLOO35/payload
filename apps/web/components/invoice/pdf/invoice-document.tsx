@@ -3,6 +3,8 @@ import { Document } from "@react-pdf/renderer"
 import type { Invoice } from "@/types/invoice"
 import { type PdfThemeKey } from "@/lib/invoice/pdf-theme"
 
+import "@/lib/invoice/pdf-fonts"
+
 import DefaultPdf from "./default"
 import VercelPdf from "./vercel"
 import GithubPdf from "./github"
@@ -17,8 +19,6 @@ const templates: Partial<
   Record<PdfThemeKey, React.ComponentType<InvoiceTemplateProps>>
 > = {
   default: DefaultPdf,
-
-  // Add these later:
   vercel: VercelPdf,
   github: GithubPdf,
   stripe: StripePdf,

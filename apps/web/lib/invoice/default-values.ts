@@ -3,7 +3,7 @@ import type { Invoice } from "@/types/invoice"
 export const defaultInvoice: Invoice = {
   theme: {
     template: "default",
-    font: "Helvetica",
+    font: "Inter",
     mode: "light",
     accentColor: "#635CFF",
   },

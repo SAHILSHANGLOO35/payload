@@ -1,6 +1,13 @@
 import { Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer"
 
 import type { Invoice } from "@/types/invoice"
+import {
+  calculateInvoiceTotals,
+  calculateItemTotal,
+  formatCurrency,
+  formatDate,
+  numberToWords,
+} from "@/lib/invoice/calculation"
 import { pdfThemes } from "@/lib/invoice/pdf-theme"
 
 type GithubPdfProps = {
@@ -13,9 +20,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
 
-  // ----------------------------------------------------------
   // Header
-  // ----------------------------------------------------------
 
   header: {
     flexDirection: "row",
@@ -67,9 +72,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
 
-  // ----------------------------------------------------------
-  // Meta bar (issued / due / currency, file-path style)
-  // ----------------------------------------------------------
+  // Meta bar
 
   metaBar: {
     flexDirection: "row",
@@ -103,9 +106,7 @@ const styles = StyleSheet.create({
     fontWeight: 600,
   },
 
-  // ----------------------------------------------------------
   // Billing
-  // ----------------------------------------------------------
 
   billingRow: {
     flexDirection: "row",
@@ -176,9 +177,7 @@ const styles = StyleSheet.create({
     fontWeight: 500,
   },
 
-  // ----------------------------------------------------------
-  // Items table (diff-list styled)
-  // ----------------------------------------------------------
+  // Items table
 
   itemsContainer: {
     flexGrow: 1,
@@ -244,9 +243,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
   },
 
-  // ----------------------------------------------------------
   // Bottom section
-  // ----------------------------------------------------------
 
   bottomSection: {
     flexDirection: "row",
@@ -280,9 +277,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
 
-  // ----------------------------------------------------------
   // Signature
-  // ----------------------------------------------------------
 
   signatureContainer: {
     alignItems: "flex-end",
@@ -296,9 +291,7 @@ const styles = StyleSheet.create({
     objectFit: "cover",
   },
 
-  // ----------------------------------------------------------
   // Totals breakdown
-  // ----------------------------------------------------------
 
   totalsBreakdown: {
     flexDirection: "column",
@@ -368,52 +361,6 @@ const styles = StyleSheet.create({
   },
 })
 
-// ============================================================
-// Helpers
-// ============================================================
-
-function formatCurrency(currency: string, value: number) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
-
-function formatDate(value: string) {
-  if (!value) return ""
-
-  const date = new Date(value)
-
-  if (Number.isNaN(date.getTime())) {
-    return value
-  }
-
-  return date.toLocaleDateString("en-IN")
-}
-
-function calculateSubtotal(invoice: Invoice) {
-  return invoice.items.reduce(
-    (total, item) => total + item.quantity * item.unitPrice,
-    0
-  )
-}
-
-function calculateBillingDetails(invoice: Invoice, subtotal: number) {
-  return invoice.invoice.billingDetails.reduce((total, detail) => {
-    if (detail.type === "percentage") {
-      return total + subtotal * (detail.value / 100)
-    }
-
-    return total + detail.value
-  }, 0)
-}
-
-function numberToWords(value: number) {
-  return value.toLocaleString("en-IN")
-}
-
-// Blends a hex color toward transparent-on-dark by returning an rgba string.
 // Used to get a subtle "diff addition" tint behind the grand total.
 function tint(hex: string, alpha: number) {
   const clean = hex.replace("#", "")
@@ -431,10 +378,7 @@ function tint(hex: string, alpha: number) {
 export default function GithubPdf({ invoice }: GithubPdfProps) {
   const theme = pdfThemes[invoice.theme.template] ?? pdfThemes.default
 
-  const subtotal = calculateSubtotal(invoice)
-  const tax = subtotal * (invoice.invoice.taxRate / 100)
-  const billingTotal = calculateBillingDetails(invoice, subtotal)
-  const total = subtotal + tax + billingTotal - invoice.invoice.discount
+  const { subtotal, tax, discount, total } = calculateInvoiceTotals(invoice)
 
   // Subtle alternate row fallback if theme.tableRow is not defined
   const alternateRowBg = tint(theme.page.text, 0.05)
@@ -801,7 +745,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             <Text style={[styles.totalColumn, dynamicStyles.monoText]}>
               {formatCurrency(
                 invoice.invoice.currency,
-                item.quantity * item.unitPrice
+                calculateItemTotal(item)
               )}
             </Text>
           </View>
@@ -905,11 +849,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
               <View style={styles.totalRow}>
                 <Text style={dynamicStyles.totalLabel}>Discount</Text>
                 <Text style={dynamicStyles.totalValue}>
-                  -
-                  {formatCurrency(
-                    invoice.invoice.currency,
-                    invoice.invoice.discount
-                  )}
+                  -{formatCurrency(invoice.invoice.currency, discount)}
                 </Text>
               </View>
             )}

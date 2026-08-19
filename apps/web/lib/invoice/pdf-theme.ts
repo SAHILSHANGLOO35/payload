@@ -1,10 +1,4 @@
-export type PdfFont =
-  | "Inter"
-  | "JetBrains Mono"
-  | "Geist"
-  | "Helvetica"
-  | "Roboto"
-  | "Ubuntu"
+export type PdfFont = "Inter" | "JetBrains Mono" | "Geist" | "Quicksand"
 
 export type PdfThemeKey = "default" | "vercel" | "github" | "stripe" | "notion"
 

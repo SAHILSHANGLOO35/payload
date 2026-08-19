@@ -1,6 +1,13 @@
 import { Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer"
 
 import type { Invoice } from "@/types/invoice"
+import {
+  calculateInvoiceTotals,
+  calculateItemTotal,
+  formatCurrency,
+  formatDate,
+  numberToWords,
+} from "@/lib/invoice/calculation"
 import { pdfThemes } from "@/lib/invoice/pdf-theme"
 
 type VercelPdfProps = {
@@ -13,9 +20,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
 
-  // ----------------------------------------------------------
   // Header
-  // ----------------------------------------------------------
 
   header: {
     flexDirection: "row",
@@ -34,9 +39,7 @@ const styles = StyleSheet.create({
     letterSpacing: -1,
   },
 
-  // ----------------------------------------------------------
   // Details & Logo
-  // ----------------------------------------------------------
 
   detailsRow: {
     flexDirection: "row",
@@ -82,9 +85,7 @@ const styles = StyleSheet.create({
     objectFit: "contain",
   },
 
-  // ----------------------------------------------------------
   // Billing
-  // ----------------------------------------------------------
 
   billingRow: {
     flexDirection: "row",
@@ -142,9 +143,7 @@ const styles = StyleSheet.create({
     fontWeight: 400,
   },
 
-  // ----------------------------------------------------------
   // Items Table
-  // ----------------------------------------------------------
 
   itemsContainer: {
     flexGrow: 1,
@@ -207,9 +206,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
 
-  // ----------------------------------------------------------
   // Bottom Section (Metadata & Totals)
-  // ----------------------------------------------------------
 
   bottomSection: {
     flexDirection: "row",
@@ -244,9 +241,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
 
-  // ----------------------------------------------------------
   // Signature
-  // ----------------------------------------------------------
 
   signatureContainer: {
     alignItems: "flex-end",
@@ -260,9 +255,7 @@ const styles = StyleSheet.create({
     objectFit: "cover",
   },
 
-  // ----------------------------------------------------------
   // Totals Breakdown
-  // ----------------------------------------------------------
 
   totalsBreakdown: {
     flexDirection: "column",
@@ -324,61 +317,13 @@ const styles = StyleSheet.create({
 })
 
 // ============================================================
-// Helpers
-// ============================================================
-
-function formatCurrency(currency: string, value: number) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
-
-function formatDate(value: string) {
-  if (!value) return ""
-
-  const date = new Date(value)
-
-  if (Number.isNaN(date.getTime())) {
-    return value
-  }
-
-  return date.toLocaleDateString("en-IN")
-}
-
-function calculateSubtotal(invoice: Invoice) {
-  return invoice.items.reduce(
-    (total, item) => total + item.quantity * item.unitPrice,
-    0
-  )
-}
-
-function calculateBillingDetails(invoice: Invoice, subtotal: number) {
-  return invoice.invoice.billingDetails.reduce((total, detail) => {
-    if (detail.type === "percentage") {
-      return total + subtotal * (detail.value / 100)
-    }
-
-    return total + detail.value
-  }, 0)
-}
-
-function numberToWords(value: number) {
-  return value.toLocaleString("en-IN")
-}
-
-// ============================================================
 // Vercel PDF Component
 // ============================================================
 
 export default function VercelPdf({ invoice }: VercelPdfProps) {
   const theme = pdfThemes[invoice.theme.template] ?? pdfThemes.default
 
-  const subtotal = calculateSubtotal(invoice)
-  const tax = subtotal * (invoice.invoice.taxRate / 100)
-  const billingTotal = calculateBillingDetails(invoice, subtotal)
-  const total = subtotal + tax + billingTotal - invoice.invoice.discount
+  const { subtotal, tax, discount, total } = calculateInvoiceTotals(invoice)
 
   const dynamicStyles = StyleSheet.create({
     page: {
@@ -723,7 +668,7 @@ export default function VercelPdf({ invoice }: VercelPdfProps) {
             <Text style={[styles.totalColumn, dynamicStyles.monoText]}>
               {formatCurrency(
                 invoice.invoice.currency,
-                item.quantity * item.unitPrice
+                calculateItemTotal(item)
               )}
             </Text>
           </View>
@@ -827,11 +772,7 @@ export default function VercelPdf({ invoice }: VercelPdfProps) {
               <View style={styles.totalRow}>
                 <Text style={dynamicStyles.totalLabel}>Discount</Text>
                 <Text style={dynamicStyles.totalValue}>
-                  -
-                  {formatCurrency(
-                    invoice.invoice.currency,
-                    invoice.invoice.discount
-                  )}
+                  -{formatCurrency(invoice.invoice.currency, discount)}
                 </Text>
               </View>
             )}
