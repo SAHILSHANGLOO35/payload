@@ -16,7 +16,23 @@ type GithubPdfProps = {
   invoice: Invoice
 }
 
-const tw = createTw({})
+const tw = createTw({
+  theme: {
+    fontFamily: {
+      default: ["Geist"],
+      geist: ["Geist"],
+    },
+    extend: {
+      fontSize: {
+        sm: "0.67rem",
+        xs: "0.625rem",
+        "2xs": "0.58rem",
+        "3xs": "0.5rem",
+        lg: "0.875rem",
+      },
+    },
+  },
+})
 
 function tint(hex: string, alpha: number) {
   const clean = hex.replace("#", "")
@@ -40,7 +56,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
     <Page
       size="A4"
       style={{
-        ...tw("flex flex-col text-[8px]"),
+        ...tw("flex flex-col text-sm"),
         fontFamily: invoice.theme.font,
         backgroundColor: theme.page.background,
         color: theme.page.text,
@@ -69,7 +85,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
           >
             <Text
               style={{
-                ...tw("text-[7.5px] font-semibold tracking-[0.5px] uppercase"),
+                ...tw("text-xs font-semibold tracking-[0.5px] uppercase"),
                 color: theme.accent,
               }}
             >
@@ -80,23 +96,12 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
           {/* Invoice Number */}
           <Text
             style={{
-              ...tw("text-[22px] font-semibold"),
+              ...tw("text-[40px] leading-[40px] font-semibold"),
               letterSpacing: isMono ? 0 : -0.5,
               color: theme.heading,
             }}
           >
             {invoice.invoice.prefix}-{invoice.invoice.serialNumber}
-          </Text>
-
-          {/* Reference */}
-          <Text
-            style={{
-              ...tw("text-[7px] tracking-[0.2px]"),
-              color: theme.mutedText,
-            }}
-          >
-            Ref: {invoice.invoice.prefix}
-            {invoice.invoice.serialNumber}
           </Text>
         </View>
 
@@ -131,7 +136,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             />
             <Text
               style={{
-                ...tw("text-[6.5px] uppercase tracking-[0.3px]"),
+                ...tw("text-2xs uppercase tracking-[0.3px]"),
                 color: theme.mutedText,
               }}
             >
@@ -139,7 +144,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             </Text>
             <Text
               style={{
-                ...tw("text-[7px] font-semibold"),
+                ...tw("text-2xs font-semibold"),
                 color: theme.page.text,
               }}
             >
@@ -158,7 +163,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             />
             <Text
               style={{
-                ...tw("text-[6.5px] uppercase tracking-[0.3px]"),
+                ...tw("text-2xs uppercase tracking-[0.3px]"),
                 color: theme.mutedText,
               }}
             >
@@ -166,7 +171,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             </Text>
             <Text
               style={{
-                ...tw("text-[7px] font-semibold"),
+                ...tw("text-2xs font-semibold"),
                 color: theme.page.text,
               }}
             >
@@ -184,7 +189,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
           />
           <Text
             style={{
-              ...tw("text-[6.5px] uppercase tracking-[0.3px]"),
+              ...tw("text-2xs uppercase tracking-[0.3px]"),
               color: theme.mutedText,
             }}
           >
@@ -192,7 +197,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
           </Text>
           <Text
             style={{
-              ...tw("text-[7px] font-semibold"),
+              ...tw("text-2xs font-semibold"),
               color: theme.page.text,
             }}
           >
@@ -220,7 +225,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             />
             <Text
               style={{
-                ...tw("text-[6.5px] font-semibold uppercase tracking-[0.5px]"),
+                ...tw("text-sm font-semibold uppercase tracking-[0.5px]"),
                 color: theme.mutedText,
               }}
             >
@@ -230,7 +235,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
 
           <Text
             style={{
-              ...tw("text-[9px] font-semibold mb-0.5"),
+              ...tw("text-xs font-semibold mb-0.5"),
               color: theme.heading,
             }}
           >
@@ -239,7 +244,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
 
           <Text
             style={{
-              ...tw("text-[7px] leading-[9.45px] mb-1"),
+              ...tw("text-xs leading-[9.45px] mb-1"),
               color: theme.mutedText,
             }}
           >
@@ -253,7 +258,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             >
               <Text
                 style={{
-                  ...tw("text-[6.5px]"),
+                  ...tw("text-xs"),
                   color: theme.mutedText,
                 }}
               >
@@ -261,7 +266,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
               </Text>
               <Text
                 style={{
-                  ...tw("text-[6.5px] font-medium"),
+                  ...tw("text-xs font-medium"),
                   color: theme.page.text,
                 }}
               >
@@ -288,7 +293,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             />
             <Text
               style={{
-                ...tw("text-[6.5px] font-semibold uppercase tracking-[0.5px]"),
+                ...tw("text-sm font-semibold uppercase tracking-[0.5px]"),
                 color: theme.mutedText,
               }}
             >
@@ -298,7 +303,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
 
           <Text
             style={{
-              ...tw("text-[9px] font-semibold mb-0.5"),
+              ...tw("text-xs font-semibold mb-0.5"),
               color: theme.heading,
             }}
           >
@@ -307,7 +312,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
 
           <Text
             style={{
-              ...tw("text-[7px] leading-[9.45px] mb-1"),
+              ...tw("text-xs leading-[9.45px] mb-1"),
               color: theme.mutedText,
             }}
           >
@@ -321,7 +326,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             >
               <Text
                 style={{
-                  ...tw("text-[6.5px]"),
+                  ...tw("text-xs"),
                   color: theme.mutedText,
                 }}
               >
@@ -329,7 +334,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
               </Text>
               <Text
                 style={{
-                  ...tw("text-[6.5px] font-medium"),
+                  ...tw("text-xs font-medium"),
                   color: theme.page.text,
                 }}
               >
@@ -354,9 +359,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
         >
           <Text
             style={{
-              ...tw(
-                "w-[60%] text-[6.5px] font-semibold uppercase tracking-[0.3px]"
-              ),
+              ...tw("w-[60%] text-xs font-semibold uppercase tracking-[0.3px]"),
               color: theme.mutedText,
             }}
           >
@@ -366,7 +369,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
           <Text
             style={{
               ...tw(
-                "w-[10%] text-center text-[6.5px] font-semibold uppercase tracking-[0.3px]"
+                "w-[10%] text-center text-xs font-semibold uppercase tracking-[0.3px]"
               ),
               color: theme.mutedText,
             }}
@@ -377,7 +380,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
           <Text
             style={{
               ...tw(
-                "w-[15%] text-right text-[6.5px] font-semibold uppercase tracking-[0.3px]"
+                "w-[15%] text-right text-xs font-semibold uppercase tracking-[0.3px]"
               ),
               color: theme.mutedText,
             }}
@@ -388,7 +391,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
           <Text
             style={{
               ...tw(
-                "w-[15%] text-right text-[6.5px] font-semibold uppercase tracking-[0.3px]"
+                "w-[15%] text-right text-xs font-semibold uppercase tracking-[0.3px]"
               ),
               color: theme.mutedText,
             }}
@@ -415,7 +418,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             <View style={tw("flex flex-col justify-center w-[60%]")}>
               <Text
                 style={{
-                  ...tw("text-[8px] font-semibold"),
+                  ...tw("text-2xs font-semibold"),
                   color: theme.heading,
                 }}
               >
@@ -425,7 +428,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
               {item.description && (
                 <Text
                   style={{
-                    ...tw("text-[6.5px] mt-0.5 leading-[8.45px]"),
+                    ...tw("text-xs mt-0.5 leading-[8.45px]"),
                     color: theme.mutedText,
                   }}
                 >
@@ -436,7 +439,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
 
             <Text
               style={{
-                ...tw("w-[10%] text-center"),
+                ...tw("w-[10%] text-center text-2xs"),
                 letterSpacing: isMono ? 0 : -0.3,
                 color: theme.page.text,
               }}
@@ -454,6 +457,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
               />
             </View>
 
+            {/* Item Amount */}
             <View style={tw("w-[15%] items-end")}>
               <CurrencyText
                 currency={invoice.invoice.currency}
@@ -488,38 +492,42 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             <View style={tw("flex flex-col gap-0.5 p-4")}>
               <Text
                 style={{
-                  ...tw(
-                    "text-[6.5px] font-semibold uppercase tracking-[0.5px]"
-                  ),
+                  ...tw("text-sm font-semibold uppercase tracking-[0.5px]"),
                   color: theme.mutedText,
                 }}
               >
                 Payment Information
               </Text>
 
-              {invoice.metadata.paymentDetails.map((field) => (
-                <View
-                  key={field.id}
-                  style={tw("flex flex-row items-center gap-1 mt-[1px]")}
-                >
-                  <Text
-                    style={{
-                      ...tw("text-[6.5px]"),
-                      color: theme.mutedText,
-                    }}
+              <View style={tw("flex flex-col gap-0.5 mt-1.5")}>
+                {invoice.metadata.paymentDetails.map((field) => (
+                  <View
+                    key={field.id}
+                    style={tw("flex flex-row items-start gap-1 flex-wrap")}
                   >
-                    {field.label}
-                  </Text>
-                  <Text
-                    style={{
-                      ...tw("text-[6.5px] font-medium"),
-                      color: theme.page.text,
-                    }}
-                  >
-                    {field.value}
-                  </Text>
-                </View>
-              ))}
+                    <Text
+                      style={{
+                        ...tw("text-2xs"),
+                        width: 85,
+                        color: theme.mutedText,
+                      }}
+                    >
+                      {field.label}
+                    </Text>
+
+                    <Text
+                      style={{
+                        ...tw("text-2xs font-medium"),
+                        flexGrow: 1,
+                        flexShrink: 1,
+                        color: theme.page.text,
+                      }}
+                    >
+                      {field.value}
+                    </Text>
+                  </View>
+                ))}
+              </View>
             </View>
           )}
 
@@ -538,9 +546,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             >
               <Text
                 style={{
-                  ...tw(
-                    "text-[6.5px] font-semibold uppercase tracking-[0.5px]"
-                  ),
+                  ...tw("text-sm font-semibold uppercase tracking-[0.5px]"),
                   color: theme.mutedText,
                 }}
               >
@@ -549,7 +555,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
 
               <Text
                 style={{
-                  ...tw("text-[6.5px] mt-1 leading-[9.1px]"),
+                  ...tw("text-2xs mt-1 leading-[9.1px]"),
                   color: theme.mutedText,
                 }}
               >
@@ -574,9 +580,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             >
               <Text
                 style={{
-                  ...tw(
-                    "text-[6.5px] font-semibold uppercase tracking-[0.5px]"
-                  ),
+                  ...tw("text-sm font-semibold uppercase tracking-[0.5px]"),
                   color: theme.mutedText,
                 }}
               >
@@ -585,7 +589,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
 
               <Text
                 style={{
-                  ...tw("text-[6.5px] mt-1 leading-[9.1px]"),
+                  ...tw("text-2xs mt-1 leading-[9.1px]"),
                   color: theme.mutedText,
                 }}
               >
@@ -618,7 +622,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             <View style={tw("flex flex-row items-center justify-between")}>
               <Text
                 style={{
-                  ...tw("text-[7px]"),
+                  ...tw("text-2xs"),
                   color: theme.mutedText,
                 }}
               >
@@ -627,7 +631,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
               <CurrencyText
                 currency={invoice.invoice.currency}
                 value={subtotal}
-                fontSize={7}
+                fontSize={9}
                 color={theme.page.text}
               />
             </View>
@@ -639,7 +643,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
               >
                 <Text
                   style={{
-                    ...tw("text-[7px]"),
+                    ...tw("text-2xs"),
                     color: theme.mutedText,
                   }}
                 >
@@ -647,7 +651,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
                 </Text>
                 <Text
                   style={{
-                    ...tw("text-[7px]"),
+                    ...tw("text-2xs"),
                     letterSpacing: isMono ? 0 : -0.3,
                     color: theme.page.text,
                   }}
@@ -663,7 +667,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
               <View style={tw("flex flex-row items-center justify-between")}>
                 <Text
                   style={{
-                    ...tw("text-[7px]"),
+                    ...tw("text-2xs"),
                     color: theme.mutedText,
                   }}
                 >
@@ -671,7 +675,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
                 </Text>
                 <Text
                   style={{
-                    ...tw("text-[7px]"),
+                    ...tw("text-2xs"),
                     letterSpacing: isMono ? 0 : -0.3,
                     color: theme.page.text,
                   }}
@@ -685,7 +689,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
               <View style={tw("flex flex-row items-center justify-between")}>
                 <Text
                   style={{
-                    ...tw("text-[7px]"),
+                    ...tw("text-2xs"),
                     color: theme.mutedText,
                   }}
                 >
@@ -693,7 +697,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
                 </Text>
                 <Text
                   style={{
-                    ...tw("text-[7px]"),
+                    ...tw("text-2xs"),
                     letterSpacing: isMono ? 0 : -0.3,
                     color: theme.page.text,
                   }}
@@ -718,15 +722,18 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             <View style={tw("flex flex-row items-center")}>
               <Text
                 style={{
-                  ...tw("text-[9px] font-bold mr-1.5"),
+                  ...tw(
+                    "w-[10px] text-center text-[9px] leading-[10px] font-bold mr-1.5"
+                  ),
                   color: theme.success,
                 }}
               >
                 +
               </Text>
+
               <Text
                 style={{
-                  ...tw("text-[8px] font-semibold"),
+                  ...tw("text-xs leading-[10px] font-semibold"),
                   color: theme.totalText,
                 }}
               >
@@ -737,17 +744,16 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             <CurrencyText
               currency={invoice.invoice.currency}
               value={total}
-              fontSize={13}
+              fontSize={12}
               color={theme.success}
-              // bold
             />
           </View>
 
           {/* Total in Words */}
-          <View style={tw("flex flex-col gap-0.5 px-4 pb-4")}>
+          <View style={tw("flex flex-col gap-2 px-4 pb-4")}>
             <Text
               style={{
-                ...tw("text-[6px] uppercase tracking-[0.3px]"),
+                ...tw("text-xs uppercase tracking-[0.3px]"),
                 color: theme.mutedText,
               }}
             >
@@ -755,7 +761,7 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             </Text>
             <Text
               style={{
-                ...tw("text-[7px]"),
+                ...tw("text-2xs"),
                 color: theme.mutedText,
               }}
             >

@@ -395,10 +395,15 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
               </Text>
 
               {invoice.metadata.paymentDetails.map((field) => (
-                <View key={field.id} style={tw("flex flex-row gap-1 mt-[3px]")}>
+                <View
+                  key={field.id}
+                  style={tw("flex flex-row items-start gap-1 mt-[3px]")}
+                >
                   <Text
                     style={{
                       ...tw("text-2xs font-semibold"),
+                      width: 85,
+                      flexShrink: 0,
                       color: theme.page.text,
                     }}
                   >
@@ -408,6 +413,8 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
                   <Text
                     style={{
                       ...tw("text-2xs font-normal"),
+                      flexGrow: 1,
+                      flexShrink: 1,
                       color: theme.mutedText,
                     }}
                   >
@@ -615,7 +622,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
           <Text
             style={{
               ...tw("text-xs font-normal mt-2 uppercase"),
-              color: theme.mutedText,
+              color: theme.page.text,
             }}
           >
             Invoice Total (in words)
@@ -624,7 +631,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
           <Text
             style={{
               ...tw("text-2xs font-normal mt-[4px]"),
-              color: theme.page.text,
+              color: theme.mutedText,
             }}
           >
             {numberToWords(total)}
