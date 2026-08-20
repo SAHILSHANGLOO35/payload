@@ -1,8 +1,12 @@
 import jwt from "jsonwebtoken"
 import type { NextFunction, Request, Response } from "express"
 
-interface AuthRequest extends Request {
-  user?: any
+export interface AuthRequest extends Request {
+  user?: {
+    id: string
+    email: string
+    authId: string
+  }
 }
 
 export const authMiddleware = (
@@ -11,6 +15,7 @@ export const authMiddleware = (
   next: NextFunction
 ) => {
   const token = req.cookies.token
+
   if (!token) return res.status(401).json({ message: "Unauthorized User!" })
 
   try {
