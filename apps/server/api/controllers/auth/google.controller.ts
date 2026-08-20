@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken"
 import { supabase } from "../../../lib/supabase"
 import { prisma } from "db/client"
 import { migrateGuestInvoices } from "../../services/guest.service"
+import type { AuthRequest } from "../../middlewares/auth.middleware"
 
 export const googleLoginController = async (req: Request, res: Response) => {
   try {
@@ -94,4 +95,59 @@ export const googleLoginController = async (req: Request, res: Response) => {
       error: "Internal server error",
     })
   }
+}
+
+export const googleMeController = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized User",
+      })
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: req.user.id,
+      },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        avatarUrl: true,
+      },
+    })
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      user,
+    })
+  } catch (error) {
+    console.error("[googleMeController]", error)
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    })
+  }
+}
+
+export const googleLogoutController = async (req: Request, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  })
+
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  })
 }

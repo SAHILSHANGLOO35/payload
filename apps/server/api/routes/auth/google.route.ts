@@ -1,6 +1,11 @@
 import { Router } from "express"
-import { googleLoginController } from "../../controllers/auth/google.controller"
+import {
+  googleLoginController,
+  googleLogoutController,
+  googleMeController,
+} from "../../controllers/auth/google.controller"
 import { googleService } from "../../services/google.service"
+import { authMiddleware } from "../../middlewares/auth.middleware"
 
 export const googleAuthRouter = Router()
 
@@ -10,3 +15,7 @@ googleAuthRouter.get("/auth/login", async (req, res) => {
 })
 
 googleAuthRouter.get("/auth/callback", googleLoginController)
+
+googleAuthRouter.get("/auth/user", authMiddleware, googleMeController)
+
+googleAuthRouter.post("/auth/logout", googleLogoutController)

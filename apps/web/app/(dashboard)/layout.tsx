@@ -3,6 +3,7 @@
 import React from "react"
 import { Sidebar } from "@/components/layout/sidebar/sidebar"
 import { useSidebarStore } from "@/stores/sidebar-store"
+import Login from "../(auth)/login/page"
 
 export default function DashboardLayout({
   children,
@@ -21,7 +22,10 @@ export default function DashboardLayout({
         <Sidebar />
       </div>
 
-      <main className="min-w-0 flex-1 pt-2 pl-4">{children}</main>
+      <main className="min-w-0 flex-1 pt-2 pl-4">
+        {children}
+        <Login />
+      </main>
     </div>
   )
 }
