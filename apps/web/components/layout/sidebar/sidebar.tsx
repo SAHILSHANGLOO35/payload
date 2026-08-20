@@ -2,7 +2,6 @@
 
 import React, { useState } from "react"
 import { SidebarItems } from "./sidebar-items"
-import { AddItem } from "@/components/icons/add-item"
 import { Invoice } from "@/components/icons/invoice"
 import { Receipt } from "@/components/icons/receipt"
 import { SidebarFooter } from "./sidebar-footer"
