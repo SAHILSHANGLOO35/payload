@@ -38,12 +38,6 @@ export const Sidebar = () => {
                 active={activeItem === "Invoices"}
                 onClick={() => setActiveItem("Invoices")}
               />
-              <SidebarItems
-                title="Customers"
-                icon={AddItem}
-                active={activeItem === "Customers"}
-                onClick={() => setActiveItem("Customers")}
-              />
             </div>
 
             <div className="flex flex-col gap-1">

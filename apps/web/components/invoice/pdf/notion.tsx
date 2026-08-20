@@ -16,7 +16,23 @@ type NotionPdfProps = {
   invoice: Invoice
 }
 
-const tw = createTw({})
+const tw = createTw({
+  theme: {
+    fontFamily: {
+      default: ["Geist"],
+      geist: ["Geist"],
+    },
+    extend: {
+      fontSize: {
+        sm: "0.67rem",
+        xs: "0.625rem",
+        "2xs": "0.58rem",
+        "3xs": "0.5rem",
+        lg: "0.875rem",
+      },
+    },
+  },
+})
 
 export default function NotionPdf({ invoice }: NotionPdfProps) {
   const theme = pdfThemes[invoice.theme.template] ?? pdfThemes.notion
@@ -27,7 +43,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
     <Page
       size="A4"
       style={{
-        ...tw("flex flex-col text-[8px]"),
+        ...tw("flex flex-col text-sm"),
         fontFamily: invoice.theme.font,
         backgroundColor: theme.page.background,
         color: theme.page.text,
@@ -46,13 +62,15 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
       >
         <Text
           style={{
-            ...tw("text-[32px] font-semibold leading-[32px] tracking-[-1px]"),
+            ...tw("font-medium text-[40px] leading-[40px] tracking-tighter"),
             color: theme.heading,
           }}
         >
           {invoice.invoice.prefix}-
           <Text
             style={{
+              fontFamily: "Geist",
+              letterSpacing: -1,
               color: theme.accent ?? theme.heading,
             }}
           >
@@ -79,7 +97,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
           <View style={tw("flex flex-row items-center gap-1")}>
             <Text
               style={{
-                ...tw("min-w-[90px] text-[7px] font-medium"),
+                ...tw("min-w-[90px] text-2xs"),
                 color: theme.mutedText,
               }}
             >
@@ -88,7 +106,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
             <Text
               style={{
-                ...tw("text-[7px] font-normal"),
+                ...tw("text-2xs font-normal"),
                 color: theme.page.text,
               }}
             >
@@ -100,7 +118,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
             <View style={tw("flex flex-row items-center gap-1")}>
               <Text
                 style={{
-                  ...tw("min-w-[90px] text-[7px] font-medium"),
+                  ...tw("min-w-[90px] text-2xs"),
                   color: theme.mutedText,
                 }}
               >
@@ -109,7 +127,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
               <Text
                 style={{
-                  ...tw("text-[7px] font-normal"),
+                  ...tw("text-2xs font-normal"),
                   color: theme.page.text,
                 }}
               >
@@ -122,7 +140,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
             <View style={tw("flex flex-row items-center gap-1")}>
               <Text
                 style={{
-                  ...tw("min-w-[90px] text-[7px] font-medium"),
+                  ...tw("min-w-[90px] text-2xs"),
                   color: theme.mutedText,
                 }}
               >
@@ -131,7 +149,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
               <Text
                 style={{
-                  ...tw("text-[7px] font-normal"),
+                  ...tw("text-2xs font-normal"),
                   color: theme.page.text,
                 }}
               >
@@ -143,7 +161,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
           <View style={tw("flex flex-row items-center gap-1")}>
             <Text
               style={{
-                ...tw("min-w-[90px] text-[7px] font-medium"),
+                ...tw("min-w-[90px] text-2xs"),
                 color: theme.mutedText,
               }}
             >
@@ -152,7 +170,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
             <Text
               style={{
-                ...tw("text-[7px] font-normal"),
+                ...tw("text-2xs font-normal"),
                 color: theme.page.text,
               }}
             >
@@ -195,7 +213,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
         >
           <Text
             style={{
-              ...tw("mb-0.5 text-[7px] font-semibold uppercase"),
+              ...tw("mb-0.5 text-sm uppercase"),
               color: theme.mutedText,
             }}
           >
@@ -204,7 +222,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
           <Text
             style={{
-              ...tw("mb-0.5 text-[9px] font-semibold"),
+              ...tw("mb-0.5 text-xs"),
               color: theme.heading,
             }}
           >
@@ -213,7 +231,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
           <Text
             style={{
-              ...tw("mb-1 text-[7px] font-normal"),
+              ...tw("mb-1 text-xs font-normal"),
               color: theme.mutedText,
             }}
           >
@@ -227,7 +245,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
             >
               <Text
                 style={{
-                  ...tw("text-[7px]"),
+                  ...tw("text-xs"),
                   color: theme.mutedText,
                 }}
               >
@@ -236,7 +254,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
               <Text
                 style={{
-                  ...tw("text-[7px] font-normal"),
+                  ...tw("text-xs font-normal"),
                   color: theme.page.text,
                 }}
               >
@@ -250,7 +268,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
         <View style={tw("flex w-1/2 flex-col gap-1 p-4")}>
           <Text
             style={{
-              ...tw("mb-0.5 text-[7px] font-semibold uppercase"),
+              ...tw("mb-0.5 text-sm uppercase"),
               color: theme.mutedText,
             }}
           >
@@ -259,7 +277,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
           <Text
             style={{
-              ...tw("mb-0.5 text-[9px] font-semibold"),
+              ...tw("mb-0.5 text-xs"),
               color: theme.heading,
             }}
           >
@@ -268,7 +286,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
           <Text
             style={{
-              ...tw("mb-1 text-[7px] font-normal"),
+              ...tw("mb-1 text-xs font-normal"),
               color: theme.mutedText,
             }}
           >
@@ -282,7 +300,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
             >
               <Text
                 style={{
-                  ...tw("text-[7px]"),
+                  ...tw("text-xs"),
                   color: theme.mutedText,
                 }}
               >
@@ -291,7 +309,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
               <Text
                 style={{
-                  ...tw("text-[7px] font-normal"),
+                  ...tw("text-xs font-normal"),
                   color: theme.page.text,
                 }}
               >
@@ -316,7 +334,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
         >
           <Text
             style={{
-              ...tw("w-[60%] text-[8px] font-semibold uppercase"),
+              ...tw("w-[60%] text-xs font-semibold uppercase"),
               color: theme.mutedText,
             }}
           >
@@ -325,7 +343,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
           <Text
             style={{
-              ...tw("w-[10%] text-center text-[8px] font-semibold uppercase"),
+              ...tw("w-[10%] text-center text-xs font-semibold uppercase"),
               color: theme.mutedText,
             }}
           >
@@ -334,7 +352,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
           <Text
             style={{
-              ...tw("w-[15%] text-right text-[8px] font-semibold uppercase"),
+              ...tw("w-[15%] text-right text-xs font-semibold uppercase"),
               color: theme.mutedText,
             }}
           >
@@ -343,7 +361,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
           <Text
             style={{
-              ...tw("w-[15%] text-right text-[8px] font-semibold uppercase"),
+              ...tw("w-[15%] text-right text-xs font-semibold uppercase"),
               color: theme.mutedText,
             }}
           >
@@ -367,7 +385,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
             <View style={tw("flex w-[60%] flex-col justify-center")}>
               <Text
                 style={{
-                  ...tw("text-[8px] font-semibold"),
+                  ...tw("text-2xs leading-[12px]"),
                   color: theme.heading,
                 }}
               >
@@ -377,7 +395,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
               {item.description && (
                 <Text
                   style={{
-                    ...tw("mt-0.5 text-[7px]"),
+                    ...tw("mt-0.5 text-xs leading-[10px] font-normal"),
                     color: theme.mutedText,
                   }}
                 >
@@ -388,7 +406,9 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
             <Text
               style={{
-                ...tw("w-[10%] text-center text-[8px]"),
+                ...tw("w-[10%] text-center text-2xs"),
+                fontFamily: "Geist",
+                letterSpacing: -0.5,
                 color: theme.page.text,
               }}
             >
@@ -437,7 +457,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
             <View style={tw("flex flex-col gap-0.5 p-4")}>
               <Text
                 style={{
-                  ...tw("mb-0.5 text-[7px] font-semibold uppercase"),
+                  ...tw("mb-0.5 text-sm uppercase"),
                   color: theme.heading,
                 }}
               >
@@ -447,11 +467,13 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
               {invoice.metadata.paymentDetails.map((field) => (
                 <View
                   key={field.id}
-                  style={tw("mt-[1px] flex flex-row items-center gap-1")}
+                  style={tw("mt-[1px] flex flex-row items-start gap-1")}
                 >
                   <Text
                     style={{
-                      ...tw("text-[7px]"),
+                      ...tw("text-2xs"),
+                      width: 85,
+                      flexShrink: 0,
                       color: theme.mutedText,
                     }}
                   >
@@ -460,7 +482,9 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
                   <Text
                     style={{
-                      ...tw("text-[7px] font-normal"),
+                      ...tw("text-2xs font-normal"),
+                      flexGrow: 1,
+                      flexShrink: 1,
                       color: theme.page.text,
                     }}
                   >
@@ -485,7 +509,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
             >
               <Text
                 style={{
-                  ...tw("mb-0.5 text-[7px] font-semibold uppercase"),
+                  ...tw("mb-0.5 text-sm uppercase"),
                   color: theme.heading,
                 }}
               >
@@ -494,7 +518,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
               <Text
                 style={{
-                  ...tw("mt-1 text-[7px] font-normal leading-[9.1px]"),
+                  ...tw("mt-1 text-2xs font-normal"),
                   color: theme.mutedText,
                 }}
               >
@@ -518,7 +542,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
             >
               <Text
                 style={{
-                  ...tw("mb-0.5 text-[7px] font-semibold uppercase"),
+                  ...tw("mb-0.5 text-sm uppercase"),
                   color: theme.heading,
                 }}
               >
@@ -527,7 +551,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
               <Text
                 style={{
-                  ...tw("mt-1 text-[7px] font-normal leading-[9.1px]"),
+                  ...tw("mt-1 text-2xs font-normal"),
                   color: theme.mutedText,
                 }}
               >
@@ -560,7 +584,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
             <View style={tw("flex flex-row items-center justify-between")}>
               <Text
                 style={{
-                  ...tw("text-[7px] font-normal"),
+                  ...tw("text-2xs font-normal"),
                   color: theme.mutedText,
                 }}
               >
@@ -582,7 +606,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
               >
                 <Text
                   style={{
-                    ...tw("text-[7px] font-normal"),
+                    ...tw("text-2xs font-normal"),
                     color: theme.mutedText,
                   }}
                 >
@@ -591,7 +615,9 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
                 <Text
                   style={{
-                    ...tw("text-[7px]"),
+                    ...tw("text-2xs"),
+                    fontFamily: "Geist",
+                    letterSpacing: -0.25,
                     color: theme.page.text,
                   }}
                 >
@@ -606,7 +632,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
               <View style={tw("flex flex-row items-center justify-between")}>
                 <Text
                   style={{
-                    ...tw("text-[7px] font-normal"),
+                    ...tw("text-2xs font-normal"),
                     color: theme.mutedText,
                   }}
                 >
@@ -615,7 +641,9 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
                 <Text
                   style={{
-                    ...tw("text-[7px]"),
+                    ...tw("text-2xs"),
+                    fontFamily: "Geist",
+                    letterSpacing: -0.25,
                     color: theme.page.text,
                   }}
                 >
@@ -628,7 +656,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
               <View style={tw("flex flex-row items-center justify-between")}>
                 <Text
                   style={{
-                    ...tw("text-[7px] font-normal"),
+                    ...tw("text-2xs font-normal"),
                     color: theme.mutedText,
                   }}
                 >
@@ -637,7 +665,9 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
                 <Text
                   style={{
-                    ...tw("text-[7px]"),
+                    ...tw("text-2xs"),
+                    fontFamily: "Geist",
+                    letterSpacing: -0.25,
                     color: theme.page.text,
                   }}
                 >
@@ -658,7 +688,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
           >
             <Text
               style={{
-                ...tw("text-[9px] font-semibold"),
+                ...tw("text-xs font-semibold"),
                 color: theme.totalText ?? theme.heading,
               }}
             >
@@ -677,14 +707,14 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
           {/* Total in Words */}
           <View
             style={{
-              ...tw("flex flex-col gap-0.5 p-4"),
+              ...tw("flex flex-col gap-2 p-4"),
               borderTopWidth: 1,
               borderTopColor: theme.border,
             }}
           >
             <Text
               style={{
-                ...tw("text-[6px] font-normal uppercase"),
+                ...tw("text-xs font-normal uppercase"),
                 color: theme.mutedText,
               }}
             >
@@ -693,7 +723,7 @@ export default function NotionPdf({ invoice }: NotionPdfProps) {
 
             <Text
               style={{
-                ...tw("text-[7px] font-normal"),
+                ...tw("text-2xs font-normal"),
                 color: theme.page.text,
               }}
             >
