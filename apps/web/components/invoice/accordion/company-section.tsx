@@ -50,10 +50,19 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
 
   useEffect(() => {
     return () => {
-      if (logoPreview) URL.revokeObjectURL(logoPreview)
-      if (signaturePreview) URL.revokeObjectURL(signaturePreview)
+      if (logoPreview) {
+        URL.revokeObjectURL(logoPreview)
+      }
     }
-  }, [logoPreview, signaturePreview])
+  }, [logoPreview])
+
+  useEffect(() => {
+    return () => {
+      if (signaturePreview) {
+        URL.revokeObjectURL(signaturePreview)
+      }
+    }
+  }, [signaturePreview])
 
   const handleImageChange = (
     event: React.ChangeEvent<HTMLInputElement>,

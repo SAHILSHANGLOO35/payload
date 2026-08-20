@@ -1,4 +1,5 @@
-import { Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer"
+import { Image, Page, Text, View } from "@react-pdf/renderer"
+import { createTw } from "react-pdf-tailwind"
 
 import type { Invoice } from "@/types/invoice"
 import {
@@ -9,824 +10,648 @@ import {
   numberToWords,
 } from "@/lib/invoice/calculation"
 import { pdfThemes } from "@/lib/invoice/pdf-theme"
+import { CurrencyText } from "@/lib/invoice/format"
 
 type GithubPdfProps = {
   invoice: Invoice
 }
 
-const styles = StyleSheet.create({
-  page: {
-    fontSize: 8,
-    flexDirection: "column",
-  },
+const tw = createTw({})
 
-  // Header
-
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-  },
-
-  headerLeft: {
-    flexDirection: "column",
-    gap: 6,
-  },
-
-  badge: {
-    alignSelf: "flex-start",
-    width: 52,
-    height: 18,
-
-    alignItems: "center",
-    justifyContent: "center",
-
-    borderRadius: 3,
-    borderWidth: 1,
-  },
-
-  badgeText: {
-    fontSize: 7.5,
-    fontWeight: 600,
-    letterSpacing: 0.5,
-    textTransform: "uppercase",
-  },
-
-  invoiceTitle: {
-    fontSize: 22,
-    fontWeight: 600,
-    letterSpacing: -0.5,
-  },
-
-  invoiceRef: {
-    fontSize: 7,
-    letterSpacing: 0.2,
-  },
-
-  logo: {
-    width: 60,
-    height: 60,
-    objectFit: "contain",
-    borderWidth: 1,
-  },
-
-  // Meta bar
-
-  metaBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    height: 30,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-  },
-
-  metaItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 3,
-    marginRight: 20,
-  },
-
-  metaDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-  },
-
-  metaLabel: {
-    fontSize: 6.5,
-    textTransform: "uppercase",
-    letterSpacing: 0.3,
-  },
-
-  metaValue: {
-    fontSize: 7,
-    fontWeight: 600,
-  },
-
-  // Billing
-
-  billingRow: {
-    flexDirection: "row",
-    width: "100%",
-    borderBottomWidth: 1,
-  },
-
-  billingPanel: {
-    width: "50%",
-    flexDirection: "column",
-    gap: 3,
-    padding: 16,
-  },
-
-  billingPanelRight: {
-    width: "50%",
-    flexDirection: "column",
-    gap: 3,
-    padding: 16,
-    borderLeftWidth: 1,
-  },
-
-  sectionLabelRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-    marginBottom: 5,
-  },
-
-  sectionMarker: {
-    width: 6,
-    height: 6,
-    borderRadius: 1,
-  },
-
-  sectionTitle: {
-    fontSize: 6.5,
-    fontWeight: 600,
-    textTransform: "uppercase",
-    letterSpacing: 0.5,
-  },
-
-  companyName: {
-    fontSize: 9,
-    fontWeight: 600,
-    marginBottom: 2,
-  },
-
-  addressText: {
-    fontSize: 7,
-    lineHeight: 1.35,
-    marginBottom: 4,
-  },
-
-  fieldRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    marginTop: 1,
-  },
-
-  fieldLabel: {
-    fontSize: 6.5,
-  },
-
-  fieldValue: {
-    fontSize: 6.5,
-    fontWeight: 500,
-  },
-
-  // Items table
-
-  itemsContainer: {
-    flexGrow: 1,
-  },
-
-  tableHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    height: 30,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-  },
-
-  itemRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    minHeight: 36,
-  },
-
-  itemColumn: {
-    width: "60%",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-
-  quantityColumn: {
-    width: "10%",
-    textAlign: "center",
-  },
-
-  priceColumn: {
-    width: "16%",
-    textAlign: "right",
-  },
-
-  totalColumn: {
-    width: "16%",
-    textAlign: "right",
-  },
-
-  tableHeaderText: {
-    fontSize: 6.5,
-    fontWeight: 600,
-    textTransform: "uppercase",
-    letterSpacing: 0.3,
-  },
-
-  itemName: {
-    fontSize: 8,
-    fontWeight: 600,
-  },
-
-  itemDescription: {
-    fontSize: 6.5,
-    marginTop: 2,
-    lineHeight: 1.3,
-  },
-
-  monoText: {
-    letterSpacing: -0.3,
-  },
-
-  // Bottom section
-
-  bottomSection: {
-    flexDirection: "row",
-    borderTopWidth: 1,
-  },
-
-  metadataColumn: {
-    width: "50%",
-    flexDirection: "column",
-    borderRightWidth: 1,
-  },
-
-  metadataSection: {
-    flexDirection: "column",
-    gap: 2,
-    padding: 16,
-  },
-
-  metadataDivider: {
-    borderTopWidth: 1,
-  },
-
-  metadataBody: {
-    fontSize: 6.5,
-    marginTop: 4,
-    lineHeight: 1.4,
-  },
-
-  totalsColumn: {
-    width: "50%",
-    flexDirection: "column",
-  },
-
-  // Signature
-
-  signatureContainer: {
-    alignItems: "flex-end",
-    borderBottomWidth: 1,
-    padding: 12,
-  },
-
-  signature: {
-    width: 60,
-    height: 60,
-    objectFit: "cover",
-  },
-
-  // Totals breakdown
-
-  totalsBreakdown: {
-    flexDirection: "column",
-    gap: 4,
-    padding: 16,
-  },
-
-  totalRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-
-  totalLabel: {
-    fontSize: 7,
-  },
-
-  totalValue: {
-    fontSize: 7,
-    letterSpacing: -0.3,
-  },
-
-  // Styled like a diff "+" addition block
-  grandTotal: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginHorizontal: 16,
-    marginBottom: 12,
-    padding: 12,
-    borderRadius: 4,
-    borderWidth: 1,
-  },
-
-  grandTotalPrefix: {
-    fontSize: 9,
-    fontWeight: 700,
-    marginRight: 6,
-  },
-
-  grandTotalLabel: {
-    fontSize: 8,
-    fontWeight: 600,
-  },
-
-  grandTotalValue: {
-    fontSize: 13,
-    fontWeight: 700,
-    letterSpacing: -0.3,
-  },
-
-  wordsContainer: {
-    flexDirection: "column",
-    gap: 2,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-
-  wordsLabel: {
-    fontSize: 6,
-    textTransform: "uppercase",
-    letterSpacing: 0.3,
-  },
-
-  words: {
-    fontSize: 7,
-  },
-})
-
-// Used to get a subtle "diff addition" tint behind the grand total.
 function tint(hex: string, alpha: number) {
   const clean = hex.replace("#", "")
   const bigint = parseInt(clean, 16)
   const r = (bigint >> 16) & 255
   const g = (bigint >> 8) & 255
   const b = bigint & 255
+
   return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
-
-// ============================================================
-// GitHub PDF Component
-// ============================================================
 
 export default function GithubPdf({ invoice }: GithubPdfProps) {
   const theme = pdfThemes[invoice.theme.template] ?? pdfThemes.default
 
   const { subtotal, tax, discount, total } = calculateInvoiceTotals(invoice)
 
-  // Subtle alternate row fallback if theme.tableRow is not defined
+  const isMono = invoice.theme.font === "JetBrains Mono"
   const alternateRowBg = tint(theme.page.text, 0.05)
 
-  const dynamicStyles = StyleSheet.create({
-    page: {
-      ...styles.page,
-      backgroundColor: theme.page.background,
-      color: theme.page.text,
-      fontFamily: invoice.theme.font,
-      borderColor: theme.border,
-      borderWidth: 1,
-    },
-
-    header: {
-      ...styles.header,
-      borderBottomColor: theme.border,
-    },
-
-    badge: {
-      ...styles.badge,
-      borderColor: theme.accent,
-    },
-
-    badgeText: {
-      ...styles.badgeText,
-      color: theme.accent,
-    },
-
-    invoiceTitle: {
-      ...styles.invoiceTitle,
-      color: theme.heading,
-    },
-
-    invoiceRef: {
-      ...styles.invoiceRef,
-      color: theme.mutedText,
-    },
-
-    logo: {
-      ...styles.logo,
-      borderColor: theme.border,
-    },
-
-    metaBar: {
-      ...styles.metaBar,
-      backgroundColor: theme.panel,
-      borderBottomColor: theme.border,
-    },
-
-    metaDot: {
-      ...styles.metaDot,
-      backgroundColor: theme.accent,
-    },
-
-    metaLabel: {
-      ...styles.metaLabel,
-      color: theme.mutedText,
-    },
-
-    metaValue: {
-      ...styles.metaValue,
-      color: theme.page.text,
-    },
-
-    billingRow: {
-      ...styles.billingRow,
-      borderBottomColor: theme.border,
-    },
-
-    billingPanelRight: {
-      ...styles.billingPanelRight,
-      borderLeftColor: theme.border,
-    },
-
-    sectionMarker: {
-      ...styles.sectionMarker,
-      backgroundColor: theme.accent,
-    },
-
-    sectionTitle: {
-      ...styles.sectionTitle,
-      color: theme.mutedText,
-    },
-
-    companyName: {
-      ...styles.companyName,
-      color: theme.heading,
-    },
-
-    addressText: {
-      ...styles.addressText,
-      color: theme.mutedText,
-    },
-
-    fieldLabel: {
-      ...styles.fieldLabel,
-      color: theme.mutedText,
-    },
-
-    fieldValue: {
-      ...styles.fieldValue,
-      color: theme.page.text,
-    },
-
-    tableHeader: {
-      ...styles.tableHeader,
-      backgroundColor: theme.tableHeader,
-      borderBottomColor: theme.border,
-    },
-
-    tableHeaderText: {
-      ...styles.tableHeaderText,
-      color: theme.mutedText,
-    },
-
-    itemRow: {
-      ...styles.itemRow,
-      borderBottomColor: theme.border,
-      borderLeftWidth: 2,
-      borderLeftColor: theme.accent,
-    },
-
-    itemName: {
-      ...styles.itemName,
-      color: theme.heading,
-    },
-
-    itemDescription: {
-      ...styles.itemDescription,
-      color: theme.mutedText,
-    },
-
-    monoText: {
-      ...styles.monoText,
-      color: theme.page.text,
-    },
-
-    bottomSection: {
-      ...styles.bottomSection,
-      borderTopColor: theme.border,
-    },
-
-    metadataColumn: {
-      ...styles.metadataColumn,
-      borderRightColor: theme.border,
-    },
-
-    metadataDivider: {
-      ...styles.metadataDivider,
-      borderTopColor: theme.border,
-    },
-
-    metadataTitle: {
-      ...styles.sectionTitle,
-      color: theme.mutedText,
-    },
-
-    metadataBody: {
-      ...styles.metadataBody,
-      color: theme.mutedText,
-    },
-
-    signatureContainer: {
-      ...styles.signatureContainer,
-      borderBottomColor: theme.border,
-    },
-
-    totalLabel: {
-      ...styles.totalLabel,
-      color: theme.mutedText,
-    },
-
-    totalValue: {
-      ...styles.totalValue,
-      color: theme.page.text,
-    },
-
-    grandTotal: {
-      ...styles.grandTotal,
-      backgroundColor: tint(theme.success, 0.12),
-      borderColor: tint(theme.success, 0.4),
-    },
-
-    grandTotalPrefix: {
-      ...styles.grandTotalPrefix,
-      color: theme.success,
-    },
-
-    grandTotalLabel: {
-      ...styles.grandTotalLabel,
-      color: theme.totalText,
-    },
-
-    grandTotalValue: {
-      ...styles.grandTotalValue,
-      color: theme.success,
-    },
-
-    wordsLabel: {
-      ...styles.wordsLabel,
-      color: theme.mutedText,
-    },
-
-    words: {
-      ...styles.words,
-      color: theme.mutedText,
-    },
-  })
-
   return (
-    <Page size="A4" style={dynamicStyles.page}>
-      {/* ================================================== */}
-      {/* HEADER */}
-      {/* ================================================== */}
-
-      <View style={dynamicStyles.header}>
-        <View style={styles.headerLeft}>
-          <View style={dynamicStyles.badge}>
-            <Text style={dynamicStyles.badgeText}>Invoice</Text>
+    <Page
+      size="A4"
+      style={{
+        ...tw("flex flex-col text-[8px]"),
+        fontFamily: invoice.theme.font,
+        backgroundColor: theme.page.background,
+        color: theme.page.text,
+        borderWidth: 1,
+        borderColor: theme.border,
+      }}
+    >
+      {/* Header */}
+      <View
+        style={{
+          ...tw("flex flex-row items-center justify-between p-4"),
+          borderBottomWidth: 1,
+          borderBottomColor: theme.border,
+        }}
+      >
+        <View style={tw("flex flex-col gap-1.5")}>
+          {/* Badge */}
+          <View
+            style={{
+              ...tw(
+                "w-[52px] h-[18px] self-start items-center justify-center rounded-[3px]"
+              ),
+              borderWidth: 1,
+              borderColor: theme.accent,
+            }}
+          >
+            <Text
+              style={{
+                ...tw("text-[7.5px] font-semibold tracking-[0.5px] uppercase"),
+                color: theme.accent,
+              }}
+            >
+              Invoice
+            </Text>
           </View>
-          <Text style={dynamicStyles.invoiceTitle}>
-            {invoice.invoice.prefix}
-            {invoice.invoice.serialNumber}
+
+          {/* Invoice Number */}
+          <Text
+            style={{
+              ...tw("text-[22px] font-semibold"),
+              letterSpacing: isMono ? 0 : -0.5,
+              color: theme.heading,
+            }}
+          >
+            {invoice.invoice.prefix}-{invoice.invoice.serialNumber}
           </Text>
-          <Text style={dynamicStyles.invoiceRef}>
-            ref: {invoice.invoice.prefix}
+
+          {/* Reference */}
+          <Text
+            style={{
+              ...tw("text-[7px] tracking-[0.2px]"),
+              color: theme.mutedText,
+            }}
+          >
+            Ref: {invoice.invoice.prefix}
             {invoice.invoice.serialNumber}
           </Text>
         </View>
 
         {invoice.company.logo && (
-          <Image src={invoice.company.logo} style={dynamicStyles.logo} />
+          <Image
+            src={invoice.company.logo}
+            style={{
+              ...tw("w-[60px] h-[60px] object-contain"),
+              borderWidth: 1,
+              borderColor: theme.border,
+            }}
+          />
         )}
       </View>
 
-      {/* ================================================== */}
-      {/* META BAR */}
-      {/* ================================================== */}
-
-      <View style={dynamicStyles.metaBar}>
+      {/* Meta Bar */}
+      <View
+        style={{
+          ...tw("flex flex-row items-center h-[30px] px-4"),
+          backgroundColor: theme.panel,
+          borderBottomWidth: 1,
+          borderBottomColor: theme.border,
+        }}
+      >
         {invoice.invoice.date && (
-          <View style={styles.metaItem}>
-            <View style={dynamicStyles.metaDot} />
-            <Text style={dynamicStyles.metaLabel}>Issued</Text>
-            <Text style={dynamicStyles.metaValue}>
+          <View style={tw("flex flex-row items-center gap-[3px] mr-5")}>
+            <View
+              style={{
+                ...tw("w-1 h-1 rounded-[2px]"),
+                backgroundColor: theme.accent,
+              }}
+            />
+            <Text
+              style={{
+                ...tw("text-[6.5px] uppercase tracking-[0.3px]"),
+                color: theme.mutedText,
+              }}
+            >
+              Issued
+            </Text>
+            <Text
+              style={{
+                ...tw("text-[7px] font-semibold"),
+                color: theme.page.text,
+              }}
+            >
               {formatDate(invoice.invoice.date)}
             </Text>
           </View>
         )}
 
         {invoice.invoice.dueDate && (
-          <View style={styles.metaItem}>
-            <View style={dynamicStyles.metaDot} />
-            <Text style={dynamicStyles.metaLabel}>Due</Text>
-            <Text style={dynamicStyles.metaValue}>
+          <View style={tw("flex flex-row items-center gap-[3px] mr-5")}>
+            <View
+              style={{
+                ...tw("w-1 h-1 rounded-[2px]"),
+                backgroundColor: theme.accent,
+              }}
+            />
+            <Text
+              style={{
+                ...tw("text-[6.5px] uppercase tracking-[0.3px]"),
+                color: theme.mutedText,
+              }}
+            >
+              Due
+            </Text>
+            <Text
+              style={{
+                ...tw("text-[7px] font-semibold"),
+                color: theme.page.text,
+              }}
+            >
               {formatDate(invoice.invoice.dueDate)}
             </Text>
           </View>
         )}
 
-        <View style={styles.metaItem}>
-          <View style={dynamicStyles.metaDot} />
-          <Text style={dynamicStyles.metaLabel}>Currency</Text>
-          <Text style={dynamicStyles.metaValue}>
+        <View style={tw("flex flex-row items-center gap-[3px] mr-5")}>
+          <View
+            style={{
+              ...tw("w-1 h-1 rounded-[2px]"),
+              backgroundColor: theme.accent,
+            }}
+          />
+          <Text
+            style={{
+              ...tw("text-[6.5px] uppercase tracking-[0.3px]"),
+              color: theme.mutedText,
+            }}
+          >
+            Currency
+          </Text>
+          <Text
+            style={{
+              ...tw("text-[7px] font-semibold"),
+              color: theme.page.text,
+            }}
+          >
             {invoice.invoice.currency}
           </Text>
         </View>
       </View>
 
-      {/* ================================================== */}
-      {/* BILLING */}
-      {/* ================================================== */}
-
-      <View style={dynamicStyles.billingRow}>
+      {/* Billing */}
+      <View
+        style={{
+          ...tw("flex flex-row w-full"),
+          borderBottomWidth: 1,
+          borderBottomColor: theme.border,
+        }}
+      >
         {/* Billed By */}
-        <View style={styles.billingPanel}>
-          <View style={styles.sectionLabelRow}>
-            <View style={dynamicStyles.sectionMarker} />
-            <Text style={dynamicStyles.sectionTitle}>Billed By</Text>
+        <View style={tw("flex flex-col w-1/2 gap-[3px] p-4")}>
+          <View style={tw("flex flex-row items-center gap-[5px] mb-[5px]")}>
+            <View
+              style={{
+                ...tw("w-[6px] h-[6px] rounded-[1px]"),
+                backgroundColor: theme.accent,
+              }}
+            />
+            <Text
+              style={{
+                ...tw("text-[6.5px] font-semibold uppercase tracking-[0.5px]"),
+                color: theme.mutedText,
+              }}
+            >
+              Billed By
+            </Text>
           </View>
-          <Text style={dynamicStyles.companyName}>{invoice.company.name}</Text>
-          <Text style={dynamicStyles.addressText}>
+
+          <Text
+            style={{
+              ...tw("text-[9px] font-semibold mb-0.5"),
+              color: theme.heading,
+            }}
+          >
+            {invoice.company.name}
+          </Text>
+
+          <Text
+            style={{
+              ...tw("text-[7px] leading-[9.45px] mb-1"),
+              color: theme.mutedText,
+            }}
+          >
             {invoice.company.address}
           </Text>
 
           {invoice.company.fields.map((field) => (
-            <View key={field.id} style={styles.fieldRow}>
-              <Text style={dynamicStyles.fieldLabel}>{field.label}</Text>
-              <Text style={dynamicStyles.fieldValue}>{field.value}</Text>
+            <View
+              key={field.id}
+              style={tw("flex flex-row items-center gap-1 mt-[1px]")}
+            >
+              <Text
+                style={{
+                  ...tw("text-[6.5px]"),
+                  color: theme.mutedText,
+                }}
+              >
+                {field.label}
+              </Text>
+              <Text
+                style={{
+                  ...tw("text-[6.5px] font-medium"),
+                  color: theme.page.text,
+                }}
+              >
+                {field.value}
+              </Text>
             </View>
           ))}
         </View>
 
         {/* Billed To */}
-        <View style={dynamicStyles.billingPanelRight}>
-          <View style={styles.sectionLabelRow}>
-            <View style={dynamicStyles.sectionMarker} />
-            <Text style={dynamicStyles.sectionTitle}>Billed To</Text>
+        <View
+          style={{
+            ...tw("flex flex-col w-1/2 gap-[3px] p-4"),
+            borderLeftWidth: 1,
+            borderLeftColor: theme.border,
+          }}
+        >
+          <View style={tw("flex flex-row items-center gap-[5px] mb-[5px]")}>
+            <View
+              style={{
+                ...tw("w-[6px] h-[6px] rounded-[1px]"),
+                backgroundColor: theme.accent,
+              }}
+            />
+            <Text
+              style={{
+                ...tw("text-[6.5px] font-semibold uppercase tracking-[0.5px]"),
+                color: theme.mutedText,
+              }}
+            >
+              Billed To
+            </Text>
           </View>
-          <Text style={dynamicStyles.companyName}>{invoice.client.name}</Text>
-          <Text style={dynamicStyles.addressText}>
+
+          <Text
+            style={{
+              ...tw("text-[9px] font-semibold mb-0.5"),
+              color: theme.heading,
+            }}
+          >
+            {invoice.client.name}
+          </Text>
+
+          <Text
+            style={{
+              ...tw("text-[7px] leading-[9.45px] mb-1"),
+              color: theme.mutedText,
+            }}
+          >
             {invoice.client.address}
           </Text>
 
           {invoice.client.fields.map((field) => (
-            <View key={field.id} style={styles.fieldRow}>
-              <Text style={dynamicStyles.fieldLabel}>{field.label}</Text>
-              <Text style={dynamicStyles.fieldValue}>{field.value}</Text>
+            <View
+              key={field.id}
+              style={tw("flex flex-row items-center gap-1 mt-[1px]")}
+            >
+              <Text
+                style={{
+                  ...tw("text-[6.5px]"),
+                  color: theme.mutedText,
+                }}
+              >
+                {field.label}
+              </Text>
+              <Text
+                style={{
+                  ...tw("text-[6.5px] font-medium"),
+                  color: theme.page.text,
+                }}
+              >
+                {field.value}
+              </Text>
             </View>
           ))}
         </View>
       </View>
 
-      {/* ================================================== */}
-      {/* ITEMS TABLE */}
-      {/* ================================================== */}
-
-      <View style={styles.itemsContainer}>
-        <View fixed style={dynamicStyles.tableHeader}>
-          <Text style={[styles.itemColumn, dynamicStyles.tableHeaderText]}>
+      {/* Items */}
+      <View style={tw("grow")}>
+        {/* Table Header */}
+        <View
+          fixed
+          style={{
+            ...tw("flex flex-row items-center h-[30px] px-4"),
+            backgroundColor: theme.tableHeader,
+            borderBottomWidth: 1,
+            borderBottomColor: theme.border,
+          }}
+        >
+          <Text
+            style={{
+              ...tw(
+                "w-[60%] text-[6.5px] font-semibold uppercase tracking-[0.3px]"
+              ),
+              color: theme.mutedText,
+            }}
+          >
             Item
           </Text>
-          <Text style={[styles.quantityColumn, dynamicStyles.tableHeaderText]}>
+
+          <Text
+            style={{
+              ...tw(
+                "w-[10%] text-center text-[6.5px] font-semibold uppercase tracking-[0.3px]"
+              ),
+              color: theme.mutedText,
+            }}
+          >
             Qty
           </Text>
-          <Text style={[styles.priceColumn, dynamicStyles.tableHeaderText]}>
+
+          <Text
+            style={{
+              ...tw(
+                "w-[15%] text-right text-[6.5px] font-semibold uppercase tracking-[0.3px]"
+              ),
+              color: theme.mutedText,
+            }}
+          >
             Rate
           </Text>
-          <Text style={[styles.totalColumn, dynamicStyles.tableHeaderText]}>
+
+          <Text
+            style={{
+              ...tw(
+                "w-[15%] text-right text-[6.5px] font-semibold uppercase tracking-[0.3px]"
+              ),
+              color: theme.mutedText,
+            }}
+          >
             Amount
           </Text>
         </View>
 
+        {/* Table Rows */}
         {invoice.items.map((item, index) => (
           <View
             key={item.id}
             wrap={false}
-            style={[
-              dynamicStyles.itemRow,
-              {
-                backgroundColor:
-                  index % 2 === 0 ? theme.page.background : alternateRowBg,
-              },
-            ]}
+            style={{
+              ...tw("flex flex-row items-center px-4 py-2.5 min-h-[36px]"),
+              backgroundColor:
+                index % 2 === 0 ? theme.page.background : alternateRowBg,
+              borderBottomWidth: 1,
+              borderBottomColor: theme.border,
+              borderLeftWidth: 2,
+              borderLeftColor: theme.accent,
+            }}
           >
-            <View style={styles.itemColumn}>
-              <Text style={dynamicStyles.itemName}>{item.name}</Text>
+            <View style={tw("flex flex-col justify-center w-[60%]")}>
+              <Text
+                style={{
+                  ...tw("text-[8px] font-semibold"),
+                  color: theme.heading,
+                }}
+              >
+                {item.name}
+              </Text>
+
               {item.description && (
-                <Text style={dynamicStyles.itemDescription}>
+                <Text
+                  style={{
+                    ...tw("text-[6.5px] mt-0.5 leading-[8.45px]"),
+                    color: theme.mutedText,
+                  }}
+                >
                   {item.description}
                 </Text>
               )}
             </View>
 
-            <Text style={[styles.quantityColumn, dynamicStyles.monoText]}>
+            <Text
+              style={{
+                ...tw("w-[10%] text-center"),
+                letterSpacing: isMono ? 0 : -0.3,
+                color: theme.page.text,
+              }}
+            >
               {item.quantity}
             </Text>
 
-            <Text style={[styles.priceColumn, dynamicStyles.monoText]}>
-              {formatCurrency(invoice.invoice.currency, item.unitPrice)}
-            </Text>
+            {/* Item Rate */}
+            <View style={tw("w-[15%] items-end")}>
+              <CurrencyText
+                currency={invoice.invoice.currency}
+                value={item.unitPrice}
+                fontSize={9}
+                color={theme.page.text}
+              />
+            </View>
 
-            <Text style={[styles.totalColumn, dynamicStyles.monoText]}>
-              {formatCurrency(
-                invoice.invoice.currency,
-                calculateItemTotal(item)
-              )}
-            </Text>
+            <View style={tw("w-[15%] items-end")}>
+              <CurrencyText
+                currency={invoice.invoice.currency}
+                value={calculateItemTotal(item)}
+                fontSize={9}
+                color={theme.page.text}
+              />
+            </View>
           </View>
         ))}
       </View>
 
-      {/* ================================================== */}
-      {/* BOTTOM SECTION */}
-      {/* ================================================== */}
-
-      <View wrap={false} style={dynamicStyles.bottomSection}>
-        {/* Left: Metadata */}
-        <View style={dynamicStyles.metadataColumn}>
+      {/* Bottom */}
+      <View
+        wrap={false}
+        style={{
+          ...tw("flex flex-row"),
+          borderTopWidth: 1,
+          borderTopColor: theme.border,
+        }}
+      >
+        {/* Metadata */}
+        <View
+          style={{
+            ...tw("flex flex-col w-1/2"),
+            borderRightWidth: 1,
+            borderRightColor: theme.border,
+          }}
+        >
+          {/* Payment Information */}
           {invoice.metadata.paymentDetails.length > 0 && (
-            <View style={styles.metadataSection}>
-              <Text style={dynamicStyles.metadataTitle}>
+            <View style={tw("flex flex-col gap-0.5 p-4")}>
+              <Text
+                style={{
+                  ...tw(
+                    "text-[6.5px] font-semibold uppercase tracking-[0.5px]"
+                  ),
+                  color: theme.mutedText,
+                }}
+              >
                 Payment Information
               </Text>
+
               {invoice.metadata.paymentDetails.map((field) => (
-                <View key={field.id} style={styles.fieldRow}>
-                  <Text style={dynamicStyles.fieldLabel}>{field.label}</Text>
-                  <Text style={dynamicStyles.fieldValue}>{field.value}</Text>
+                <View
+                  key={field.id}
+                  style={tw("flex flex-row items-center gap-1 mt-[1px]")}
+                >
+                  <Text
+                    style={{
+                      ...tw("text-[6.5px]"),
+                      color: theme.mutedText,
+                    }}
+                  >
+                    {field.label}
+                  </Text>
+                  <Text
+                    style={{
+                      ...tw("text-[6.5px] font-medium"),
+                      color: theme.page.text,
+                    }}
+                  >
+                    {field.value}
+                  </Text>
                 </View>
               ))}
             </View>
           )}
 
+          {/* Terms */}
           {invoice.metadata.terms && (
             <View
-              style={[
-                styles.metadataSection,
-                invoice.metadata.paymentDetails.length > 0
-                  ? dynamicStyles.metadataDivider
-                  : {},
-              ]}
+              style={{
+                ...tw("flex flex-col gap-0.5 p-4"),
+                ...(invoice.metadata.paymentDetails.length > 0
+                  ? {
+                      borderTopWidth: 1,
+                      borderTopColor: theme.border,
+                    }
+                  : {}),
+              }}
             >
-              <Text style={dynamicStyles.metadataTitle}>Terms</Text>
-              <Text style={dynamicStyles.metadataBody}>
+              <Text
+                style={{
+                  ...tw(
+                    "text-[6.5px] font-semibold uppercase tracking-[0.5px]"
+                  ),
+                  color: theme.mutedText,
+                }}
+              >
+                Terms
+              </Text>
+
+              <Text
+                style={{
+                  ...tw("text-[6.5px] mt-1 leading-[9.1px]"),
+                  color: theme.mutedText,
+                }}
+              >
                 {invoice.metadata.terms}
               </Text>
             </View>
           )}
 
+          {/* Notes */}
           {invoice.metadata.notes && (
             <View
-              style={[
-                styles.metadataSection,
-                invoice.metadata.paymentDetails.length > 0 ||
+              style={{
+                ...tw("flex flex-col gap-0.5 p-4"),
+                ...(invoice.metadata.paymentDetails.length > 0 ||
                 invoice.metadata.terms
-                  ? dynamicStyles.metadataDivider
-                  : {},
-              ]}
+                  ? {
+                      borderTopWidth: 1,
+                      borderTopColor: theme.border,
+                    }
+                  : {}),
+              }}
             >
-              <Text style={dynamicStyles.metadataTitle}>Notes</Text>
-              <Text style={dynamicStyles.metadataBody}>
+              <Text
+                style={{
+                  ...tw(
+                    "text-[6.5px] font-semibold uppercase tracking-[0.5px]"
+                  ),
+                  color: theme.mutedText,
+                }}
+              >
+                Notes
+              </Text>
+
+              <Text
+                style={{
+                  ...tw("text-[6.5px] mt-1 leading-[9.1px]"),
+                  color: theme.mutedText,
+                }}
+              >
                 {invoice.metadata.notes}
               </Text>
             </View>
           )}
         </View>
 
-        {/* Right: Signature & Totals */}
-        <View style={styles.totalsColumn}>
+        {/* Pricing */}
+        <View style={tw("flex flex-col w-1/2")}>
+          {/* Signature */}
           {invoice.company.signature && (
-            <View style={dynamicStyles.signatureContainer}>
-              <Image src={invoice.company.signature} style={styles.signature} />
+            <View
+              style={{
+                ...tw("items-end p-3"),
+                borderBottomWidth: 1,
+                borderBottomColor: theme.border,
+              }}
+            >
+              <Image
+                src={invoice.company.signature}
+                style={tw("w-[60px] h-[60px] object-cover")}
+              />
             </View>
           )}
 
-          <View style={styles.totalsBreakdown}>
-            <View style={styles.totalRow}>
-              <Text style={dynamicStyles.totalLabel}>Subtotal</Text>
-              <Text style={dynamicStyles.totalValue}>
-                {formatCurrency(invoice.invoice.currency, subtotal)}
+          {/* Totals Breakdown */}
+          <View style={tw("flex flex-col gap-1 p-4")}>
+            <View style={tw("flex flex-row items-center justify-between")}>
+              <Text
+                style={{
+                  ...tw("text-[7px]"),
+                  color: theme.mutedText,
+                }}
+              >
+                Subtotal
               </Text>
+              <CurrencyText
+                currency={invoice.invoice.currency}
+                value={subtotal}
+                fontSize={7}
+                color={theme.page.text}
+              />
             </View>
 
             {invoice.invoice.billingDetails.map((detail) => (
-              <View key={detail.id} style={styles.totalRow}>
-                <Text style={dynamicStyles.totalLabel}>{detail.label}</Text>
-                <Text style={dynamicStyles.totalValue}>
+              <View
+                key={detail.id}
+                style={tw("flex flex-row items-center justify-between")}
+              >
+                <Text
+                  style={{
+                    ...tw("text-[7px]"),
+                    color: theme.mutedText,
+                  }}
+                >
+                  {detail.label}
+                </Text>
+                <Text
+                  style={{
+                    ...tw("text-[7px]"),
+                    letterSpacing: isMono ? 0 : -0.3,
+                    color: theme.page.text,
+                  }}
+                >
                   {detail.type === "percentage"
                     ? `${detail.value}%`
                     : formatCurrency(invoice.invoice.currency, detail.value)}
@@ -835,42 +660,107 @@ export default function GithubPdf({ invoice }: GithubPdfProps) {
             ))}
 
             {invoice.invoice.taxRate > 0 && (
-              <View style={styles.totalRow}>
-                <Text style={dynamicStyles.totalLabel}>
+              <View style={tw("flex flex-row items-center justify-between")}>
+                <Text
+                  style={{
+                    ...tw("text-[7px]"),
+                    color: theme.mutedText,
+                  }}
+                >
                   Tax ({invoice.invoice.taxRate}%)
                 </Text>
-                <Text style={dynamicStyles.totalValue}>
+                <Text
+                  style={{
+                    ...tw("text-[7px]"),
+                    letterSpacing: isMono ? 0 : -0.3,
+                    color: theme.page.text,
+                  }}
+                >
                   {formatCurrency(invoice.invoice.currency, tax)}
                 </Text>
               </View>
             )}
 
-            {invoice.invoice.discount > 0 && (
-              <View style={styles.totalRow}>
-                <Text style={dynamicStyles.totalLabel}>Discount</Text>
-                <Text style={dynamicStyles.totalValue}>
+            {discount > 0 && (
+              <View style={tw("flex flex-row items-center justify-between")}>
+                <Text
+                  style={{
+                    ...tw("text-[7px]"),
+                    color: theme.mutedText,
+                  }}
+                >
+                  Discount
+                </Text>
+                <Text
+                  style={{
+                    ...tw("text-[7px]"),
+                    letterSpacing: isMono ? 0 : -0.3,
+                    color: theme.page.text,
+                  }}
+                >
                   -{formatCurrency(invoice.invoice.currency, discount)}
                 </Text>
               </View>
             )}
           </View>
 
-          {/* Grand total, styled like a GitHub diff "+" addition line */}
-          <View style={dynamicStyles.grandTotal}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={dynamicStyles.grandTotalPrefix}>+</Text>
-              <Text style={dynamicStyles.grandTotalLabel}>Total Due</Text>
+          {/* Grand Total */}
+          <View
+            style={{
+              ...tw(
+                "flex flex-row items-center justify-between mx-4 mb-3 p-3 rounded"
+              ),
+              backgroundColor: tint(theme.success, 0.12),
+              borderWidth: 1,
+              borderColor: tint(theme.success, 0.4),
+            }}
+          >
+            <View style={tw("flex flex-row items-center")}>
+              <Text
+                style={{
+                  ...tw("text-[9px] font-bold mr-1.5"),
+                  color: theme.success,
+                }}
+              >
+                +
+              </Text>
+              <Text
+                style={{
+                  ...tw("text-[8px] font-semibold"),
+                  color: theme.totalText,
+                }}
+              >
+                Total Due
+              </Text>
             </View>
-            <Text style={dynamicStyles.grandTotalValue}>
-              {formatCurrency(invoice.invoice.currency, total)}
-            </Text>
+
+            <CurrencyText
+              currency={invoice.invoice.currency}
+              value={total}
+              fontSize={13}
+              color={theme.success}
+              // bold
+            />
           </View>
 
-          <View style={styles.wordsContainer}>
-            <Text style={dynamicStyles.wordsLabel}>
+          {/* Total in Words */}
+          <View style={tw("flex flex-col gap-0.5 px-4 pb-4")}>
+            <Text
+              style={{
+                ...tw("text-[6px] uppercase tracking-[0.3px]"),
+                color: theme.mutedText,
+              }}
+            >
               Invoice Total (in words)
             </Text>
-            <Text style={dynamicStyles.words}>{numberToWords(total)}</Text>
+            <Text
+              style={{
+                ...tw("text-[7px]"),
+                color: theme.mutedText,
+              }}
+            >
+              {numberToWords(total)}
+            </Text>
           </View>
         </View>
       </View>

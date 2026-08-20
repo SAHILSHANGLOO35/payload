@@ -53,11 +53,15 @@ export const calculateInvoiceTotals = (invoice: Invoice) => {
 }
 
 export function formatCurrency(currency: string, value: number) {
-  return new Intl.NumberFormat("en-IN", {
+  const formatted = new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency,
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value)
+
+  // Adds a space after the symbol if none exists (e.g., "₹20,000.00" -> "₹ 20,000.00")
+  return formatted.replace(/^(\D+)/, "$1 ").replace(/\s+/, " ")
 }
 
 export function formatDate(value: string) {
