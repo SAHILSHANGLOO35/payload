@@ -51,7 +51,7 @@ export const defaultInvoice: Invoice = {
       {
         id: crypto.randomUUID(),
         label: "HDFC Bank",
-        value: "SN 11, Parliament Street, New Delhi, 110001",
+        value: "SN 11, Parliament Street, New Delhi",
       },
       {
         id: crypto.randomUUID(),

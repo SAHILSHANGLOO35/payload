@@ -1,4 +1,5 @@
-import { Image, Page, StyleSheet, Text, View } from "@react-pdf/renderer"
+import { Image, Page, Text, View } from "@react-pdf/renderer"
+import { createTw } from "react-pdf-tailwind"
 
 import type { Invoice } from "@/types/invoice"
 import { pdfThemes } from "@/lib/invoice/pdf-theme"
@@ -9,430 +10,67 @@ import {
   formatDate,
   numberToWords,
 } from "@/lib/invoice/calculation"
+import { CurrencyText } from "@/lib/invoice/format"
 
 type DefaultPdfProps = {
   invoice: Invoice
 }
 
-const styles = StyleSheet.create({
-  page: {
-    padding: 20,
-    fontSize: 8,
-    flexDirection: "column",
-  },
-
-  // Header
-
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-  },
-
-  headerLeft: {
-    flexDirection: "column",
-  },
-
-  invoiceTitle: {
-    fontSize: 22,
-    fontWeight: 600,
-    letterSpacing: -0.5,
-  },
-
-  invoiceDetails: {
-    marginTop: 12,
-    gap: 4,
-  },
-
-  detailRow: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  detailLabel: {
-    width: 72,
-    fontSize: 7,
-    fontWeight: 600,
-  },
-
-  detailValue: {
-    fontSize: 7,
-  },
-
-  logo: {
-    width: 62,
-    height: 62,
-    objectFit: "contain",
-  },
-
-  // Company / Client
-
-  billingRow: {
-    flexDirection: "row",
-    gap: 10,
-    marginTop: 22,
-  },
-
-  billingPanel: {
-    width: "50%",
-    paddingTop: 10,
-    paddingRight: 11,
-    paddingBottom: 10,
-    paddingLeft: 11,
-    borderRadius: 2,
-  },
-
-  sectionTitle: {
-    fontSize: 8,
-    fontWeight: 600,
-    marginBottom: 6,
-  },
-
-  companyName: {
-    fontSize: 8,
-    fontWeight: 600,
-    marginBottom: 3,
-  },
-
-  muted: {
-    fontSize: 7,
-  },
-
-  fieldRow: {
-    flexDirection: "row",
-    gap: 4,
-    marginTop: 3,
-  },
-
-  fieldLabel: {
-    fontSize: 7,
-    fontWeight: 600,
-  },
-
-  fieldValue: {
-    fontSize: 7,
-  },
-
-  // Items
-
-  itemsContainer: {
-    marginTop: 20,
-  },
-
-  tableHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingTop: 7,
-    paddingRight: 8,
-    paddingBottom: 7,
-    paddingLeft: 8,
-    borderRadius: 3,
-  },
-
-  itemRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    minHeight: 36,
-  },
-
-  itemColumn: {
-    width: "60%",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-
-  quantityColumn: {
-    width: "10%",
-    textAlign: "center",
-  },
-
-  priceColumn: {
-    width: "17.5%",
-    textAlign: "right",
-  },
-
-  totalColumn: {
-    width: "17.5%",
-    textAlign: "right",
-  },
-
-  tableHeaderText: {
-    fontSize: 7,
-    fontWeight: 600,
-  },
-
-  itemName: {
-    fontSize: 8,
-    fontWeight: 600,
-  },
-
-  itemDescription: {
-    fontSize: 7,
-    marginTop: 2,
-  },
-
-  // Spacer
-
-  pageSpacer: {
-    flexGrow: 1,
-  },
-
-  // Bottom
-
-  bottomSection: {
-    flexDirection: "row",
-    gap: 35,
-    marginTop: 18,
-  },
-
-  metadataColumn: {
-    width: "50%",
-    justifyContent: "flex-end",
-    gap: 13,
-  },
-
-  metadataSection: {
-    flexDirection: "column",
-  },
-
-  totalsColumn: {
-    width: "50%",
-    justifyContent: "flex-end",
-  },
-
-  // Signature
-
-  signatureContainer: {
-    alignItems: "flex-end",
-    marginBottom: 9,
-  },
-
-  signatureVerified: {
-    fontSize: 6,
-    marginBottom: 4,
-  },
-
-  signature: {
-    width: 58,
-    height: 58,
-    objectFit: "contain",
-  },
-
-  // Totals
-
-  totalRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 5,
-  },
-
-  totalLabel: {
-    fontSize: 7,
-    fontWeight: 500,
-  },
-
-  totalValue: {
-    fontSize: 7,
-  },
-
-  grandTotal: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 7,
-    paddingTop: 8,
-    borderTopWidth: 1,
-  },
-
-  grandTotalLabel: {
-    fontSize: 10,
-    fontWeight: 600,
-  },
-
-  grandTotalValue: {
-    fontSize: 17,
-    fontWeight: 500,
-  },
-
-  wordsLabel: {
-    fontSize: 6,
-    marginTop: 8,
-  },
-
-  words: {
-    fontSize: 7,
-    marginTop: 3,
+const tw = createTw({
+  theme: {
+    extend: {
+      fontSize: {
+        "3xs": "0.375rem", // 6px
+        "2xs": "0.46875rem", // 7.5px
+        xs: "0.5625rem", // 9px
+        sm: "0.65625rem", // 10.5px
+        lg: "0.84375rem", // 13.5px
+        "2xl": "1.125rem", // 18px
+      },
+    },
   },
 })
-
-// Helpers
-
-// Default PDF
 
 export default function DefaultPdf({ invoice }: DefaultPdfProps) {
   const theme = pdfThemes[invoice.theme.template] ?? pdfThemes.default
 
-  // Centralized totals.
   const { subtotal, tax, discount, total } = calculateInvoiceTotals(invoice)
-
-  const dynamicStyles = StyleSheet.create({
-    page: {
-      ...styles.page,
-      backgroundColor: theme.page.background,
-      color: theme.page.text,
-      fontFamily: invoice.theme.font,
-    },
-
-    header: {
-      ...styles.header,
-    },
-
-    invoiceTitle: {
-      ...styles.invoiceTitle,
-      color: theme.accent,
-    },
-
-    detailLabel: {
-      ...styles.detailLabel,
-      color: theme.mutedText,
-    },
-
-    detailValue: {
-      ...styles.detailValue,
-      color: theme.page.text,
-    },
-
-    billingRow: {
-      ...styles.billingRow,
-    },
-
-    billingPanel: {
-      ...styles.billingPanel,
-      backgroundColor: theme.panel,
-    },
-
-    sectionTitle: {
-      ...styles.sectionTitle,
-      color: theme.heading,
-    },
-
-    companyName: {
-      ...styles.companyName,
-      color: theme.page.text,
-    },
-
-    muted: {
-      ...styles.muted,
-      color: theme.mutedText,
-    },
-
-    fieldLabel: {
-      ...styles.fieldLabel,
-      color: theme.page.text,
-    },
-
-    fieldValue: {
-      ...styles.fieldValue,
-      color: theme.page.text,
-    },
-
-    tableHeader: {
-      ...styles.tableHeader,
-      backgroundColor: theme.tableHeader,
-    },
-
-    tableHeaderText: {
-      ...styles.tableHeaderText,
-      color: theme.page.text,
-    },
-
-    itemRow: {
-      ...styles.itemRow,
-      backgroundColor: theme.tableRow,
-      borderBottomWidth: 1,
-      borderBottomColor: theme.border,
-    },
-
-    itemName: {
-      ...styles.itemName,
-      color: theme.page.text,
-    },
-
-    itemDescription: {
-      ...styles.itemDescription,
-      color: theme.mutedText,
-    },
-
-    totalLabel: {
-      ...styles.totalLabel,
-      color: theme.mutedText,
-    },
-
-    totalValue: {
-      ...styles.totalValue,
-      color: theme.page.text,
-    },
-
-    grandTotal: {
-      ...styles.grandTotal,
-      borderTopColor: theme.border,
-    },
-
-    grandTotalLabel: {
-      ...styles.grandTotalLabel,
-      color: theme.totalText,
-    },
-
-    grandTotalValue: {
-      ...styles.grandTotalValue,
-      color: theme.totalText,
-    },
-
-    wordsLabel: {
-      ...styles.wordsLabel,
-      color: theme.mutedText,
-    },
-
-    words: {
-      ...styles.words,
-      color: theme.page.text,
-    },
-  })
 
   return (
     <Page
       size="A4"
       style={{
-        ...dynamicStyles.page,
+        ...tw("p-8 py-8 text-xs flex flex-col"),
         backgroundColor: theme.page.background,
         color: theme.page.text,
         fontFamily: invoice.theme.font,
       }}
     >
-      {/* HEADER */}
-
-      <View style={dynamicStyles.header}>
-        <View style={styles.headerLeft}>
+      {/* Header */}
+      <View style={tw("flex flex-row justify-between items-start")}>
+        <View style={tw("flex flex-col")}>
           <Text
             style={{
-              ...styles.invoiceTitle,
+              ...tw("text-2xl font-semibold leading-[20px] tracking-[-0.9px]"),
               color: theme.accent,
             }}
           >
             {invoice.invoice.prefix}-{invoice.invoice.serialNumber}
           </Text>
 
-          <View style={styles.invoiceDetails}>
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Serial Number</Text>
+          <View style={tw("flex flex-col gap-1 mt-3")}>
+            <View style={tw("flex flex-row items-center")}>
+              <Text
+                style={{
+                  ...tw("w-[72px] text-2xs font-semibold"),
+                }}
+              >
+                Serial Number
+              </Text>
 
               <Text
                 style={{
-                  ...styles.detailValue,
+                  ...tw("text-2xs font-normal"),
                   color: theme.mutedText,
                 }}
               >
@@ -441,12 +79,18 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
             </View>
 
             {invoice.invoice.date && (
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Date</Text>
+              <View style={tw("flex flex-row items-center")}>
+                <Text
+                  style={{
+                    ...tw("w-[72px] text-2xs font-semibold"),
+                  }}
+                >
+                  Date
+                </Text>
 
                 <Text
                   style={{
-                    ...styles.detailValue,
+                    ...tw("text-2xs font-normal"),
                     color: theme.mutedText,
                   }}
                 >
@@ -456,12 +100,18 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
             )}
 
             {invoice.invoice.dueDate && (
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Due Date</Text>
+              <View style={tw("flex flex-row items-center")}>
+                <Text
+                  style={{
+                    ...tw("w-[72px] text-2xs font-semibold"),
+                  }}
+                >
+                  Due Date
+                </Text>
 
                 <Text
                   style={{
-                    ...styles.detailValue,
+                    ...tw("text-2xs font-normal"),
                     color: theme.mutedText,
                   }}
                 >
@@ -470,12 +120,18 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
               </View>
             )}
 
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Currency</Text>
+            <View style={tw("flex flex-row items-center")}>
+              <Text
+                style={{
+                  ...tw("w-[72px] text-2xs font-semibold"),
+                }}
+              >
+                Currency
+              </Text>
 
               <Text
                 style={{
-                  ...styles.detailValue,
+                  ...tw("text-2xs font-normal"),
                   color: theme.mutedText,
                 }}
               >
@@ -486,24 +142,25 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
         </View>
 
         {invoice.company.logo && (
-          <Image src={invoice.company.logo} style={styles.logo} />
+          <Image
+            src={invoice.company.logo}
+            style={tw("w-[62px] h-[62px] object-contain")}
+          />
         )}
       </View>
 
-      {/* BILLING */}
-
-      <View style={dynamicStyles.billingRow}>
+      {/* Billing */}
+      <View style={tw("flex flex-row gap-2.5 mt-[22px]")}>
         {/* Billed By */}
-
         <View
           style={{
-            ...styles.billingPanel,
+            ...tw("w-1/2 pt-2.5 pr-[11px] pb-2.5 pl-[11px] rounded-sm"),
             backgroundColor: theme.panel,
           }}
         >
           <Text
             style={{
-              ...styles.sectionTitle,
+              ...tw("text-sm font-semibold mb-1.5 uppercase"),
               color: theme.accent,
             }}
           >
@@ -512,7 +169,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
           <Text
             style={{
-              ...styles.companyName,
+              ...tw("text-2xs font-semibold mb-[3px]"),
               color: theme.page.text,
             }}
           >
@@ -521,7 +178,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
           <Text
             style={{
-              ...styles.muted,
+              ...tw("text-2xs font-normal"),
               color: theme.mutedText,
             }}
           >
@@ -529,10 +186,10 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
           </Text>
 
           {invoice.company.fields.map((field) => (
-            <View key={field.id} style={styles.fieldRow}>
+            <View key={field.id} style={tw("flex flex-row gap-1 mt-[3px]")}>
               <Text
                 style={{
-                  ...styles.fieldLabel,
+                  ...tw("text-2xs font-semibold"),
                   color: theme.page.text,
                 }}
               >
@@ -541,7 +198,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
               <Text
                 style={{
-                  ...styles.fieldValue,
+                  ...tw("text-2xs font-normal"),
                   color: theme.mutedText,
                 }}
               >
@@ -552,16 +209,15 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
         </View>
 
         {/* Billed To */}
-
         <View
           style={{
-            ...styles.billingPanel,
+            ...tw("w-1/2 pt-2.5 pr-[11px] pb-2.5 pl-[11px] rounded-sm"),
             backgroundColor: theme.panel,
           }}
         >
           <Text
             style={{
-              ...styles.sectionTitle,
+              ...tw("text-sm font-semibold mb-1.5 uppercase"),
               color: theme.accent,
             }}
           >
@@ -570,7 +226,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
           <Text
             style={{
-              ...styles.companyName,
+              ...tw("text-2xs font-semibold mb-[3px]"),
               color: theme.page.text,
             }}
           >
@@ -579,7 +235,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
           <Text
             style={{
-              ...styles.muted,
+              ...tw("text-2xs font-normal"),
               color: theme.mutedText,
             }}
           >
@@ -587,10 +243,10 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
           </Text>
 
           {invoice.client.fields.map((field) => (
-            <View key={field.id} style={styles.fieldRow}>
+            <View key={field.id} style={tw("flex flex-row gap-1 mt-[3px]")}>
               <Text
                 style={{
-                  ...styles.fieldLabel,
+                  ...tw("text-2xs font-semibold"),
                   color: theme.page.text,
                 }}
               >
@@ -599,7 +255,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
               <Text
                 style={{
-                  ...styles.fieldValue,
+                  ...tw("text-2xs font-normal"),
                   color: theme.mutedText,
                 }}
               >
@@ -610,19 +266,17 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
         </View>
       </View>
 
-      {/* ITEMS */}
-
-      <View style={styles.itemsContainer}>
+      {/* Items */}
+      <View style={tw("mt-5")}>
         <View
           style={{
-            ...styles.tableHeader,
+            ...tw("flex flex-row items-center py-[7px] px-2 rounded-[3px]"),
             backgroundColor: theme.tableHeader,
           }}
         >
           <Text
             style={{
-              ...styles.itemColumn,
-              ...styles.tableHeaderText,
+              ...tw("w-[60%] text-2xs font-semibold uppercase"),
               color: theme.page.background,
             }}
           >
@@ -631,8 +285,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
           <Text
             style={{
-              ...styles.quantityColumn,
-              ...styles.tableHeaderText,
+              ...tw("w-[10%] text-center text-2xs font-semibold uppercase"),
               color: theme.page.background,
             }}
           >
@@ -641,8 +294,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
           <Text
             style={{
-              ...styles.priceColumn,
-              ...styles.tableHeaderText,
+              ...tw("w-[15%] text-right text-2xs font-semibold uppercase"),
               color: theme.page.background,
             }}
           >
@@ -651,8 +303,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
           <Text
             style={{
-              ...styles.totalColumn,
-              ...styles.tableHeaderText,
+              ...tw("w-[15%] text-right text-2xs font-semibold uppercase"),
               color: theme.page.background,
             }}
           >
@@ -665,17 +316,17 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
             key={item.id}
             wrap={false}
             style={{
-              ...styles.itemRow,
+              ...tw("flex flex-row items-center px-2 py-2.5 min-h-[36px]"),
               backgroundColor:
                 index % 2 === 0 ? theme.page.background : theme.tableRow,
               borderBottomWidth: 1,
               borderBottomColor: theme.border,
             }}
           >
-            <View style={styles.itemColumn}>
+            <View style={tw("w-[60%] flex flex-col justify-center")}>
               <Text
                 style={{
-                  ...styles.itemName,
+                  ...tw("text-sm font-semibold"),
                   color: theme.page.text,
                 }}
               >
@@ -685,7 +336,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
               {item.description && (
                 <Text
                   style={{
-                    ...styles.itemDescription,
+                    ...tw("text-xs font-normal mt-0.5"),
                     color: theme.mutedText,
                   }}
                 >
@@ -696,52 +347,47 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
             <Text
               style={{
-                ...styles.quantityColumn,
+                ...tw("w-[10%] text-center text-sm tracking-[-0.5px]"),
+                fontFamily: "Geist",
                 color: theme.page.text,
               }}
             >
               {item.quantity}
             </Text>
 
-            <Text
-              style={{
-                ...styles.priceColumn,
-                color: theme.page.text,
-              }}
-            >
-              {formatCurrency(invoice.invoice.currency, item.unitPrice)}
-            </Text>
+            <View style={tw("w-[15%] items-end")}>
+              <CurrencyText
+                currency={invoice.invoice.currency}
+                value={item.unitPrice}
+                fontSize={9}
+                color={theme.page.text}
+              />
+            </View>
 
-            <Text
-              style={{
-                ...styles.totalColumn,
-                color: theme.page.text,
-              }}
-            >
-              {formatCurrency(
-                invoice.invoice.currency,
-                calculateItemTotal(item)
-              )}
-            </Text>
+            <View style={tw("w-[15%] items-end")}>
+              <CurrencyText
+                currency={invoice.invoice.currency}
+                value={calculateItemTotal(item)}
+                fontSize={9}
+                color={theme.page.text}
+              />
+            </View>
           </View>
         ))}
       </View>
 
-      {/* SPACER */}
+      {/* Push bottom content to bottom */}
+      <View style={tw("grow")} />
 
-      <View style={styles.pageSpacer} />
-
-      {/* BOTTOM CONTENT */}
-
-      <View wrap={false} style={styles.bottomSection}>
-        {/* LEFT SIDE */}
-
-        <View style={styles.metadataColumn}>
+      {/* Bottom */}
+      <View wrap={false} style={tw("flex flex-row gap-[35px] mt-[18px]")}>
+        {/* Metadata */}
+        <View style={tw("w-1/2 flex flex-col justify-end gap-[13px]")}>
           {invoice.metadata.paymentDetails.length > 0 && (
-            <View style={styles.metadataSection}>
+            <View style={tw("flex flex-col")}>
               <Text
                 style={{
-                  ...styles.sectionTitle,
+                  ...tw("text-sm font-semibold mb-1.5 uppercase"),
                   color: theme.accent,
                 }}
               >
@@ -749,10 +395,10 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
               </Text>
 
               {invoice.metadata.paymentDetails.map((field) => (
-                <View key={field.id} style={styles.fieldRow}>
+                <View key={field.id} style={tw("flex flex-row gap-1 mt-[3px]")}>
                   <Text
                     style={{
-                      ...styles.fieldLabel,
+                      ...tw("text-2xs font-semibold"),
                       color: theme.page.text,
                     }}
                   >
@@ -761,7 +407,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
                   <Text
                     style={{
-                      ...styles.fieldValue,
+                      ...tw("text-2xs font-normal"),
                       color: theme.mutedText,
                     }}
                   >
@@ -773,10 +419,10 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
           )}
 
           {invoice.metadata.terms && (
-            <View style={styles.metadataSection}>
+            <View style={tw("flex flex-col")}>
               <Text
                 style={{
-                  ...styles.sectionTitle,
+                  ...tw("text-sm font-semibold mb-1.5 uppercase"),
                   color: theme.accent,
                 }}
               >
@@ -785,9 +431,8 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
               <Text
                 style={{
+                  ...tw("text-2xs font-normal leading-[10.5px]"),
                   color: theme.mutedText,
-                  fontSize: 7,
-                  lineHeight: 1.4,
                 }}
               >
                 {invoice.metadata.terms}
@@ -796,10 +441,10 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
           )}
 
           {invoice.metadata.notes && (
-            <View style={styles.metadataSection}>
+            <View style={tw("flex flex-col")}>
               <Text
                 style={{
-                  ...styles.sectionTitle,
+                  ...tw("text-sm font-semibold mb-1.5 uppercase"),
                   color: theme.accent,
                 }}
               >
@@ -808,9 +453,8 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
               <Text
                 style={{
+                  ...tw("text-2xs font-normal leading-[10.5px]"),
                   color: theme.mutedText,
-                  fontSize: 7,
-                  lineHeight: 1.4,
                 }}
               >
                 {invoice.metadata.notes}
@@ -819,55 +463,57 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
           )}
         </View>
 
-        {/* RIGHT SIDE */}
-
-        <View style={styles.totalsColumn}>
+        {/* Totals */}
+        <View style={tw("w-1/2 flex flex-col justify-end")}>
           {/* Signature */}
-
           {invoice.company.signature && (
-            <View style={styles.signatureContainer}>
+            <View style={tw("flex flex-col items-end mb-[9px]")}>
               <Text
                 style={{
-                  ...styles.signatureVerified,
+                  ...tw("text-3xs font-normal mb-1"),
                   color: theme.mutedText,
                 }}
               >
                 Verified by {invoice.company.name}
               </Text>
 
-              <Image src={invoice.company.signature} style={styles.signature} />
+              <Image
+                src={invoice.company.signature}
+                style={tw("w-[58px] h-[58px] object-contain")}
+              />
             </View>
           )}
 
           {/* Subtotal */}
-
-          <View style={styles.totalRow}>
+          <View
+            style={tw("flex flex-row justify-between items-center mb-[5px]")}
+          >
             <Text
               style={{
-                ...styles.totalLabel,
+                ...tw("text-2xs font-semibold"),
                 color: theme.page.text,
               }}
             >
               Subtotal
             </Text>
 
-            <Text
-              style={{
-                ...styles.totalValue,
-                color: theme.mutedText,
-              }}
-            >
-              {formatCurrency(invoice.invoice.currency, subtotal)}
-            </Text>
+            <CurrencyText
+              currency={invoice.invoice.currency}
+              value={subtotal}
+              fontSize={9}
+              color={theme.page.text}
+            />
           </View>
 
           {/* Billing Details */}
-
           {invoice.invoice.billingDetails.map((detail) => (
-            <View key={detail.id} style={styles.totalRow}>
+            <View
+              key={detail.id}
+              style={tw("flex flex-row justify-between items-center mb-[5px]")}
+            >
               <Text
                 style={{
-                  ...styles.totalLabel,
+                  ...tw("text-2xs font-semibold"),
                   color: theme.page.text,
                 }}
               >
@@ -876,7 +522,8 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
               <Text
                 style={{
-                  ...styles.totalValue,
+                  ...tw("text-2xs font-normal tracking-[-0.2px]"),
+                  fontFamily: "Geist",
                   color: theme.mutedText,
                 }}
               >
@@ -888,12 +535,13 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
           ))}
 
           {/* Tax */}
-
           {invoice.invoice.taxRate > 0 && (
-            <View style={styles.totalRow}>
+            <View
+              style={tw("flex flex-row justify-between items-center mb-[5px]")}
+            >
               <Text
                 style={{
-                  ...styles.totalLabel,
+                  ...tw("text-2xs font-semibold"),
                   color: theme.page.text,
                 }}
               >
@@ -902,7 +550,8 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
               <Text
                 style={{
-                  ...styles.totalValue,
+                  ...tw("text-2xs font-normal tracking-[-0.2px]"),
+                  fontFamily: "Geist",
                   color: theme.mutedText,
                 }}
               >
@@ -912,12 +561,13 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
           )}
 
           {/* Discount */}
-
           {discount > 0 && (
-            <View style={styles.totalRow}>
+            <View
+              style={tw("flex flex-row justify-between items-center mb-[5px]")}
+            >
               <Text
                 style={{
-                  ...styles.totalLabel,
+                  ...tw("text-2xs font-semibold"),
                   color: theme.page.text,
                 }}
               >
@@ -926,7 +576,8 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
               <Text
                 style={{
-                  ...styles.totalValue,
+                  ...tw("text-2xs font-normal tracking-[-0.2px]"),
+                  fontFamily: "Geist",
                   color: theme.mutedText,
                 }}
               >
@@ -936,37 +587,34 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
           )}
 
           {/* Grand Total */}
-
           <View
             style={{
-              ...styles.grandTotal,
+              ...tw("flex flex-row justify-between items-center mt-[7px] pt-2"),
+              borderTopWidth: 1,
               borderTopColor: theme.border,
             }}
           >
             <Text
               style={{
-                ...styles.grandTotalLabel,
+                ...tw("text-xs font-semibold"),
                 color: theme.totalText,
               }}
             >
               Total
             </Text>
 
-            <Text
-              style={{
-                ...styles.grandTotalValue,
-                color: theme.totalText,
-              }}
-            >
-              {formatCurrency(invoice.invoice.currency, total)}
-            </Text>
+            <CurrencyText
+              currency={invoice.invoice.currency}
+              value={total}
+              fontSize={12}
+              color={theme.page.text}
+            />
           </View>
 
           {/* Total in words */}
-
           <Text
             style={{
-              ...styles.wordsLabel,
+              ...tw("text-xs font-normal mt-2 uppercase"),
               color: theme.mutedText,
             }}
           >
@@ -975,7 +623,7 @@ export default function DefaultPdf({ invoice }: DefaultPdfProps) {
 
           <Text
             style={{
-              ...styles.words,
+              ...tw("text-2xs font-normal mt-[4px]"),
               color: theme.page.text,
             }}
           >
