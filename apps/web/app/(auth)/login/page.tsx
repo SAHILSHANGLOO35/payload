@@ -18,7 +18,7 @@ export default function Login() {
       onClick={closeLogin}
     >
       <div
-        className="flex w-full max-w-sm flex-col items-center rounded-lg border bg-background p-6 shadow-xl"
+        className="absolute inset-x-0 bottom-0 flex max-h-[90dvh] w-full flex-col items-center overflow-y-auto rounded-t-lg border bg-background p-4 shadow-xl sm:relative sm:inset-auto sm:max-w-sm sm:rounded-lg sm:p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <Logo />
