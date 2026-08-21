@@ -9,7 +9,7 @@ export default function Login() {
   if (!isLoginOpen) return null
 
   const handleLogin = () => {
-    window.location.href = "http://localhost:8000/api/v1/google/auth/login"
+    window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/google/auth/login`
   }
 
   return (

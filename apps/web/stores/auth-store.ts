@@ -30,7 +30,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   checkAuth: async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/google/auth/user",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/google/auth/user`,
         {
           withCredentials: true,
         }
@@ -62,7 +62,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   logout: async () => {
     try {
       await axios.post(
-        "http://localhost:8000/api/v1/google/auth/logout",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/google/auth/logout`,
         {},
         {
           withCredentials: true,
