@@ -73,3 +73,48 @@ export type Invoice = {
 
   metadata: InvoiceMetadata
 }
+
+export const invoiceStatuses = [
+  "pending",
+  "paid",
+  "failed",
+  "expired",
+  "refunded",
+  "cancelled",
+] as const
+
+export type InvoiceStatus = (typeof invoiceStatuses)[number]
+
+export type InvoiceListItem = {
+  id: string
+  status: InvoiceStatus
+  createdAt: string
+  paidAt: string | null
+
+  invoiceData: {
+    clientDetails: {
+      name: string
+    } | null
+
+    invoiceDetails: {
+      prefix: string
+      serialNumber: string
+      date: string
+      dueDate: string
+      currency: string
+    } | null
+  } | null
+}
+
+export type InvoicePagination = {
+  total: number
+  page: number
+  limit: number
+  totalPages: number
+}
+
+export type GetInvoicesResponse = {
+  success: boolean
+  invoices: InvoiceListItem[]
+  pagination: InvoicePagination
+}

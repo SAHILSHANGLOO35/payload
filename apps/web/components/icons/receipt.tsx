@@ -1,9 +1,14 @@
+import { cn } from "@workspace/ui/lib/utils"
 import React from "react"
 
-export const Receipt = () => {
+type ReceiptProps = {
+  className?: string
+}
+
+export const Receipt = ({ className }: ReceiptProps) => {
   return (
     <svg
-      className="size-4.25 text-black dark:text-white"
+      className={cn("size-4.25 text-black dark:text-white", className)}
       width="24"
       height="24"
       viewBox="0 0 24 24"
