@@ -139,7 +139,8 @@ export default function Invoices() {
   if (error) {
     return (
       <div className="w-full p-4">
-        <div className="flex h-40 items-center justify-center rounded-lg border text-sm text-destructive">
+        <div className="flex h-40 flex-col items-center justify-center rounded-lg border text-sm text-destructive">
+          <Warning className="size-7" />
           {error}
         </div>
       </div>
