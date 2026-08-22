@@ -11,8 +11,10 @@ import { PdfFont, PdfThemeKey } from "@/lib/invoice/pdf-theme"
 
 export type InvoiceStore = {
   invoice: Invoice
+  invoiceId: string | null
 
   setInvoice: (invoice: Invoice) => void
+  setInvoiceId: (id: string) => void
 
   // Company
   updateCompany: (data: Partial<Invoice["company"]>) => void
@@ -55,8 +57,11 @@ export type InvoiceStore = {
 
 export const useInvoiceStore = create<InvoiceStore>((set) => ({
   invoice: defaultInvoice,
+  invoiceId: null,
 
-  setInvoice: (invoice) => set({ invoice: invoice }),
+  setInvoice: (invoice) => set({ invoice }),
+
+  setInvoiceId: (invoiceId) => set({ invoiceId }),
 
   updateCompany: (data) =>
     set((state) => ({
@@ -384,5 +389,6 @@ export const useInvoiceStore = create<InvoiceStore>((set) => ({
   resetInvoice: () =>
     set({
       invoice: defaultInvoice,
+      invoiceId: null,
     }),
 }))

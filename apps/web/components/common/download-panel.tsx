@@ -21,6 +21,9 @@ import { Preview } from "../icons/preview"
 import { Gallery } from "../icons/gallery"
 import { Invoice } from "../icons/invoice"
 import { ShowBoth } from "../icons/show-both"
+import { useInvoiceStore } from "@/stores/invoice-store"
+import { createInvoice, saveInvoice } from "@/lib/invoice/invoice-api"
+import axios from "axios"
 
 type ItemsPanel = {
   icon?: React.ReactNode
@@ -28,6 +31,12 @@ type ItemsPanel = {
 }
 
 export const DownloadPanel = () => {
+  const invoice = useInvoiceStore((state) => state.invoice)
+  const invoiceId = useInvoiceStore((state) => state.invoiceId)
+  const setInvoiceId = useInvoiceStore((state) => state.setInvoiceId)
+
+  const [isSaving, setIsSaving] = useState(false)
+
   const items: ItemsPanel[] = [
     {
       icon: <Invoice />,
@@ -48,6 +57,71 @@ export const DownloadPanel = () => {
   const currentPreference = items.find(
     (item) => item.title === selectedPreference
   )
+
+  const handleSaveInvoice = async () => {
+    if (isSaving) return
+
+    if (!invoice.invoice.date || !invoice.invoice.dueDate) {
+      console.log("Please select invoice date and due date")
+      return
+    }
+
+    try {
+      setIsSaving(true)
+
+      let id = invoiceId ?? sessionStorage.getItem("payload_invoice_id")
+
+      if (id && !invoiceId) {
+        setInvoiceId(id)
+      }
+
+      if (!id) {
+        const createdInvoice = await createInvoice()
+
+        id = createdInvoice.id
+
+        setInvoiceId(id!)
+        sessionStorage.setItem("payload_invoice_id", id!)
+      }
+
+      try {
+        await saveInvoice(id!, invoice)
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+          sessionStorage.removeItem("payload_invoice_id")
+          setInvoiceId(null!)
+
+          const createdInvoice = await createInvoice()
+
+          const newId = createdInvoice.id
+
+          setInvoiceId(newId)
+          sessionStorage.setItem("payload_invoice_id", newId)
+
+          await saveInvoice(newId, invoice)
+
+          console.log("Invoice recreated and saved successfully")
+          return
+        }
+
+        throw error
+      }
+
+      console.log("Invoice saved successfully")
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log(
+          "SAVE ERROR:",
+          JSON.stringify(error.response?.data, null, 2)
+        )
+        return
+      }
+
+      console.error(error)
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   return (
     <div className="flex w-full items-center justify-between border-b px-4 py-2 font-geist">
@@ -107,9 +181,13 @@ export const DownloadPanel = () => {
 
           <DropdownMenuContent className="flex w-40 cursor-pointer items-center font-geist">
             <DropdownMenuGroup>
-              <DropdownMenuItem className="cursor-pointer p-1.5">
+              <DropdownMenuItem
+                disabled={isSaving}
+                onClick={handleSaveInvoice}
+                className="cursor-pointer p-1.5"
+              >
                 <Download className="flex w-5 shrink-0 items-center justify-center" />
-                Save Invoice
+                {isSaving ? "Saving..." : "Save Invoice"}
               </DropdownMenuItem>
 
               <DropdownMenuItem className="cursor-pointer p-1.5">

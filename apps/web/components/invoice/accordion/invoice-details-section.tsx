@@ -41,12 +41,33 @@ export const InvoiceDetailsSection = ({ isActive }: invoiceSectionProps) => {
   const [dueDateOpen, setDueDateOpen] = useState(false)
 
   const formatDate = (value: string) => {
-    if (!value) return ""
-    return new Date(value).toLocaleDateString("en-US", {
+    const date = parseDateString(value)
+
+    if (!date) return ""
+
+    return date.toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
       year: "numeric",
     })
+  }
+
+  const toDateString = (date: Date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, "0")
+    const day = String(date.getDate()).padStart(2, "0")
+
+    return `${year}-${month}-${day}`
+  }
+
+  const parseDateString = (value: string) => {
+    if (!value) return undefined
+
+    const [year, month, day] = value.split("-").map(Number)
+
+    if (!year || !month || !day) return undefined
+
+    return new Date(year, month - 1, day)
   }
 
   return (
@@ -140,10 +161,14 @@ export const InvoiceDetailsSection = ({ isActive }: invoiceSectionProps) => {
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={invoice.date ? new Date(invoice.date) : undefined}
+                  selected={parseDateString(invoice.date)}
                   onSelect={(date) => {
                     if (!date) return
-                    updateInvoiceDetails({ date: date.toISOString() })
+
+                    updateInvoiceDetails({
+                      date: toDateString(date),
+                    })
+
                     setInvoiceDateOpen(false)
                   }}
                   className="font-geist"
@@ -180,12 +205,14 @@ export const InvoiceDetailsSection = ({ isActive }: invoiceSectionProps) => {
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={
-                    invoice.dueDate ? new Date(invoice.dueDate) : undefined
-                  }
+                  selected={parseDateString(invoice.dueDate)}
                   onSelect={(date) => {
                     if (!date) return
-                    updateInvoiceDetails({ dueDate: date.toISOString() })
+
+                    updateInvoiceDetails({
+                      dueDate: toDateString(date),
+                    })
+
                     setDueDateOpen(false)
                   }}
                   className="font-geist"

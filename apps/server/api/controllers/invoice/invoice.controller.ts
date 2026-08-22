@@ -2,7 +2,10 @@ import crypto from "crypto"
 import type { Response } from "express"
 import type { AuthRequest } from "../../../types"
 import { prisma } from "db/client"
-import { saveInvoiceSchema } from "../../validators/invoice.validator"
+import {
+  saveInvoiceSchema,
+  updateInvoiceStatusSchema,
+} from "../../validators/invoice.validator"
 
 async function resolveOwnership(
   req: AuthRequest,
@@ -109,10 +112,12 @@ export const saveInvoice = async (req: AuthRequest, res: Response) => {
     // 1. Validate body
     const parsed = saveInvoiceSchema.safeParse(req.body)
     if (!parsed.success) {
+      console.log("VALIDATION ISSUES:", parsed.error.issues)
+
       return res.status(400).json({
         success: false,
         message: "Validation failed",
-        errors: parsed.error.flatten(),
+        issues: parsed.error.issues,
       })
     }
 
@@ -317,6 +322,91 @@ export const saveInvoice = async (req: AuthRequest, res: Response) => {
   }
 }
 
+export const updateInvoiceStatus = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params
+
+    if (!id || Array.isArray(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid invoice id",
+      })
+    }
+
+    // Validate only the status
+    const parsed = updateInvoiceStatusSchema.safeParse(req.body)
+
+    if (!parsed.success) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid invoice status",
+        issues: parsed.error.issues,
+      })
+    }
+
+    const { status } = parsed.data
+
+    // Get logged-in user or guest ownership
+    const ownership = await resolveOwnership(req, res)
+
+    if (!ownership) return
+
+    const { userId, guestSessionId } = ownership
+
+    // Find invoice
+    const invoice = await prisma.invoice.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!invoice) {
+      return res.status(404).json({
+        success: false,
+        message: "Invoice not found",
+      })
+    }
+
+    // Check ownership
+    const ownsInvoice =
+      (userId && invoice.userId === userId) ||
+      (guestSessionId && invoice.guestSessionId === guestSessionId)
+
+    if (!ownsInvoice) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden",
+      })
+    }
+
+    // Update only status + paidAt
+    await prisma.invoice.update({
+      where: {
+        id,
+      },
+      data: {
+        status,
+        paidAt: status === "paid" ? new Date() : null,
+      },
+    })
+
+    // Return complete updated invoice
+    const updatedInvoice = await fetchFullInvoice(id)
+
+    return res.status(200).json({
+      success: true,
+      invoice: updatedInvoice,
+    })
+  } catch (error) {
+    console.error("[updateInvoiceStatus]", error)
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+    })
+  }
+}
+
 export const getInvoices = async (req: AuthRequest, res: Response) => {
   try {
     const ownership = await resolveOwnership(req, res)
@@ -328,7 +418,7 @@ export const getInvoices = async (req: AuthRequest, res: Response) => {
     const page = Math.max(1, parseInt(req.query.page as string) || 1)
     const limit = Math.min(
       25,
-      Math.max(1, parseInt(req.query.limit as string) || 1)
+      Math.max(1, parseInt(req.query.limit as string) || 10)
     )
     const skip = (page - 1) * limit
 
