@@ -21,8 +21,6 @@ export const saveInvoiceSchema = z.object({
     .object({
       name: z.string().min(1, "Company name is required"),
       address: z.string().min(1, "Company address is required"),
-      logo: z.string().url().optional().nullable(),
-      signature: z.string().url().optional().nullable(),
       metadata: z.array(metadataEntrySchema).optional(),
     })
     .optional(),

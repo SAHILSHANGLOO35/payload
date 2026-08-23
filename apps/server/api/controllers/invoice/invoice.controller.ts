@@ -6,11 +6,15 @@ import {
   saveInvoiceSchema,
   updateInvoiceStatusSchema,
 } from "../../validators/invoice.validator"
+import { supabaseAdmin } from "../../../lib/supabase-admin"
 
 async function resolveOwnership(
   req: AuthRequest,
   res: Response
-): Promise<{ userId: string | null; guestSessionId: string | null } | null> {
+): Promise<{
+  userId: string | null
+  guestSessionId: string | null
+} | null> {
   if (req.user) {
     return {
       userId: req.user.id,
@@ -23,6 +27,7 @@ async function resolveOwnership(
 
   if (!guestId) {
     guestId = crypto.randomUUID()
+
     res.cookie("guestId", guestId, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -46,7 +51,10 @@ async function resolveOwnership(
     })
   }
 
-  return { userId: null, guestSessionId: guestSession.id }
+  return {
+    userId: null,
+    guestSessionId: guestSession.id,
+  }
 }
 
 export const createInvoice = async (req: AuthRequest, res: Response) => {
@@ -89,7 +97,7 @@ export const createInvoice = async (req: AuthRequest, res: Response) => {
       invoice,
     })
   } catch (error) {
-    console.error(error)
+    console.error("[CREATE INVOICE ERROR]:", error)
 
     return res.status(500).json({
       success: false,
@@ -573,9 +581,165 @@ export const deleteInvoice = async (req: AuthRequest, res: Response) => {
   }
 }
 
+export const uploadInvoiceAssets = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params
+
+    if (!id || Array.isArray(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid invoice id",
+      })
+    }
+
+    const ownership = await resolveOwnership(req, res)
+
+    if (!ownership) return
+
+    const { userId, guestSessionId } = ownership
+
+    const invoice = await prisma.invoice.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        invoiceData: {
+          include: {
+            companyDetails: true,
+          },
+        },
+      },
+    })
+
+    if (!invoice) {
+      return res.status(404).json({
+        success: false,
+        message: "Invoice not found",
+      })
+    }
+
+    const ownsInvoice =
+      (userId && invoice.userId === userId) ||
+      (guestSessionId && invoice.guestSessionId === guestSessionId)
+
+    if (!ownsInvoice) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden",
+      })
+    }
+
+    if (!invoice.invoiceData?.companyDetails) {
+      return res.status(400).json({
+        success: false,
+        message: "Save invoice details before uploading assets",
+      })
+    }
+
+    const files = req.files as
+      | {
+          logo?: Express.Multer.File[]
+          signature?: Express.Multer.File[]
+        }
+      | undefined
+
+    const logo = files?.logo?.[0]
+    const signature = files?.signature?.[0]
+
+    if (!logo && !signature) {
+      return res.status(400).json({
+        success: false,
+        message: "No assets provided",
+      })
+    }
+
+    let logoPath: string | undefined
+    let signaturePath: string | undefined
+
+    if (logo) {
+      logoPath = `${id}/logo`
+
+      const { error } = await supabaseAdmin.storage
+        .from("invoice-assets")
+        .upload(logoPath, logo.buffer, {
+          contentType: logo.mimetype,
+          upsert: true,
+        })
+
+      if (error) {
+        throw error
+      }
+    }
+
+    if (signature) {
+      signaturePath = `${id}/signature`
+
+      const { error } = await supabaseAdmin.storage
+        .from("invoice-assets")
+        .upload(signaturePath, signature.buffer, {
+          contentType: signature.mimetype,
+          upsert: true,
+        })
+
+      if (error) {
+        throw error
+      }
+    }
+
+    await prisma.invoiceCompanyDetails.update({
+      where: {
+        invoiceDataId: invoice.invoiceData.id,
+      },
+
+      data: {
+        ...(logoPath && {
+          logo: logoPath,
+        }),
+
+        ...(signaturePath && {
+          signature: signaturePath,
+        }),
+      },
+    })
+
+    const updatedInvoice = await fetchFullInvoice(id)
+
+    return res.status(200).json({
+      success: true,
+      invoice: updatedInvoice,
+    })
+  } catch (error) {
+    console.error("[uploadInvoiceAssets]", error)
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to upload invoice assets",
+    })
+  }
+}
+
+const createAssetSignedUrl = async (path: string | null) => {
+  if (!path) return null
+
+  const { data, error } = await supabaseAdmin.storage
+    .from("invoice-assets")
+    .createSignedUrl(path, 60 * 60 * 24)
+
+  if (error) {
+    console.error("[createAssetSignedUrl]", error)
+
+    return null
+  }
+
+  return data.signedUrl
+}
+
 async function fetchFullInvoice(id: string) {
-  return prisma.invoice.findUnique({
-    where: { id },
+  const invoice = await prisma.invoice.findUnique({
+    where: {
+      id,
+    },
+
     include: {
       invoiceData: {
         include: {
@@ -584,17 +748,21 @@ async function fetchFullInvoice(id: string) {
               metadata: true,
             },
           },
+
           clientDetails: {
             include: {
               metadata: true,
             },
           },
+
           invoiceDetails: {
             include: {
               billingDetails: true,
             },
           },
+
           items: true,
+
           metadata: {
             include: {
               paymentDetails: true,
@@ -604,4 +772,33 @@ async function fetchFullInvoice(id: string) {
       },
     },
   })
+
+  if (!invoice) {
+    return null
+  }
+
+  const company = invoice.invoiceData?.companyDetails
+
+  if (!company) {
+    return invoice
+  }
+
+  const [logo, signature] = await Promise.all([
+    createAssetSignedUrl(company.logo),
+    createAssetSignedUrl(company.signature),
+  ])
+
+  return {
+    ...invoice,
+
+    invoiceData: {
+      ...invoice.invoiceData!,
+
+      companyDetails: {
+        ...company,
+        logo,
+        signature,
+      },
+    },
+  }
 }

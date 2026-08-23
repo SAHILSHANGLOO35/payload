@@ -24,6 +24,7 @@ import { ShowBoth } from "../icons/show-both"
 import { useInvoiceStore } from "@/stores/invoice-store"
 import { createInvoice, saveInvoice } from "@/lib/invoice/invoice-api"
 import axios from "axios"
+import { uploadInvoiceAssets } from "../../lib/invoice/invoice-api"
 
 type ItemsPanel = {
   icon?: React.ReactNode
@@ -62,7 +63,6 @@ export const DownloadPanel = () => {
     if (isSaving) return
 
     if (!invoice.invoice.date || !invoice.invoice.dueDate) {
-      console.log("Please select invoice date and due date")
       return
     }
 
@@ -82,6 +82,14 @@ export const DownloadPanel = () => {
 
         setInvoiceId(id!)
         sessionStorage.setItem("payload_invoice_id", id!)
+
+        await saveInvoice(id!, invoice)
+
+        await uploadInvoiceAssets(
+          id!,
+          invoice.company.logo,
+          invoice.company.signature
+        )
       }
 
       try {
@@ -100,20 +108,13 @@ export const DownloadPanel = () => {
 
           await saveInvoice(newId, invoice)
 
-          console.log("Invoice recreated and saved successfully")
           return
         }
 
         throw error
       }
-
-      console.log("Invoice saved successfully")
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log(
-          "SAVE ERROR:",
-          JSON.stringify(error.response?.data, null, 2)
-        )
         return
       }
 

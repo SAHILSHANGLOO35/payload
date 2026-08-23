@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useMemo } from "react"
-import { X } from "lucide-react"
+import { Info, X } from "lucide-react"
 
 import { InvoiceSection } from "../common/invoice-section"
 
@@ -141,6 +141,10 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
                   <span className="text-[10px] font-medium sm:mb-1.5 sm:text-xs">
                     Select Image From Gallery
                   </span>
+                  <p className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <Info className="size-2.5" />
+                    Max file size: 5 MB · PNG or JPEG only
+                  </p>
                 </>
               )}
             </label>
@@ -195,6 +199,10 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
                   <span className="text-[10px] font-medium sm:mb-1.5 sm:text-xs">
                     Select Image From Gallery
                   </span>
+                  <p className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <Info className="size-2.5" />
+                    Max file size: 5 MB · PNG or JPEG only
+                  </p>
                 </>
               )}
             </label>

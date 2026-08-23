@@ -7,15 +7,24 @@ import {
   getInvoices,
   saveInvoice,
   updateInvoiceStatus,
+  uploadInvoiceAssets,
 } from "../../controllers/invoice/invoice.controller"
+import { invoiceAssetUpload } from "../../middlewares/upload.middleware"
 
 export const invoiceRouter = Router()
 
 invoiceRouter.post("/", optionalAuthMiddleware, createInvoice)
 
+invoiceRouter.get("/", optionalAuthMiddleware, getInvoices)
+
 invoiceRouter.put("/:id/status", optionalAuthMiddleware, updateInvoiceStatus)
 
-invoiceRouter.get("/", optionalAuthMiddleware, getInvoices)
+invoiceRouter.put(
+  "/:id/assets",
+  optionalAuthMiddleware,
+  invoiceAssetUpload,
+  uploadInvoiceAssets
+)
 
 invoiceRouter.get("/:id", optionalAuthMiddleware, getInvoice)
 
