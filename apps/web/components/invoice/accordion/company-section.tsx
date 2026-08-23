@@ -141,7 +141,7 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
                   <span className="text-[10px] font-medium sm:mb-1.5 sm:text-xs">
                     Select Image From Gallery
                   </span>
-                  <p className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                  <p className="flex items-center gap-1 p-2 text-[10px] text-muted-foreground">
                     <Info className="size-2.5" />
                     Max file size: 5 MB · PNG or JPEG only
                   </p>
@@ -199,7 +199,7 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
                   <span className="text-[10px] font-medium sm:mb-1.5 sm:text-xs">
                     Select Image From Gallery
                   </span>
-                  <p className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                  <p className="flex items-center gap-1 p-2 text-[10px] text-muted-foreground">
                     <Info className="size-2.5" />
                     Max file size: 5 MB · PNG or JPEG only
                   </p>
