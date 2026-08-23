@@ -9,6 +9,7 @@ import { generateInvoicePdf } from "@/lib/invoice/pdf"
 
 import { InvoiceForm } from "./form"
 import { PdfLoading } from "../pdf/loading"
+import { useViewModeStore } from "@/stores/view-mode-store"
 
 const PdfViewer = dynamic<{ file: Blob | null }>(
   () => import("../preview/pdf-preview").then((module) => module.PdfPreview),
@@ -26,6 +27,11 @@ const PdfViewer = dynamic<{ file: Blob | null }>(
 
 export function InvoiceEditor() {
   const invoice = useInvoiceStore((state) => state.invoice)
+
+  const viewMode = useViewModeStore((state) => state.viewMode)
+  const setResponsiveViewMode = useViewModeStore(
+    (state) => state.setResponsiveViewMode
+  )
 
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null)
 
@@ -53,22 +59,47 @@ export function InvoiceEditor() {
     }
   }, [invoice])
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(min-width: 1024px)")
+
+    const handleScreenChange = () => {
+      setResponsiveViewMode(mediaQuery.matches)
+    }
+
+    handleScreenChange()
+
+    mediaQuery.addEventListener("change", handleScreenChange)
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleScreenChange)
+    }
+  }, [setResponsiveViewMode])
+
+  const showForm = viewMode === "form" || viewMode === "both"
+  const showPreview = viewMode === "preview" || viewMode === "both"
+
   return (
     <div className="flex h-full min-h-0 w-full flex-col">
       <div className="shrink-0">
         <DownloadPanel />
       </div>
 
-      <div className="grid min-h-0 flex-1 grid-cols-2">
-        {/* Left */}
-        <div className="min-h-0 overflow-hidden">
-          <InvoiceForm />
-        </div>
+      <div
+        className={`grid min-h-0 flex-1 ${
+          viewMode === "both" ? "grid-cols-2" : "grid-cols-1"
+        }`}
+      >
+        {showForm && (
+          <div className="grid min-h-0 grid-cols-1 overflow-hidden">
+            <InvoiceForm />
+          </div>
+        )}
 
-        {/* Right */}
-        <div className="min-h-0 overflow-hidden">
-          <PdfViewer file={pdfBlob} />
-        </div>
+        {showPreview && (
+          <div className="grid min-h-0 grid-cols-1 overflow-hidden">
+            <PdfViewer file={pdfBlob} />
+          </div>
+        )}
       </div>
     </div>
   )

@@ -25,10 +25,12 @@ import { useInvoiceStore } from "@/stores/invoice-store"
 import { createInvoice, saveInvoice } from "@/lib/invoice/invoice-api"
 import axios from "axios"
 import { uploadInvoiceAssets } from "../../lib/invoice/invoice-api"
+import { useViewModeStore, ViewMode } from "@/stores/view-mode-store"
 
 type ItemsPanel = {
   icon?: React.ReactNode
   title: string
+  value: ViewMode
 }
 
 export const DownloadPanel = () => {
@@ -36,28 +38,30 @@ export const DownloadPanel = () => {
   const invoiceId = useInvoiceStore((state) => state.invoiceId)
   const setInvoiceId = useInvoiceStore((state) => state.setInvoiceId)
 
+  const viewMode = useViewModeStore((state) => state.viewMode)
+  const setViewMode = useViewModeStore((state) => state.setViewMode)
+
   const [isSaving, setIsSaving] = useState(false)
 
   const items: ItemsPanel[] = [
     {
       icon: <Invoice />,
       title: "Form",
+      value: "form",
     },
     {
       icon: <Preview />,
       title: "Preview",
+      value: "preview",
     },
     {
       icon: <ShowBoth />,
       title: "Both",
+      value: "both",
     },
   ]
 
-  const [selectedPreference, setSelectedPreference] = useState("Both")
-
-  const currentPreference = items.find(
-    (item) => item.title === selectedPreference
-  )
+  const currentPreference = items.find((item) => item.value === viewMode)
 
   const handleSaveInvoice = async () => {
     if (isSaving) return
@@ -131,10 +135,11 @@ export const DownloadPanel = () => {
       <div className="flex w-60 items-center gap-2">
         <Combobox
           items={items}
-          defaultValue="Both"
-          onValueChange={(value) => {
-            if (value) {
-              setSelectedPreference(value)
+          value={currentPreference}
+          itemToStringLabel={(item) => item.title}
+          onValueChange={(item) => {
+            if (item) {
+              setViewMode(item.value)
             }
           }}
         >
@@ -155,15 +160,15 @@ export const DownloadPanel = () => {
             <ComboboxList>
               {(item) => (
                 <ComboboxItem
-                  key={item.title}
-                  value={item.title}
+                  key={item.value}
+                  value={item}
                   className="font-geist"
                 >
                   <div className="flex w-full items-center gap-2">
                     <span className="flex w-5 shrink-0 items-center justify-center">
                       {item.icon}
                     </span>
-                    <span>{item.title}</span>
+                    <span>{item.value}</span>
                   </div>
                 </ComboboxItem>
               )}
