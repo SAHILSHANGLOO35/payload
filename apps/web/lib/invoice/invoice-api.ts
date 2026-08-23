@@ -18,8 +18,6 @@ export const saveInvoice = async (id: string, invoice: Invoice) => {
     companyDetails: {
       name: invoice.company.name,
       address: invoice.company.address,
-      logo: null,
-      signature: null,
 
       metadata: invoice.company.fields
         .filter((field) => field.label.trim() && field.value.trim())
@@ -98,6 +96,36 @@ export const updateInvoiceStatus = async (
     {
       status,
     },
+    {
+      withCredentials: true,
+    }
+  )
+
+  return data.invoice
+}
+
+export const uploadInvoiceAssets = async (
+  id: string,
+  logo: File | null,
+  signature: File | null
+) => {
+  if (!logo && !signature) {
+    return null
+  }
+
+  const formData = new FormData()
+
+  if (logo) {
+    formData.append("logo", logo)
+  }
+
+  if (signature) {
+    formData.append("signature", signature)
+  }
+
+  const { data } = await axios.put(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/${id}/assets`,
+    formData,
     {
       withCredentials: true,
     }
