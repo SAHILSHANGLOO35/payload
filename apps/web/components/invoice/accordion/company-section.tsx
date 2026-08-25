@@ -16,6 +16,8 @@ import { AddItem } from "@/components/icons/add-item"
 
 import { useInvoiceStore } from "@/stores/invoice-store"
 import { CustomFieldInput } from "../fields/custom-field"
+import { useViewModeStore } from "@/stores/view-mode-store"
+import { cn } from "@workspace/ui/lib/utils"
 
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png"]
 
@@ -37,6 +39,9 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
   const removeCompanyField = useInvoiceStore(
     (state) => state.removeCompanyField
   )
+
+  const viewMode = useViewModeStore((state) => state.viewMode)
+  const isFormOnly = viewMode === "form"
 
   const logoPreview = useMemo(
     () => (company.logo ? URL.createObjectURL(company.logo) : null),
@@ -86,9 +91,15 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
 
   return (
     <InvoiceSection value="company" title="Company Details" isActive={isActive}>
-      <div className="space-y-3">
+      <div
+        className={cn(
+          "space-y-3",
+          isFormOnly &&
+            "xl:grid xl:grid-cols-[260px_260px_minmax(0,1fr)] xl:items-start xl:gap-5 xl:space-y-0"
+        )}
+      >
         {/* Logo + Signature */}
-        <div className="flex w-full gap-4">
+        <div className={cn("flex w-full gap-4", isFormOnly && "xl:contents")}>
           {/* Company Logo */}
           <div className="flex flex-1 flex-col items-start gap-2">
             <Label className="text-xs">Company Logo</Label>
@@ -109,9 +120,6 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
                 <div className="relative flex h-full w-full items-center justify-center">
                   <button
                     type="button"
-                    // Prevent default and stop propagation so clicking the
-                    // remove button doesn't trigger the parent label (which
-                    // would open the file picker). Then clear the logo.
                     onClick={(event) => {
                       event.preventDefault()
                       event.stopPropagation()
@@ -141,6 +149,7 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
                   <span className="text-[10px] font-medium sm:mb-1.5 sm:text-xs">
                     Select Image From Gallery
                   </span>
+
                   <p className="flex items-center gap-1 p-2 text-[10px] text-muted-foreground">
                     <Info className="size-2.5" />
                     Max file size: 5 MB · PNG or JPEG only
@@ -183,7 +192,6 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
                     <X size={14} className="text-white" />
                   </button>
 
-                  {/* eslint-disable @next/next/no-img-element */}
                   {signaturePreview && (
                     <img
                       src={signaturePreview}
@@ -199,6 +207,7 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
                   <span className="text-[10px] font-medium sm:mb-1.5 sm:text-xs">
                     Select Image From Gallery
                   </span>
+
                   <p className="flex items-center gap-1 p-2 text-[10px] text-muted-foreground">
                     <Info className="size-2.5" />
                     Max file size: 5 MB · PNG or JPEG only
@@ -209,61 +218,64 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
           </div>
         </div>
 
-        {/* Company Name */}
-        <div className="space-y-2">
-          <Label className="text-xs">Company Name</Label>
+        {/* Right side details */}
+        <div className="space-y-3">
+          {/* Company Name */}
+          <div className="space-y-2">
+            <Label className="text-xs">Company Name</Label>
 
-          <Input
-            placeholder="Your company name"
-            value={company.name}
-            onChange={(event) =>
-              updateCompany({
-                name: event.target.value,
-              })
-            }
-            className="px-3"
-          />
-        </div>
+            <Input
+              placeholder="Your company name"
+              value={company.name}
+              onChange={(event) =>
+                updateCompany({
+                  name: event.target.value,
+                })
+              }
+              className="px-3"
+            />
+          </div>
 
-        {/* Company Address */}
-        <div className="space-y-2">
-          <Label className="text-xs">Company Address</Label>
+          {/* Company Address */}
+          <div className="space-y-2">
+            <Label className="text-xs">Company Address</Label>
 
-          <Textarea
-            placeholder="Your company address"
-            value={company.address}
-            onChange={(event) =>
-              updateCompany({
-                address: event.target.value,
-              })
-            }
-            className="px-3"
-          />
-        </div>
+            <Textarea
+              placeholder="Your company address"
+              value={company.address}
+              onChange={(event) =>
+                updateCompany({
+                  address: event.target.value,
+                })
+              }
+              className="px-3"
+            />
+          </div>
 
-        {/* Company Additional Fields */}
-        <div className="space-y-2">
-          <Label className="text-xs">Additional Fields</Label>
+          {/* Company Additional Fields */}
+          <div className="space-y-2">
+            <Label className="text-xs">Additional Fields</Label>
 
-          <div className="space-y-3">
-            {company.fields.map((field) => (
-              <CustomFieldInput
-                key={field.id}
-                field={field}
-                onChange={(data) => updateCompanyField(field.id, data)}
-                onRemove={() => removeCompanyField(field.id)}
-              />
-            ))}
+            <div className="space-y-3">
+              {company.fields.map((field) => (
+                <CustomFieldInput
+                  key={field.id}
+                  field={field}
+                  onChange={(data) => updateCompanyField(field.id, data)}
+                  onRemove={() => removeCompanyField(field.id)}
+                />
+              ))}
 
-            <Button
-              type="button"
-              variant="outline"
-              onClick={addCompanyField}
-              className="w-full cursor-pointer border-dashed py-4"
-            >
-              <AddItem />
-              Add New Field
-            </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={addCompanyField}
+                className="w-full cursor-pointer border-dashed py-4"
+              >
+                <AddItem />
+                Add New Field
+              </Button>
+            </div>
           </div>
         </div>
       </div>
