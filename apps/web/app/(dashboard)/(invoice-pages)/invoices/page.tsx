@@ -40,6 +40,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@workspace/ui/components/pagination"
+import { toast } from "@workspace/ui/components/toast"
 
 const statusStyles = {
   pending: "bg-yellow-500/10 text-yellow-500",
@@ -191,6 +192,11 @@ export default function Invoices() {
           invoice.id === invoiceId ? updatedInvoice : invoice
         )
       )
+
+      toast.add({
+        type: "success",
+        description: "Status of Invoice has been updated",
+      })
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.log("STATUS UPDATE ERROR:", {
@@ -212,6 +218,11 @@ export default function Invoices() {
       setDeletingInvoiceId(invoiceId)
 
       await deleteInvoice(invoiceId)
+
+      toast.add({
+        type: "success",
+        description: "Invoice deleted",
+      })
 
       if (sessionStorage.getItem("payload_invoice_id") === invoiceId) {
         sessionStorage.removeItem("payload_invoice_id")

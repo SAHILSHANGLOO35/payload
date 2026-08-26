@@ -10,6 +10,7 @@ import "@workspace/ui/globals.css"
 import { cn } from "@workspace/ui/lib/utils"
 import { Metadata, Viewport } from "next"
 import { ThemeProvider } from "@/providers/theme-provider"
+import { Toaster } from "@workspace/ui/components/toast"
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
 
@@ -86,7 +87,10 @@ export default function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )
