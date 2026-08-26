@@ -28,9 +28,18 @@ import {
   invoiceStatuses,
 } from "@/types/invoice"
 import axios from "axios"
-import { updateInvoiceStatus } from "@/lib/invoice/invoice-api"
+import { deleteInvoice, updateInvoiceStatus } from "@/lib/invoice/invoice-api"
 import { Warning } from "@/components/icons/loading"
 import { useRouter } from "next/navigation"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@workspace/ui/components/pagination"
 
 const statusStyles = {
   pending: "bg-yellow-500/10 text-yellow-500",
@@ -73,14 +82,63 @@ const formatDateTime = (date: string) => {
   return `${formattedDate} - ${formattedTime}`
 }
 
+type PaginationItemValue = number | "ellipsis-left" | "ellipsis-right"
+
+const getPaginationItems = (
+  currentPage: number,
+  totalPages: number
+): PaginationItemValue[] => {
+  if (totalPages <= 5) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1)
+  }
+
+  const pages: PaginationItemValue[] = [1]
+
+  if (currentPage > 3) {
+    pages.push("ellipsis-left")
+  }
+
+  const start = Math.max(2, currentPage - 1)
+  const end = Math.min(totalPages - 1, currentPage + 1)
+
+  for (let page = start; page <= end; page++) {
+    pages.push(page)
+  }
+
+  if (currentPage < totalPages - 2) {
+    pages.push("ellipsis-right")
+  }
+
+  pages.push(totalPages)
+
+  return pages
+}
+
 export default function Invoices() {
   const [invoices, setInvoices] = useState<InvoiceListItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const [page, setPage] = useState(1)
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: PAGE_SIZE,
+    totalPages: 0,
+  })
+
+  const [deletingInvoiceId, setDeletingInvoiceId] = useState<string | null>(
+    null
+  )
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  const paginationItems = getPaginationItems(page, pagination.totalPages)
+
   const router = useRouter()
 
   useEffect(() => {
+    const controller = new AbortController()
+
     const fetchInvoices = async () => {
       try {
         setIsLoading(true)
@@ -90,24 +148,36 @@ export default function Invoices() {
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices`,
           {
             params: {
-              page: 1,
+              page,
               limit: PAGE_SIZE,
             },
             withCredentials: true,
+            signal: controller.signal,
           }
         )
 
         setInvoices(response.data.invoices)
+        setPagination(response.data.pagination)
       } catch (error) {
+        if (axios.isCancel(error)) {
+          return
+        }
+
         console.error("Failed to fetch invoices:", error)
         setError("Failed to load invoices")
       } finally {
-        setIsLoading(false)
+        if (!controller.signal.aborted) {
+          setIsLoading(false)
+        }
       }
     }
 
     fetchInvoices()
-  }, [])
+
+    return () => {
+      controller.abort()
+    }
+  }, [page, refreshKey])
 
   const handleUpdateInvoiceStatus = async (
     invoiceId: string,
@@ -132,6 +202,43 @@ export default function Invoices() {
         return
       }
       console.error("Failed to update invoice status:", error)
+    }
+  }
+
+  const handleDeleteInvoice = async (invoiceId: string) => {
+    if (deletingInvoiceId) return
+
+    try {
+      setDeletingInvoiceId(invoiceId)
+
+      await deleteInvoice(invoiceId)
+
+      if (sessionStorage.getItem("payload_invoice_id") === invoiceId) {
+        sessionStorage.removeItem("payload_invoice_id")
+      }
+
+      // If this was the last row on page 2, 3, etc.,
+      // move back to the previous page.
+      if (invoices.length === 1 && page > 1) {
+        setPage((current) => current - 1)
+        return
+      }
+
+      // Otherwise refresh the current page.
+      setRefreshKey((current) => current + 1)
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.log("DELETE INVOICE ERROR:", {
+          status: error.response?.status,
+          data: error.response?.data,
+        })
+
+        return
+      }
+
+      console.error("Failed to delete invoice:", error)
+    } finally {
+      setDeletingInvoiceId(null)
     }
   }
 
@@ -350,13 +457,19 @@ export default function Invoices() {
 
                           <DropdownMenuItem
                             variant="destructive"
+                            disabled={deletingInvoiceId === invoice.id}
+                            onClick={() => handleDeleteInvoice(invoice.id)}
                             className="grid cursor-pointer grid-cols-[20px_1fr] items-center gap-x-2"
                           >
                             <span className="flex size-5 items-center justify-center rounded-[4px] bg-linear-to-b from-red-500 to-red-600 shadow-xs ring-1 shadow-red-500/20 ring-white/25 ring-inset">
                               <TbTrashFilled className="size-3.75 text-white" />
                             </span>
 
-                            <span>Delete</span>
+                            <span>
+                              {deletingInvoiceId === invoice.id
+                                ? "Deleting..."
+                                : "Delete"}
+                            </span>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -368,6 +481,77 @@ export default function Invoices() {
           </TableBody>
         </Table>
       </div>
+      {pagination.totalPages > 0 && (
+        <Pagination className="mt-4">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                aria-disabled={page === 1 || isLoading}
+                className={
+                  page === 1 || isLoading
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+                onClick={(event) => {
+                  event.preventDefault()
+
+                  if (page > 1 && !isLoading) {
+                    setPage((current) => current - 1)
+                  }
+                }}
+              />
+            </PaginationItem>
+
+            {paginationItems.map((item) => {
+              if (item === "ellipsis-left" || item === "ellipsis-right") {
+                return (
+                  <PaginationItem key={item}>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                )
+              }
+
+              return (
+                <PaginationItem key={item}>
+                  <PaginationLink
+                    href="#"
+                    isActive={page === item}
+                    onClick={(event) => {
+                      event.preventDefault()
+
+                      if (!isLoading) {
+                        setPage(item)
+                      }
+                    }}
+                  >
+                    {item}
+                  </PaginationLink>
+                </PaginationItem>
+              )
+            })}
+
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                aria-disabled={page === pagination.totalPages || isLoading}
+                className={
+                  page === pagination.totalPages || isLoading
+                    ? "pointer-events-none opacity-50"
+                    : "cursor-pointer"
+                }
+                onClick={(event) => {
+                  event.preventDefault()
+
+                  if (page < pagination.totalPages && !isLoading) {
+                    setPage((current) => current + 1)
+                  }
+                }}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </div>
   )
 }

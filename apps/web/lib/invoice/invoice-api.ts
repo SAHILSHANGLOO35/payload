@@ -136,3 +136,14 @@ export const uploadInvoiceAssets = async (
 
   return data.invoice
 }
+
+export const deleteInvoice = async (id: string) => {
+  const { data } = await axios.delete(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/invoices/${id}`,
+    {
+      withCredentials: true,
+    }
+  )
+
+  return data
+}
