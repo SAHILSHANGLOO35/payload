@@ -1,3 +1,5 @@
+"use client"
+
 import { Logo } from "@/components/common/logo"
 import { useAuthStore } from "@/stores/auth-store"
 import { FcGoogle } from "react-icons/fc"

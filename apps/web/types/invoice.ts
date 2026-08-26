@@ -15,8 +15,8 @@ export type CustomField = {
 }
 
 export type CompanyDetails = {
-  logo: File | null
-  signature: File | null
+  logo: File | string | null
+  signature: File | string | null
   name: string
   address: string
   fields: CustomField[]

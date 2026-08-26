@@ -98,6 +98,8 @@ model InvoiceDetails {
   serialNumber   String
   date           DateTime
   dueDate        DateTime
+  taxRate        Decimal                 @default(0) @db.Decimal(5, 2)
+  discount       Decimal                 @default(0) @db.Decimal(10, 2)
   billingDetails InvoiceBillingDetails[]
   invoiceDataId  String                  @unique
   invoiceData    InvoiceData             @relation(fields: [invoiceDataId], references: [id], onDelete: Cascade)

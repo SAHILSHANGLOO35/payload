@@ -21,11 +21,13 @@ export const calculateBillingDetails = (
   details: BillingDetails[]
 ) => {
   return details.reduce((total, detail) => {
+    const value = Number(detail.value)
+
     if (detail.type === "fixed") {
-      return total + detail.value
+      return total + value
     }
 
-    return total + subtotal * (detail.value / 100)
+    return total + subtotal * (value / 100)
   }, 0)
 }
 
