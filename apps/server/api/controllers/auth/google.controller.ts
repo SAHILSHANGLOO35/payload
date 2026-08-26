@@ -59,8 +59,15 @@ export const googleLoginController = async (req: Request, res: Response) => {
       // Migrating guest invoices if guestId cookie exists
       const guestId = req.cookies.guestId
       if (guestId) {
+        const isProduction = process.env.NODE_ENV === "production"
+
         await migrateGuestInvoices(user.id, guestId)
-        res.clearCookie("guestId")
+        res.clearCookie("guestId", {
+          httpOnly: true,
+          secure: isProduction,
+          sameSite: isProduction ? "none" : "lax",
+          path: "/",
+        })
       }
 
       // Setting JWT Token
@@ -74,15 +81,22 @@ export const googleLoginController = async (req: Request, res: Response) => {
         { expiresIn: "7d" }
       )
 
+      const isProduction = process.env.NODE_ENV === "production"
+
+      const cookieOptions = {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? ("none" as const) : ("lax" as const),
+        path: "/",
+      }
+
       // Setting JWT Cookie
       res.cookie("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        ...cookieOptions,
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
 
-      return res.redirect(`${process.env.FRONTEND_URL}`)
+      return res.redirect(`${process.env.FRONTEND_URL}/create/invoice`)
     } catch (prismaError) {
       console.error("[googleLoginController]", prismaError)
       return res.status(500).json({
@@ -140,10 +154,13 @@ export const googleMeController = async (req: AuthRequest, res: Response) => {
 }
 
 export const googleLogoutController = async (req: Request, res: Response) => {
+  const isProduction = process.env.NODE_ENV === "production"
+
   res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/",
   })
 
   return res.status(200).json({

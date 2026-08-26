@@ -22,6 +22,8 @@ async function resolveOwnership(
     }
   }
 
+  const isProduction = process.env.NODE_ENV === "production"
+
   // Guest Flow
   let guestId = req.cookies.guestId
 
@@ -30,8 +32,9 @@ async function resolveOwnership(
 
     res.cookie("guestId", guestId, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
       maxAge: 30 * 24 * 60 * 60 * 1000,
     })
   }
