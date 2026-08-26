@@ -31,6 +31,7 @@ import {
   downloadInvoicePng,
   viewInvoicePdf,
 } from "@/lib/invoice/export"
+import { toast } from "@workspace/ui/components/toast"
 
 type ItemsPanel = {
   icon?: React.ReactNode
@@ -72,6 +73,10 @@ export const DownloadPanel = ({ pdfBlob }: { pdfBlob: Blob | null }) => {
     if (isSaving) return
 
     if (!invoice.invoice.date || !invoice.invoice.dueDate) {
+      toast.add({
+        type: "error",
+        description: "Please select invoice and due date",
+      })
       return
     }
 
@@ -129,13 +134,27 @@ export const DownloadPanel = ({ pdfBlob }: { pdfBlob: Blob | null }) => {
           : null
 
       await uploadInvoiceAssets(id!, logoFile, signatureFile)
+
+      toast.add({
+        type: "success",
+        description: "Invoice saved",
+      })
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log("SAVE ERROR:", error.response?.data)
+        toast.add({
+          type: "error",
+          description:
+            error.response?.data?.message ?? "Failed to save invoice",
+        })
+
         return
       }
 
       console.error(error)
+      toast.add({
+        type: "error",
+        description: "Failed to save invoice",
+      })
     } finally {
       setIsSaving(false)
     }
