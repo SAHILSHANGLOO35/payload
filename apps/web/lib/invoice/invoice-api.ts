@@ -47,20 +47,23 @@ export const saveInvoice = async (id: string, invoice: Invoice) => {
       date: invoice.invoice.date,
       dueDate: invoice.invoice.dueDate,
 
+      taxRate: Number(invoice.invoice.taxRate),
+      discount: Number(invoice.invoice.discount),
+
       billingDetails: invoice.invoice.billingDetails
         .filter((detail) => detail.label.trim())
         .map((detail) => ({
           label: detail.label,
           type: detail.type,
-          value: detail.value,
+          value: Number(detail.value),
         })),
     },
 
     items: invoice.items.map((item) => ({
       name: item.name,
       description: item.description,
-      quantity: item.quantity,
-      unitPrice: item.unitPrice,
+      quantity: Number(item.quantity),
+      unitPrice: Number(item.unitPrice),
     })),
 
     metadata: {

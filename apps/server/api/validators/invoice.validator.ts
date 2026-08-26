@@ -46,6 +46,8 @@ export const saveInvoiceSchema = z.object({
       dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
         message: "dueDate must be YYYY-MM-DD",
       }),
+      taxRate: z.number().min(0).max(100).default(0),
+      discount: z.number().min(0).default(0),
       billingDetails: z
         .array(
           z.object({

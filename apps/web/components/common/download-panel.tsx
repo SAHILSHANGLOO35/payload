@@ -79,6 +79,7 @@ export const DownloadPanel = () => {
         setInvoiceId(id)
       }
 
+      // Create invoice shell only if we don't have an id
       if (!id) {
         const createdInvoice = await createInvoice()
 
@@ -86,39 +87,46 @@ export const DownloadPanel = () => {
 
         setInvoiceId(id!)
         sessionStorage.setItem("payload_invoice_id", id!)
-
-        await saveInvoice(id!, invoice)
-
-        await uploadInvoiceAssets(
-          id!,
-          invoice.company.logo,
-          invoice.company.signature
-        )
       }
 
       try {
+        // Save normal invoice data
         await saveInvoice(id!, invoice)
       } catch (error) {
+        // Stored invoice id no longer exists
         if (axios.isAxiosError(error) && error.response?.status === 404) {
           sessionStorage.removeItem("payload_invoice_id")
+
           setInvoiceId(null!)
 
           const createdInvoice = await createInvoice()
 
-          const newId = createdInvoice.id
+          id = createdInvoice.id
 
-          setInvoiceId(newId)
-          sessionStorage.setItem("payload_invoice_id", newId)
+          setInvoiceId(id!)
 
-          await saveInvoice(newId, invoice)
+          sessionStorage.setItem("payload_invoice_id", id!)
 
-          return
+          await saveInvoice(id!, invoice)
+        } else {
+          throw error
         }
-
-        throw error
       }
+
+      // Upload ONLY newly selected files.
+      // Existing signed URLs are already stored in Supabase.
+      const logoFile =
+        invoice.company.logo instanceof File ? invoice.company.logo : null
+
+      const signatureFile =
+        invoice.company.signature instanceof File
+          ? invoice.company.signature
+          : null
+
+      await uploadInvoiceAssets(id!, logoFile, signatureFile)
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        console.log("SAVE ERROR:", error.response?.data)
         return
       }
 
@@ -127,7 +135,6 @@ export const DownloadPanel = () => {
       setIsSaving(false)
     }
   }
-
   return (
     <div className="flex w-full items-center justify-between border-b px-4 py-2 font-geist">
       <div />

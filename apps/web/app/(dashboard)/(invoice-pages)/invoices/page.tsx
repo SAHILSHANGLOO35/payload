@@ -30,6 +30,7 @@ import {
 import axios from "axios"
 import { updateInvoiceStatus } from "@/lib/invoice/invoice-api"
 import { Warning } from "@/components/icons/loading"
+import { useRouter } from "next/navigation"
 
 const statusStyles = {
   pending: "bg-yellow-500/10 text-yellow-500",
@@ -40,11 +41,7 @@ const statusStyles = {
   cancelled: "bg-orange-500/10 text-orange-500",
 }
 
-// Keep this in sync with the `limit` used in the invoices fetch below.
-// It drives how tall the loading / empty states are, so the table never
-// jumps in height once real rows come in.
 const PAGE_SIZE = 10
-// h-12 on a row === 3rem === 48px
 const ROW_HEIGHT_PX = 48
 const TABLE_BODY_HEIGHT_PX = PAGE_SIZE * ROW_HEIGHT_PX
 
@@ -80,6 +77,8 @@ export default function Invoices() {
   const [invoices, setInvoices] = useState<InvoiceListItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  const router = useRouter()
 
   useEffect(() => {
     const fetchInvoices = async () => {
@@ -306,7 +305,12 @@ export default function Invoices() {
                           align="end"
                           className="w-42 space-y-1.5 py-1.5 font-geist"
                         >
-                          <DropdownMenuItem className="grid cursor-pointer grid-cols-[20px_1fr] items-center gap-x-2">
+                          <DropdownMenuItem
+                            className="grid cursor-pointer grid-cols-[20px_1fr] items-center gap-x-2"
+                            onClick={() =>
+                              router.push(`/invoices/${invoice.id}`)
+                            }
+                          >
                             <span className="flex w-5 items-center justify-center">
                               <Signature className="size-4.5" />
                             </span>

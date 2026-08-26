@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useMemo } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Info, X } from "lucide-react"
 
 import { InvoiceSection } from "../common/invoice-section"
@@ -25,6 +25,32 @@ type CompanySectionProps = {
   isActive: boolean
 }
 
+type SmoothPreviewImageProps = {
+  src: string
+  alt: string
+}
+
+const SmoothPreviewImage = ({ src, alt }: SmoothPreviewImageProps) => {
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  return (
+    <div className="relative h-full w-full overflow-hidden">
+      {!isLoaded && <div className="absolute inset-0 animate-pulse bg-muted" />}
+
+      {/* eslint-disable @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={alt}
+        decoding="async"
+        onLoad={() => setIsLoaded(true)}
+        className={`h-full w-full object-cover object-center transition-opacity duration-300 ease-out ${
+          isLoaded ? "opacity-100" : "opacity-0"
+        }`}
+      />
+    </div>
+  )
+}
+
 export const CompanySection = ({ isActive }: CompanySectionProps) => {
   const company = useInvoiceStore((state) => state.invoice.company)
 
@@ -43,31 +69,41 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
   const viewMode = useViewModeStore((state) => state.viewMode)
   const isFormOnly = viewMode === "form"
 
-  const logoPreview = useMemo(
-    () => (company.logo ? URL.createObjectURL(company.logo) : null),
-    [company.logo]
-  )
+  const logoPreview = useMemo(() => {
+    if (!company.logo) return null
 
-  const signaturePreview = useMemo(
-    () => (company.signature ? URL.createObjectURL(company.signature) : null),
-    [company.signature]
-  )
+    if (typeof company.logo === "string") {
+      return company.logo
+    }
+
+    return URL.createObjectURL(company.logo)
+  }, [company.logo])
+
+  const signaturePreview = useMemo(() => {
+    if (!company.signature) return null
+
+    if (typeof company.signature === "string") {
+      return company.signature
+    }
+
+    return URL.createObjectURL(company.signature)
+  }, [company.signature])
 
   useEffect(() => {
     return () => {
-      if (logoPreview) {
+      if (company.logo instanceof File && logoPreview) {
         URL.revokeObjectURL(logoPreview)
       }
     }
-  }, [logoPreview])
+  }, [company.logo, logoPreview])
 
   useEffect(() => {
     return () => {
-      if (signaturePreview) {
+      if (company.signature instanceof File && signaturePreview) {
         URL.revokeObjectURL(signaturePreview)
       }
     }
-  }, [signaturePreview])
+  }, [company.signature, signaturePreview])
 
   const handleImageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -133,12 +169,11 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
                     <X size={14} className="text-white" />
                   </button>
 
-                  {/* eslint-disable @next/next/no-img-element */}
                   {logoPreview && (
-                    <img
+                    <SmoothPreviewImage
+                      key={logoPreview}
                       src={logoPreview}
                       alt="Company logo preview"
-                      className="h-full w-full object-cover object-center"
                     />
                   )}
                 </div>
@@ -193,10 +228,10 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
                   </button>
 
                   {signaturePreview && (
-                    <img
+                    <SmoothPreviewImage
+                      key={signaturePreview}
                       src={signaturePreview}
                       alt="Company signature preview"
-                      className="h-full w-full object-cover object-center"
                     />
                   )}
                 </div>
