@@ -33,7 +33,7 @@ export default function DashboardLayout({
         />
       )}
 
-      <main className="min-w-0 flex-1 pt-2 pl-4">
+      <main className="min-w-0 flex-1 pt-0 pl-0 sm:pt-2 sm:pl-4">
         {children}
         <Login />
       </main>

@@ -7,7 +7,7 @@ export default function InvoiceLayout({
   children: ReactNode
 }>) {
   return (
-    <section className="flex h-full min-h-0 flex-col rounded-tl-2xl border bg-background p-0 font-geist text-foreground">
+    <section className="flex h-full min-h-0 flex-col border bg-background font-geist text-foreground sm:rounded-tl-2xl">
       <DashboardHeader />
       {children}
     </section>

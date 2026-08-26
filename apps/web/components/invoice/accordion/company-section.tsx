@@ -142,7 +142,7 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
 
             <label
               htmlFor="company-logo"
-              className="flex h-65 w-full cursor-pointer flex-col items-center justify-center gap-1 overflow-hidden rounded-md border border-dashed bg-background transition-colors duration-150 hover:bg-sidebar"
+              className="flex aspect-square w-full cursor-pointer flex-col items-center justify-center gap-1 overflow-hidden rounded-md border border-dashed bg-background transition-colors duration-150 hover:bg-sidebar"
             >
               <input
                 id="company-logo"
@@ -200,7 +200,7 @@ export const CompanySection = ({ isActive }: CompanySectionProps) => {
 
             <label
               htmlFor="company-signature"
-              className="flex h-65 w-full cursor-pointer flex-col items-center justify-center gap-1 overflow-hidden rounded-md border border-dashed bg-background transition-colors duration-150 hover:bg-sidebar"
+              className="flex aspect-square w-full cursor-pointer flex-col items-center justify-center gap-1 overflow-hidden rounded-md border border-dashed bg-background transition-colors duration-150 hover:bg-sidebar"
             >
               <input
                 id="company-signature"
