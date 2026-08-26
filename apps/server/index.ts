@@ -17,6 +17,13 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
+app.get("/health", (_, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Payload SERVER is running",
+  })
+})
+
 app.use("/api/v1/google", authRouter)
 app.use("/api/v1/invoices", invoiceRouter)
 
