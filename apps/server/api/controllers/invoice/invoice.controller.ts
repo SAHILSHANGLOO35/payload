@@ -453,6 +453,7 @@ export const getInvoices = async (req: AuthRequest, res: Response) => {
                   currency: true,
                   serialNumber: true,
                   prefix: true,
+                  date: true,
                   dueDate: true,
                 },
               },
