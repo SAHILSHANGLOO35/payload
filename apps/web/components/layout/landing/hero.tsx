@@ -2,6 +2,7 @@
 
 import React from "react"
 import { Container } from "./container"
+import Link from "next/link"
 import { ArrowRightIcon } from "@phosphor-icons/react"
 
 export const Hero = () => {
@@ -55,10 +56,13 @@ export const Hero = () => {
                 hidden costs.
               </p>
 
-              <button className="flex w-full cursor-pointer items-center justify-between gap-4 border border-foreground bg-foreground px-4 py-3 text-left text-background transition-all duration-200 hover:bg-transparent hover:text-foreground sm:px-5">
+              <Link
+                href="/create/invoice"
+                className="flex w-full cursor-pointer items-center justify-between gap-4 border border-foreground bg-foreground px-4 py-3 text-left text-background transition-all duration-200 hover:bg-transparent hover:text-foreground sm:px-5"
+              >
                 <span className="font-poppins">Create Your First Invoice</span>
                 <ArrowRightIcon size={20} />
-              </button>
+              </Link>
             </div>
           </div>
         </div>
