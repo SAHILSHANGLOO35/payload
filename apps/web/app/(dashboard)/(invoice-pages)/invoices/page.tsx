@@ -199,10 +199,9 @@ export default function Invoices() {
       })
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log("STATUS UPDATE ERROR:", {
-          status: error.response?.status,
-          data: error.response?.data,
-          url: error.config?.url,
+        toast.add({
+          type: "error",
+          description: error.response?.status || "Status update error",
         })
 
         return
@@ -239,9 +238,9 @@ export default function Invoices() {
       setRefreshKey((current) => current + 1)
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log("DELETE INVOICE ERROR:", {
-          status: error.response?.status,
-          data: error.response?.data,
+        toast.add({
+          type: "error",
+          description: error.response?.status || "Failed to delete invoice",
         })
 
         return
