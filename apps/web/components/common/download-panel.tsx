@@ -26,6 +26,11 @@ import { createInvoice, saveInvoice } from "@/lib/invoice/invoice-api"
 import axios from "axios"
 import { uploadInvoiceAssets } from "../../lib/invoice/invoice-api"
 import { useViewModeStore, ViewMode } from "@/stores/view-mode-store"
+import {
+  downloadInvoicePdf,
+  downloadInvoicePng,
+  viewInvoicePdf,
+} from "@/lib/invoice/export"
 
 type ItemsPanel = {
   icon?: React.ReactNode
@@ -33,7 +38,7 @@ type ItemsPanel = {
   value: ViewMode
 }
 
-export const DownloadPanel = () => {
+export const DownloadPanel = ({ pdfBlob }: { pdfBlob: Blob | null }) => {
   const invoice = useInvoiceStore((state) => state.invoice)
   const invoiceId = useInvoiceStore((state) => state.invoiceId)
   const setInvoiceId = useInvoiceStore((state) => state.setInvoiceId)
@@ -135,6 +140,37 @@ export const DownloadPanel = () => {
       setIsSaving(false)
     }
   }
+
+  const handleViewInvoice = () => {
+    if (!pdfBlob) return
+
+    try {
+      viewInvoicePdf(pdfBlob)
+    } catch (error) {
+      console.error("VIEW PDF ERROR:", error)
+    }
+  }
+
+  const handleDownloadPdf = () => {
+    if (!pdfBlob) return
+
+    downloadInvoicePdf(pdfBlob, filename)
+  }
+
+  const handleDownloadPng = async () => {
+    if (!pdfBlob) return
+
+    try {
+      await downloadInvoicePng(pdfBlob, filename)
+    } catch (error) {
+      console.error("PNG DOWNLOAD ERROR:", error)
+    }
+  }
+
+  const filename =
+    `${invoice.invoice.prefix}${invoice.invoice.serialNumber}`.trim() ||
+    "invoice"
+
   return (
     <div className="flex w-full items-center justify-between border-b px-4 py-2 font-geist">
       <div />
@@ -203,17 +239,29 @@ export const DownloadPanel = () => {
                 {isSaving ? "Saving..." : "Save Invoice"}
               </DropdownMenuItem>
 
-              <DropdownMenuItem className="cursor-pointer p-1.5">
+              <DropdownMenuItem
+                disabled={!pdfBlob}
+                onClick={handleViewInvoice}
+                className="cursor-pointer p-1.5"
+              >
                 <Preview className="flex w-5 shrink-0 items-center justify-center" />
                 View Invoice
               </DropdownMenuItem>
 
-              <DropdownMenuItem className="cursor-pointer p-1.5">
+              <DropdownMenuItem
+                disabled={!pdfBlob}
+                onClick={handleDownloadPdf}
+                className="cursor-pointer p-1.5"
+              >
                 <Invoice className="flex w-5 shrink-0 items-center justify-center" />
                 Download PDF
               </DropdownMenuItem>
 
-              <DropdownMenuItem className="cursor-pointer p-1.5">
+              <DropdownMenuItem
+                disabled={!pdfBlob}
+                onClick={handleDownloadPng}
+                className="cursor-pointer p-1.5"
+              >
                 <Gallery className="flex w-5 shrink-0 items-center justify-center" />
                 Download PNG
               </DropdownMenuItem>
