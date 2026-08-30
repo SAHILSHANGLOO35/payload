@@ -13,10 +13,6 @@
       "outputs": [
         ".next/**",
         "!.next/cache/**"
-      ],
-      "env": [
-        "BACKEND_URL",
-        "NEXT_PUBLIC_BACKEND_URL"
       ]
     },
     "lint": {
@@ -36,11 +32,7 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true,
-      "env": [
-        "BACKEND_URL",
-        "NEXT_PUBLIC_BACKEND_URL"
-      ]
+      "persistent": true
     }
   }
 }
