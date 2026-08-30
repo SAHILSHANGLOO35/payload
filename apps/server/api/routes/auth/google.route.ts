@@ -10,8 +10,18 @@ import { authMiddleware } from "../../middlewares/auth.middleware"
 export const googleAuthRouter = Router()
 
 googleAuthRouter.get("/auth/login", async (req, res) => {
-  const url = await googleService()
-  return res.redirect(url)
+  try {
+    const url = await googleService(req, res)
+
+    return res.redirect(url)
+  } catch (error) {
+    console.error("[googleAuthRouter]", error)
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to start Google login",
+    })
+  }
 })
 
 googleAuthRouter.get("/auth/callback", googleLoginController)

@@ -28,6 +28,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
   closeLogin: () => set({ isLoginOpen: false }),
 
   checkAuth: async () => {
+    set({ isLoading: true })
+
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/google/auth/user`,
@@ -50,7 +52,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
         return
       }
 
-      console.error(error)
+      console.error("[checkAuth]", error)
 
       set({
         user: null,

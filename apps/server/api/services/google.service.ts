@@ -1,6 +1,9 @@
-import { supabase } from "../../lib/supabase"
+import type { Request, Response } from "express"
+import { createSupabaseClient } from "../../lib/supabase"
 
-export const googleService = async () => {
+export const googleService = async (req: Request, res: Response) => {
+  const supabase = createSupabaseClient(req, res)
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {

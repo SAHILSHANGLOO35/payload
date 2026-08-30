@@ -16,7 +16,13 @@ export const authMiddleware = (
 ) => {
   const token = req.cookies.token
 
-  if (!token) return res.status(401).json({ message: "Unauthorized User!" })
+  if (!token) {
+    console.log("[authMiddleware] No token cookie received")
+
+    return res.status(401).json({
+      message: "Unauthorized User!",
+    })
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!)
@@ -25,6 +31,13 @@ export const authMiddleware = (
 
     next()
   } catch (error) {
-    return res.status(401).json({ message: "Invalid token" })
+    console.error(
+      "[authMiddleware] Invalid JWT:",
+      error instanceof Error ? error.message : error
+    )
+
+    return res.status(401).json({
+      message: "Invalid token",
+    })
   }
 }
