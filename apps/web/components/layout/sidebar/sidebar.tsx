@@ -18,7 +18,7 @@ export const Sidebar = () => {
 
   return (
     <div
-      className={`scrollbar-hide fixed top-0 left-0 z-50 h-screen w-60 overflow-hidden bg-sidebar pr-4 pl-4 transition-transform duration-300 ease-in-out sm:relative sm:pr-0 ${
+      className={`scrollbar-hide fixed top-0 left-0 z-50 h-dvh w-60 overflow-hidden bg-sidebar pr-4 pl-4 transition-transform duration-300 ease-in-out sm:relative sm:pr-0 ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >

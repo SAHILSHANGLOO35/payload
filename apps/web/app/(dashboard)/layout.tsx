@@ -14,7 +14,7 @@ export default function DashboardLayout({
   const toggleSidebar = useSidebarStore((state) => state.toggle)
 
   return (
-    <div className="relative flex h-screen overflow-hidden bg-sidebar">
+    <div className="relative flex h-svh overflow-hidden bg-sidebar">
       {/* Desktop sidebar space only */}
       <div
         className={`w-0 shrink-0 transition-all duration-300 ease-in-out ${
