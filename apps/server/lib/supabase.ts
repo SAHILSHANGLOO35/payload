@@ -11,13 +11,13 @@ export const createSupabaseClient = (req: Request, res: Response) => {
     auth: {
       flowType: "pkce",
 
-      // Payload uses its own JWT after OAuth.
-      persistSession: false,
+      // IMPORTANT:
+      // must be true so Supabase actually uses our cookie storage
+      persistSession: true,
+
       autoRefreshToken: false,
       detectSessionInUrl: false,
 
-      // PKCE verifier belongs to THIS browser/login flow,
-      // not one global Express server instance.
       storage: {
         getItem: (key: string) => {
           return req.cookies?.[key] ?? null
