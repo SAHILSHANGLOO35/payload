@@ -81,7 +81,7 @@ export const googleLoginController = async (req: Request, res: Response) => {
         res.clearCookie("guestId", {
           httpOnly: true,
           secure: isProduction,
-          sameSite: isProduction ? "none" : "lax",
+          sameSite: "lax",
           path: "/",
         })
       }
@@ -103,7 +103,7 @@ export const googleLoginController = async (req: Request, res: Response) => {
       res.cookie("token", token, {
         httpOnly: true,
         secure: isProduction,
-        sameSite: isProduction ? "none" : "lax",
+        sameSite: "lax",
         path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
@@ -175,7 +175,7 @@ export const googleLogoutController = async (req: Request, res: Response) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? "none" : "lax",
+    sameSite: "lax",
     path: "/",
   })
 
