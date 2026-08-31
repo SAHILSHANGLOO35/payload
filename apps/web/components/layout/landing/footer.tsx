@@ -44,7 +44,7 @@ export const Footer = () => {
       <Container>
         <div className="flex flex-col divide-y divide-dashed font-poppins">
           {/* Top */}
-          <div className="grid w-full grid-cols-1 items-center justify-between divide-x divide-y divide-dashed sm:grid-cols-2 sm:divide-y-0">
+          <div className="grid w-full grid-cols-1 items-center justify-between divide-y divide-dashed sm:grid-cols-2 sm:divide-x sm:divide-y-0">
             {/* Left half */}
             <div className="grid h-full grid-cols-2 divide-x divide-dashed">
               <div className="flex h-full items-center justify-center">

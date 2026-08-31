@@ -24,16 +24,16 @@ export const Hero = () => {
         {/* Overlay */}
         <div className="absolute inset-0 -z-10 bg-linear-to-b from-black/70 via-black/10 to-black/70" />
 
-        <div className="grid min-h-[calc(100svh-60px)] grid-cols-1 grid-rows-2 divide-y divide-dashed overflow-hidden md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-y-0">
+        <div className="grid min-h-[calc(100svh-60px)] grid-cols-1 grid-rows-2 overflow-hidden sm:divide-y sm:divide-dashed md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-y-0">
           {/* Left */}
-          <div className="grid grid-rows-2 divide-y divide-dashed overflow-hidden">
+          <div className="grid grid-rows-1 divide-y divide-dashed overflow-hidden sm:grid-rows-2">
             <div className="relative flex flex-col items-center justify-center bg-background px-6 py-12 text-center backdrop-blur-sm sm:px-8 sm:py-16 md:p-0">
-              <span className="font-poppins text-7xl leading-none font-semibold tracking-tight text-foreground sm:font-normal md:text-8xl lg:text-9xl">
+              <span className="font-poppins text-[80px] leading-none font-normal tracking-tight text-foreground md:text-8xl lg:text-9xl">
                 Payload
               </span>
             </div>
 
-            <div className="relative p-4">
+            <div className="relative hidden p-4 sm:block">
               <span className="absolute right-3 bottom-3 font-mono text-xs tracking-widest text-foreground">
                 02
               </span>
@@ -41,8 +41,8 @@ export const Hero = () => {
           </div>
 
           {/* Right */}
-          <div className="grid grid-rows-2 divide-y divide-dashed">
-            <div className="relative p-4">
+          <div className="grid grid-rows-1 divide-y divide-dashed sm:grid-rows-2">
+            <div className="relative hidden p-4 sm:block">
               <span className="absolute right-3 bottom-3 font-mono text-xs tracking-widest text-foreground">
                 03
               </span>

@@ -6,7 +6,7 @@ export const Features = () => {
   return (
     <section>
       <Container>
-        <div className="grid grid-cols-1 divide-x divide-y divide-dashed md:grid-cols-3 md:divide-y-0">
+        <div className="grid grid-cols-1 divide-dashed sm:divide-x sm:divide-y md:grid-cols-3 md:divide-y-0">
           <SkeletonFeatures
             title="Professional invoices"
             description="Create clean, modern invoices with customizable branding, currencies, layouts, and payment details that leave a lasting impression on every client."
